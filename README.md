@@ -1,16 +1,72 @@
-# starlight
+# Starlight
 
-A new Flutter project.
+An instant messaging application written with Flutter.
 
-## Getting Started
+## Packages
 
-This project is a starting point for a Flutter application.
+Lists of packages used for the project.
 
-A few resources to get you started if this is your first Flutter project:
+### VelocityX
+VelocityX is a 100% free Flutter open-source minimalist UI Framework built with Flutter SDK to make Flutter development
+easier and more joyful than ever.<br>
+Inspired from Tailwindcss and SwiftUI.
+<br><br>
+[Link](https://pub.dev/packages/velocity_x)
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+<br>
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### GetX
+GetX is an extra-light and powerful solution for Flutter.<br>
+It combines high-performance state management, intelligent dependency injection, and route management quickly
+and practically.
+<br><br>
+[Link](https://pub.dev/packages/get)
+
+<br>
+
+### Blackfoot Flutter Lint
+This package contains a recommended set of lints for Blackfoot's Flutter apps to encourage good coding practices.<br>
+This package is built on top of Flutter `flutter.yaml` set of lints from `package:flutter_lints`.
+<br><br>
+[Link](https://pub.dev/packages/blackfoot_flutter_lint)
+
+<br>
+
+-----
+
+## Download
+
+### Desktop
+
+### Web
+
+### Android
+
+### iOS
+
+### Architecture
+
+```
+lib
+├── components
+└── pages
+```
+
+## Build
+
+Flutter Version: `3.2.2`
+
+### Windows
+
+### MacOS
+
+### Linux
+
+
+## Deploy
+
+### Desktop
+
+### Web
+
+### Mobile
