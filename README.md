@@ -52,6 +52,10 @@ lib
 └── pages
 ```
 
+<br>
+
+-----
+
 ## Build
 
 Flutter Version: `3.2.2`
@@ -62,6 +66,9 @@ Flutter Version: `3.2.2`
 
 ### Linux
 
+<br>
+
+-----
 
 ## Deploy
 
