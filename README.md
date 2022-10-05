@@ -1,6 +1,6 @@
 # Starlight
 
-An instant messaging application written with Flutter.
+An instant messaging application inspired from Discord and LINE written with Flutter.
 
 ## Packages
 
@@ -21,6 +21,30 @@ It combines high-performance state management, intelligent dependency injection,
 and practically.
 <br><br>
 [Link](https://pub.dev/packages/get)
+
+<br>
+
+### Google Fonts
+A Flutter package to use fonts from [fonts.google.com](fonts.google.com).<br>
+HTTP fetching at runtime, ideal for development. Can also be used in production to reduce app size. Font file caching, on device file system. Font bundling in assets. Matching font files found in assets are prioritized over HTTP fetching. Useful for offline-first apps.
+<br><br>
+
+[Link](https://pub.dev/packages/google_fonts)
+
+<br>
+
+### Equatable
+`Equatable` overrides `==` and `hashCode` for you so you don't have to waste your time writing lots of boilerplate code.
+<br><br>
+[Link](https://pub.dev/packages/equatable)
+
+<br>
+
+### Meta
+This package defines annotations that can be used by the tools that are shipped with the Dart SDK.<br>
+Annotations used to express developer intentions that can't otherwise be deduced by statically analyzing source code.
+<br><br>
+[Link](https://pub.dev/packages/meta)
 
 <br>
 
