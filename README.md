@@ -82,7 +82,8 @@ lib
 
 ## Build
 
-Flutter Version: `3.2.2`
+Flutter Version: `3.2.2`<br>
+We use a main only strategy with PRs for our repository.
 
 ### Windows
 
