@@ -3,13 +3,19 @@
 
 workflows:
   default-workflow:
-    name: Default Workflow
+    name: Starlight Worflow
     max_build_duration: 60
     environment:
-      groups: Flutter
+      groups:
+        - Flutter
       flutter: default
       xcode: latest
       cocoapods: default
+    vars:
+      FCI_KEYSTORE_PATH: /tmp/keystore.keystore
+      PACKAGE_NAME: "io.starlight.flutteryaml" # <-- Put your package name here
+      GOOGLE_PLAY_TRACK: "alpha" # <-- This must be "alpha" or above.
+      CODE_COVERAGE_TARGET: 10 # <-- Expected code coverage rate
     triggering:
       events:
         - push
@@ -22,49 +28,58 @@ workflows:
         - pattern: "*"
           include: true
     scripts:
-     - name: Create coverage report
-        script: | 
+      - name: Set up key properties
+        script: |
+          echo $CM_KEYSTORE | base64 --decode > /tmp/keystore.keystore
+          # The following script creates key.properties file and stores the credentials in it. As we configure code signing in app/build.gradle file, the following part is unnecessary unless code signing is configured differently as explained in the documentation: https://docs.codemagic.io/flutter-code-signing/android-code-signing/
+          # cat >> "$CM_BUILD_DIR/android/key.properties" <<EOF
+          # storePassword=$FCI_KEYSTORE_PASSWORD
+          # keyPassword=$FCI_KEY_PASSWORD
+          # keyAlias=$FCI_KEY_ALIAS
+          # storeFile=/tmp/keystore.keystore
+          # EOF
+      - name: Set up local.properties
+        script: |
+          echo "flutter.sdk=$HOME/programs/flutter" > "$FCI_BUILD_DIR/android/local.properties"
+      - name: Get Flutter packages
+        script: |
+          flutter packages pub get
+      - name: Flutter analyze
+        script: |
+          flutter analyze
+      - name: Flutter unit tests
+        script: |
+          flutter test
+        ignore_failure: true
+      - name: Collecting code coverage and storing in a location
+        script: |
           HOMEBREW_NO_AUTO_UPDATE=1 brew install lcov
           mkdir -p test-results 
           flutter test --coverage --machine > test-results/flutter.json  
-          
-          code_coverage=$(lcov --list $FCI_BUILD_DIR/coverage/lcov.info | sed -n "s/.*Total:|\(.*\)%.*/\1/p")
-          
-          echo "Code Coverage: ${code_coverage}% "
-          if (( $(echo "$code_coverage < $CODE_COVERAGE_TARGET" | bc) ))
-            then { echo "code coverage is less than expected" && exit 1; }
-          fi  
-          test_report: test-results/flutter.json
+          code_coverage=$(lcov --list $CM_BUILD_DIR/coverage/lcov.info | sed -n "s/.*Total:|\(.*\)%.*/\1/p")
+          echo "Code Coverage: ${code_coverage}% " | bc); then { echo "uploading to codecov" }; fi 
+          if (( $(echo "$code_coverage < $CODE_COVERAGE_TARGET" | bc) )); then { echo "code coverage is less than expected" && exit 1; }; fi
+        test_report: test-results/flutter.json
       - name: Codecov upload
-        script: | 
+        script: |
+          #!/bin/bash
           curl -Os https://uploader.codecov.io/latest/macos/codecov
           chmod +x codecov
-          ./codecov -t ${CODECOV_TOKEN}
-      - |
-        # set up debug keystore
-        rm -f ~/.android/debug.keystore
-        keytool -genkeypair \
-          -alias androiddebugkey \
-          -keypass android \
-          -keystore ~/.android/debug.keystore \
-          -storepass android \
-          -dname 'CN=Android Debug,O=Android,C=US' \
-          -keyalg 'RSA' \
-          -keysize 2048 \
-          -validity 10000
-      - |
-        # set up local properties
-        echo "flutter.sdk=$HOME/programs/flutter" > "$FCI_BUILD_DIR/android/local.properties"
-      - flutter packages pub get
-      - flutter config --enable-web
-      - flutter build appbundle --debug
-      - find . -name "Podfile" -execdir pod install \;
-      - flutter build ios --debug --no-codesign
-      - |
-        # build web
-        flutter build web --release
-        cd build/web
-        7z a -r ../web.zip ./*
+          ./codecov -t ${CODECOV_TOKEN} -f "test-results/flutter.json"
+      - name: Build APK with Flutter
+        script: |
+          flutter build apk --release --build-name=1.0.0 --build-number=$(($(google-play get-latest-build-number --package-name "$PACKAGE_NAME" --tracks="$GOOGLE_PLAY_TRACK") + 1))
+      - name: Build iOS
+        script: |
+          flutter build appbundle --debug
+          find . -name "Podfile" -execdir pod install \;
+          flutter build ios --debug --no-codesign
+      - name: Build Web
+        script: |
+          flutter config --enable-web
+          flutter build web --release
+          cd build/web
+          7z a -r ../web.zip ./*
     artifacts:
       - build/**/outputs/apk/**/*.apk
       - build/**/outputs/bundle/**/*.aab
