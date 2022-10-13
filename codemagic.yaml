@@ -11,11 +11,11 @@ workflows:
       flutter: default
       xcode: latest
       cocoapods: default
-    vars:
-      FCI_KEYSTORE_PATH: /tmp/keystore.keystore
-      PACKAGE_NAME: "io.starlight.flutteryaml" # <-- Put your package name here
-      GOOGLE_PLAY_TRACK: "alpha" # <-- This must be "alpha" or above.
-      CODE_COVERAGE_TARGET: 10 # <-- Expected code coverage rate
+      vars:
+        FCI_KEYSTORE_PATH: /tmp/keystore.keystore
+        PACKAGE_NAME: "io.starlight.flutteryaml" # <-- Put your package name here
+        GOOGLE_PLAY_TRACK: "alpha" # <-- This must be "alpha" or above.
+        CODE_COVERAGE_TARGET: 10 # <-- Expected code coverage rate
     triggering:
       events:
         - push
