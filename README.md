@@ -1,5 +1,8 @@
 # Starlight
 
+[![Codemagic build status](https://api.codemagic.io/apps/63483ea222ff8dd9f01474ca/63483ea222ff8dd9f01474c9/status_badge.svg)](https://codemagic.io/apps/63483ea222ff8dd9f01474ca/63483ea222ff8dd9f01474c9/latest_build)
+[![CodeFactor](https://www.codefactor.io/repository/github/mikyan0207/m-mob-900-flutter/badge)](https://www.codefactor.io/repository/github/mikyan0207/m-mob-900-flutter)
+
 An instant messaging application inspired from Discord and LINE written with Flutter.
 
 ## Packages
