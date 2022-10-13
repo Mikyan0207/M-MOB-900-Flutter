@@ -23,23 +23,23 @@ workflows:
           include: true
     scripts:
      - name: Create coverage report
-      script: | 
-        HOMEBREW_NO_AUTO_UPDATE=1 brew install lcov
-        mkdir -p test-results 
-        flutter test --coverage --machine > test-results/flutter.json  
-        
-        code_coverage=$(lcov --list $FCI_BUILD_DIR/coverage/lcov.info | sed -n "s/.*Total:|\(.*\)%.*/\1/p")
-        
-        echo "Code Coverage: ${code_coverage}% "
-        if (( $(echo "$code_coverage < $CODE_COVERAGE_TARGET" | bc) ))
-          then { echo "code coverage is less than expected" && exit 1; }
-        fi  
-        test_report: test-results/flutter.json
+        script: | 
+          HOMEBREW_NO_AUTO_UPDATE=1 brew install lcov
+          mkdir -p test-results 
+          flutter test --coverage --machine > test-results/flutter.json  
+          
+          code_coverage=$(lcov --list $FCI_BUILD_DIR/coverage/lcov.info | sed -n "s/.*Total:|\(.*\)%.*/\1/p")
+          
+          echo "Code Coverage: ${code_coverage}% "
+          if (( $(echo "$code_coverage < $CODE_COVERAGE_TARGET" | bc) ))
+            then { echo "code coverage is less than expected" && exit 1; }
+          fi  
+          test_report: test-results/flutter.json
       - name: Codecov upload
-      script: | 
-        curl -Os https://uploader.codecov.io/latest/macos/codecov
-        chmod +x codecov
-        ./codecov -t ${CODECOV_TOKEN}
+        script: | 
+          curl -Os https://uploader.codecov.io/latest/macos/codecov
+          chmod +x codecov
+          ./codecov -t ${CODECOV_TOKEN}
       - |
         # set up debug keystore
         rm -f ~/.android/debug.keystore
