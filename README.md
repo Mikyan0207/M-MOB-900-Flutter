@@ -33,6 +33,14 @@ HTTP fetching at runtime, ideal for development. Can also be used in production 
 
 <br>
 
+### Flutter SVG
+Draw SVG (and some Android VectorDrawable (XML)) files on a Flutter Widget.
+<br><br>
+
+[Link](https://pub.dev/packages/flutter_svg)
+
+<br>
+
 ### Equatable
 `Equatable` overrides `==` and `hashCode` for you so you don't have to waste your time writing lots of boilerplate code.
 <br><br>
