@@ -14,8 +14,8 @@ class SignInScreen extends StatelessWidget {
 
   final AuthController auth = Get.put(AuthController());
 
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final   TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +86,7 @@ class SignInScreen extends StatelessWidget {
                     // check tha validation
                     validator: (String? val) {
                       return RegExp(
-                        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
+                        r"^[a-zA-Z0-9.a-zA-Z0-9!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
                       ).hasMatch(val!)
                           ? null
                           : "Please enter a valid email";
@@ -159,21 +159,16 @@ class SignInScreen extends StatelessWidget {
 
                       try {
                         final FirebaseAuth auth = FirebaseAuth.instance;
-                        User? user;
-
                         final UserCredential userCredential = await auth.signInWithEmailAndPassword(
                           email: emailController.text,
                           password: passwordController.text,
                         );
-                        user = userCredential.user;
+                        // User? user = userCredential.user;
                       } on FirebaseAuthException catch (e) {
                         if (e.code == 'user-not-found') {
-                          print('No user found for that email.');
                         } else if (e.code == 'wrong-password') {
-                          print('Wrong password provided for that user.');
                         }
                       }
-
                     },
                   ),
                 ),
