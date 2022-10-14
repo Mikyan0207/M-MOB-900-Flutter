@@ -14,6 +14,9 @@ class SignInScreen extends StatelessWidget {
 
   final AuthController auth = Get.put(AuthController());
 
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -52,6 +55,7 @@ class SignInScreen extends StatelessWidget {
                 SizedBox(
                   width: 400,
                   child: TextFormField(
+                    controller: emailController,
                     decoration: const InputDecoration(
                       labelStyle: TextStyle(
                           color: Vx.gray300, fontWeight: FontWeight.w300),
@@ -90,6 +94,7 @@ class SignInScreen extends StatelessWidget {
                   child: SizedBox(
                     width: 400,
                     child: TextFormField(
+                      controller: passwordController,
                       obscureText: true,
                       decoration: const InputDecoration(
                         labelStyle: TextStyle(
@@ -147,10 +152,14 @@ class SignInScreen extends StatelessWidget {
                     onPressed: () async {
 
                       try {
-                        UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-                            email: "barry.allen@example.com",
-                            password: "SuperSecretPassword!",
+                        final FirebaseAuth auth = FirebaseAuth.instance;
+                        User? user;
+
+                        final UserCredential userCredential = await auth.signInWithEmailAndPassword(
+                          email: emailController.text,
+                          password: passwordController.text,
                         );
+                        user = userCredential.user;
                       } on FirebaseAuthException catch (e) {
                         if (e.code == 'user-not-found') {
                           print('No user found for that email.');
