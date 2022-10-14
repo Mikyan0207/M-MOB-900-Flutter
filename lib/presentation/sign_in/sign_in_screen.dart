@@ -1,15 +1,15 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:starlight/presentation/signIn/signIn_screen.dart';
+import 'package:starlight/presentation/sign_up/sign_up_screen.dart';
+import 'package:starlight/presentation/themes/theme_colors.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import '../../auth/auth_controller.dart';
-import '../themes/theme_colors.dart';
 
-class SignUpScreen extends StatelessWidget {
-  SignUpScreen({super.key});
+class SignInScreen extends StatelessWidget {
+  SignInScreen({super.key});
 
   final AuthController auth = Get.put(AuthController());
 
@@ -29,18 +29,20 @@ class SignUpScreen extends StatelessWidget {
                 const Text(
                   "Starlight ✨",
                   style: TextStyle(
-                      fontSize: 40,
-                      fontWeight: FontWeight.bold,
-                      color: Vx.gray100),
+                    fontSize: 40,
+                    fontWeight: FontWeight.bold,
+                    color: Vx.gray100,
+                  ),
                 ),
                 const Padding(
                   padding: EdgeInsets.only(top: 10.0),
                   child: Text(
-                    "Register now to see what they are talking!",
+                    "Login now to see what they are talking!",
                     style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w400,
-                        color: Vx.gray300),
+                      fontSize: 15,
+                      fontWeight: FontWeight.w400,
+                      color: Vx.gray300,
+                    ),
                   ),
                 ),
                 SizedBox(
@@ -53,7 +55,9 @@ class SignUpScreen extends StatelessWidget {
                   child: TextFormField(
                     decoration: const InputDecoration(
                       labelStyle: TextStyle(
-                          color: Vx.gray300, fontWeight: FontWeight.w300),
+                        color: Vx.gray300,
+                        fontWeight: FontWeight.w300,
+                      ),
                       labelText: "Email",
                       prefixIcon: Icon(
                         Icons.email,
@@ -77,8 +81,8 @@ class SignUpScreen extends StatelessWidget {
                     // check tha validation
                     validator: (String? val) {
                       return RegExp(
-                                  r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                              .hasMatch(val!)
+                        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
+                      ).hasMatch(val!)
                           ? null
                           : "Please enter a valid email";
                     },
@@ -92,48 +96,10 @@ class SignUpScreen extends StatelessWidget {
                       obscureText: true,
                       decoration: const InputDecoration(
                         labelStyle: TextStyle(
-                            color: Vx.gray300, fontWeight: FontWeight.w300),
-                        labelText: "Password",
-                        prefixIcon: Icon(
-                          Icons.lock,
-                          color: AppColors.primaryColor,
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Color(0xFF8667f2), width: 2),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Color(0xFF8667f2), width: 2),
-                        ),
-                        errorBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Color(0xFF8667f2), width: 2),
-                        ),
-                      ),
-                      validator: (String? val) {
-                        if (val!.length < 6) {
-                          return "Password must be at least 6 characters";
-                        } else {
-                          return null;
-                        }
-                      },
-                      onChanged: (String? val) {},
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 15.0),
-                  child: SizedBox(
-                    width: 400,
-                    child: TextFormField(
-                      obscureText: true,
-                      decoration: const InputDecoration(
-                        labelStyle: TextStyle(
                           color: Vx.gray300,
                           fontWeight: FontWeight.w300,
                         ),
-                        labelText: "Confirm Password",
+                        labelText: "Password",
                         prefixIcon: Icon(
                           Icons.lock,
                           color: AppColors.primaryColor,
@@ -170,7 +136,9 @@ class SignUpScreen extends StatelessWidget {
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 8.0, vertical: 24.0),
+                        horizontal: 8.0,
+                        vertical: 24.0,
+                      ),
                       backgroundColor: AppColors.primaryColor,
                       elevation: 0,
                       shape: RoundedRectangleBorder(
@@ -178,7 +146,7 @@ class SignUpScreen extends StatelessWidget {
                       ),
                     ),
                     child: const Text(
-                      "Sign Up",
+                      "Sign In",
                       style: TextStyle(color: Vx.gray100, fontSize: 16),
                     ),
                     onPressed: () {},
@@ -189,13 +157,13 @@ class SignUpScreen extends StatelessWidget {
                 ),
                 Text.rich(
                   TextSpan(
-                    text: "Already have an account? ",
+                    text: "Don't have an account? ",
                     style: const TextStyle(color: Vx.gray300, fontSize: 14),
                     children: <TextSpan>[
                       TextSpan(
                         recognizer: TapGestureRecognizer()
-                          ..onTap = () => Get.to(() => SignInScreen()),
-                        text: "Sign In.",
+                          ..onTap = () => Get.to(() => SignUpScreen()),
+                        text: "Sign Up.",
                         style: const TextStyle(
                           color: Vx.gray100,
                           decoration: TextDecoration.underline,

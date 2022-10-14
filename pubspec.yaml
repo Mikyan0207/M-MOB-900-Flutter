@@ -32,14 +32,13 @@ dependencies:
   flutter:
     sdk: flutter
 
-
   blackfoot_flutter_lint: ^1.0.6
   cupertino_icons: ^1.0.2
-  get: ^4.6.5
-  velocity_x: ^3.5.1
   flutter_svg: ^1.1.5
+  get: ^4.6.5
   google_fonts: ^3.0.1
   responsive_framework: ^0.2.0
+  velocity_x: ^3.5.1
 
 dev_dependencies:
   flutter_test:

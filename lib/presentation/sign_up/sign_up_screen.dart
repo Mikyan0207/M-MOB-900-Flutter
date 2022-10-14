@@ -1,15 +1,15 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:starlight/presentation/signUp/signUp_screen.dart';
-import 'package:starlight/presentation/themes/theme_colors.dart';
+import 'package:starlight/presentation/sign_in/sign_in_screen.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import '../../auth/auth_controller.dart';
+import '../themes/theme_colors.dart';
 
-class SignInScreen extends StatelessWidget {
-  SignInScreen({super.key});
+class SignUpScreen extends StatelessWidget {
+  SignUpScreen({super.key});
 
   final AuthController auth = Get.put(AuthController());
 
@@ -29,18 +29,20 @@ class SignInScreen extends StatelessWidget {
                 const Text(
                   "Starlight ✨",
                   style: TextStyle(
-                      fontSize: 40,
-                      fontWeight: FontWeight.bold,
-                      color: Vx.gray100),
+                    fontSize: 40,
+                    fontWeight: FontWeight.bold,
+                    color: Vx.gray100,
+                  ),
                 ),
                 const Padding(
                   padding: EdgeInsets.only(top: 10.0),
                   child: Text(
-                    "Login now to see what they are talking!",
+                    "Register now to see what they are talking!",
                     style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w400,
-                        color: Vx.gray300),
+                      fontSize: 15,
+                      fontWeight: FontWeight.w400,
+                      color: Vx.gray300,
+                    ),
                   ),
                 ),
                 SizedBox(
@@ -53,7 +55,9 @@ class SignInScreen extends StatelessWidget {
                   child: TextFormField(
                     decoration: const InputDecoration(
                       labelStyle: TextStyle(
-                          color: Vx.gray300, fontWeight: FontWeight.w300),
+                        color: Vx.gray300,
+                        fontWeight: FontWeight.w300,
+                      ),
                       labelText: "Email",
                       prefixIcon: Icon(
                         Icons.email,
@@ -77,8 +81,8 @@ class SignInScreen extends StatelessWidget {
                     // check tha validation
                     validator: (String? val) {
                       return RegExp(
-                                  r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                              .hasMatch(val!)
+                        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
+                      ).hasMatch(val!)
                           ? null
                           : "Please enter a valid email";
                     },
@@ -92,8 +96,50 @@ class SignInScreen extends StatelessWidget {
                       obscureText: true,
                       decoration: const InputDecoration(
                         labelStyle: TextStyle(
-                            color: Vx.gray300, fontWeight: FontWeight.w300),
+                          color: Vx.gray300,
+                          fontWeight: FontWeight.w300,
+                        ),
                         labelText: "Password",
+                        prefixIcon: Icon(
+                          Icons.lock,
+                          color: AppColors.primaryColor,
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Color(0xFF8667f2), width: 2),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Color(0xFF8667f2), width: 2),
+                        ),
+                        errorBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Color(0xFF8667f2), width: 2),
+                        ),
+                      ),
+                      validator: (String? val) {
+                        if (val!.length < 6) {
+                          return "Password must be at least 6 characters";
+                        } else {
+                          return null;
+                        }
+                      },
+                      onChanged: (String? val) {},
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 15.0),
+                  child: SizedBox(
+                    width: 400,
+                    child: TextFormField(
+                      obscureText: true,
+                      decoration: const InputDecoration(
+                        labelStyle: TextStyle(
+                          color: Vx.gray300,
+                          fontWeight: FontWeight.w300,
+                        ),
+                        labelText: "Confirm Password",
                         prefixIcon: Icon(
                           Icons.lock,
                           color: AppColors.primaryColor,
@@ -140,7 +186,7 @@ class SignInScreen extends StatelessWidget {
                       ),
                     ),
                     child: const Text(
-                      "Sign In",
+                      "Sign Up",
                       style: TextStyle(color: Vx.gray100, fontSize: 16),
                     ),
                     onPressed: () {},
@@ -151,13 +197,13 @@ class SignInScreen extends StatelessWidget {
                 ),
                 Text.rich(
                   TextSpan(
-                    text: "Don't have an account? ",
+                    text: "Already have an account? ",
                     style: const TextStyle(color: Vx.gray300, fontSize: 14),
                     children: <TextSpan>[
                       TextSpan(
                         recognizer: TapGestureRecognizer()
-                          ..onTap = () => Get.to(() => SignUpScreen()),
-                        text: "Sign Up.",
+                          ..onTap = () => Get.to(() => SignInScreen()),
+                        text: "Sign In.",
                         style: const TextStyle(
                           color: Vx.gray100,
                           decoration: TextDecoration.underline,

@@ -32,7 +32,7 @@ class App extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       routes: Routes.getAll(),
       initialRoute: RouteList.signIn,
-      theme: AppTheme(context),
+      theme: appTheme(context),
     );
   }
 }
