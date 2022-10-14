@@ -7,8 +7,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:starlight/main.dart';
 import 'package:starlight/presentation/App.dart';
 
 void main() {

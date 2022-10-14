@@ -53,12 +53,16 @@ workflows:
         ignore_failure: true
       - name: Collecting code coverage and storing in a location
         script: |
-          HOMEBREW_NO_AUTO_UPDATE=1 brew install lcov
+          HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_NO_INSTALL_CLEANUP=1 brew install lcov
           mkdir -p test-results 
           flutter test --coverage --machine > test-results/flutter.json  
-          code_coverage=$(lcov --list $CM_BUILD_DIR/coverage/lcov.info | sed -n "s/.*Total:|\(.*\)%.*/\1/p")
-          echo "Code Coverage: ${code_coverage}% " | bc); then { echo "uploading to codecov" }; fi 
-          if (( $(echo "$code_coverage < $CODE_COVERAGE_TARGET" | bc) )); then { echo "code coverage is less than expected" && exit 1; }; fi
+          
+          code_coverage=$(lcov --list $FCI_BUILD_DIR/coverage/lcov.info | sed -n "s/.*Total:|\(.*\)%.*/\1/p")
+          
+          echo "Code Coverage: ${code_coverage}% "
+          if (( $(echo "$code_coverage < $CODE_COVERAGE_TARGET" | bc) ))
+            then { echo "code coverage is less than expected" && exit 1; }
+          fi
         test_report: test-results/flutter.json
       - name: Codecov upload
         script: |
@@ -74,6 +78,10 @@ workflows:
           flutter build appbundle --debug
           find . -name "Podfile" -execdir pod install \;
           flutter build ios --debug --no-codesign
+      - name: Build MacOS
+        script: |
+          flutter config --enable-macos-desktop
+          flutter build macos --release --no-codesign
       - name: Build Web
         script: |
           flutter config --enable-web
@@ -85,6 +93,7 @@ workflows:
       - build/**/outputs/bundle/**/*.aab
       - build/**/outputs/**/mapping.txt
       - build/ios/ipa/*.ipa
+      - build/macos/**/*.pkg
       - /tmp/xcodebuild_logs/*.log
       - build/web.zip
       - "*.snap"

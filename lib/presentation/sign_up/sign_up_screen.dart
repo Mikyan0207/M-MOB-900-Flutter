@@ -3,7 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:starlight/presentation/signIn/signIn_screen.dart';
+import 'package:starlight/presentation/sign_in/sign_in_screen.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import '../../auth/auth_controller.dart';
@@ -33,18 +33,20 @@ class SignUpScreen extends StatelessWidget {
                 const Text(
                   "Starlight ✨",
                   style: TextStyle(
-                      fontSize: 40,
-                      fontWeight: FontWeight.bold,
-                      color: Vx.gray100),
+                    fontSize: 40,
+                    fontWeight: FontWeight.bold,
+                    color: Vx.gray100,
+                  ),
                 ),
                 const Padding(
                   padding: EdgeInsets.only(top: 10.0),
                   child: Text(
                     "Register now to see what they are talking!",
                     style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w400,
-                        color: Vx.gray300),
+                      fontSize: 15,
+                      fontWeight: FontWeight.w400,
+                      color: Vx.gray300,
+                    ),
                   ),
                 ),
                 SizedBox(
@@ -58,7 +60,9 @@ class SignUpScreen extends StatelessWidget {
                     controller: emailController,
                     decoration: const InputDecoration(
                       labelStyle: TextStyle(
-                          color: Vx.gray300, fontWeight: FontWeight.w300),
+                        color: Vx.gray300,
+                        fontWeight: FontWeight.w300,
+                      ),
                       labelText: "Email",
                       prefixIcon: Icon(
                         Icons.email,
@@ -82,8 +86,8 @@ class SignUpScreen extends StatelessWidget {
                     // check tha validation
                     validator: (String? val) {
                       return RegExp(
-                                  r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                              .hasMatch(val!)
+                        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
+                      ).hasMatch(val!)
                           ? null
                           : "Please enter a valid email";
                     },
@@ -98,7 +102,9 @@ class SignUpScreen extends StatelessWidget {
                       obscureText: true,
                       decoration: const InputDecoration(
                         labelStyle: TextStyle(
-                            color: Vx.gray300, fontWeight: FontWeight.w300),
+                          color: Vx.gray300,
+                          fontWeight: FontWeight.w300,
+                        ),
                         labelText: "Password",
                         prefixIcon: Icon(
                           Icons.lock,
@@ -176,7 +182,9 @@ class SignUpScreen extends StatelessWidget {
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 8.0, vertical: 24.0),
+                        horizontal: 8.0,
+                        vertical: 24.0,
+                      ),
                       backgroundColor: AppColors.primaryColor,
                       elevation: 0,
                       shape: RoundedRectangleBorder(
