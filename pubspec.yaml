@@ -31,6 +31,8 @@ dependencies:
   velocity_x: ^3.5.1
   flutter: 
     sdk: flutter
+  overlapping_panels: ^0.0.3
+  adaptive_breakpoints: ^0.1.4
 dev_dependencies: 
   flutter_lints: ^2.0.0
   pubspec_dependency_sorter: ^0.0.1
