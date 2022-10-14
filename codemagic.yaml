@@ -77,7 +77,7 @@ workflows:
         script: |
           flutter build appbundle --debug
           find . -name "Podfile" -execdir pod install \;
-          flutter build ipa --release --build-name=1.0.0 --export-options-plist=/Users/builder/export_options.plist
+          flutter build ipa --release --build-name=1.0.0
       - name: Build MacOS
         script: |
           flutter config --enable-macos-desktop
