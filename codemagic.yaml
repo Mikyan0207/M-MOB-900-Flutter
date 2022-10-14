@@ -73,6 +73,8 @@ workflows:
       - name: Build APK with Flutter
         script: |
           flutter build apk --release --build-name=1.0.0 --build-number=$(($(google-play get-latest-build-number --package-name "$PACKAGE_NAME" --tracks="$GOOGLE_PLAY_TRACK") + 1))
+      - name: Set up code signing settings on Xcode project
+        script: xcode-project use-profiles
       - name: Build iOS
         script: |
           flutter build appbundle --debug
