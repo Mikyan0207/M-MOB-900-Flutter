@@ -9,7 +9,7 @@ class Chat extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: Vx.gray700,
+        color: Vx.gray600,
         height: double.infinity,
         width: double.infinity,
         child: Column(

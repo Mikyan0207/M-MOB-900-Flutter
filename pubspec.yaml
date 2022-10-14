@@ -20,8 +20,6 @@ dependencies:
   fluttertoast: 8.0.6
   intl: 0.17.0
   cloud_firestore: "^3.5.1"
-
-
   blackfoot_flutter_lint: ^1.0.6
   cupertino_icons: ^1.0.2
   flutter_svg: ^1.1.5
@@ -39,6 +37,19 @@ dev_dependencies:
   flutter_test: 
     sdk: flutter
 flutter: 
-  assets: 
+  assets:
     - assets/
+  fonts:
+    - family: 'Whitney'
+      fonts:
+        - asset: assets/fonts/whitneylightitalic.otf
+          weight: 100
+        - asset: assets/fonts/whitneylight.otf
+          weight: 100
+        - asset: assets/fonts/whitneymedium.otf
+          weight: 500
+        - asset: assets/fonts/whitneysemibold.otf
+          weight: 600
+        - asset: assets/fonts/whitneybold.otf
+          weight: 800
   uses-material-design: true

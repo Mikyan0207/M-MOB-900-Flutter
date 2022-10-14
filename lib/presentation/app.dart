@@ -22,7 +22,7 @@ class App extends StatelessWidget {
           ResponsiveBreakpoint.resize(800, name: TABLET),
           ResponsiveBreakpoint.resize(1000, name: TABLET),
           ResponsiveBreakpoint.resize(1200, name: DESKTOP),
-          ResponsiveBreakpoint.resize(2460, name: "4K"),
+          ResponsiveBreakpoint.autoScale(2460, name: "4K"),
         ],
         background: Container(
           color: Vx.gray800,
