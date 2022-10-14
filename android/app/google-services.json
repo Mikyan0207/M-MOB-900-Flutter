@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "23479163395",
+    "project_id": "mob-900-flutter",
+    "storage_bucket": "mob-900-flutter.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:23479163395:android:84e33f8a57aa4674cc8c36",
+        "android_client_info": {
+          "package_name": "com.example.starlight"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "23479163395-th7gad1u4p3jl8v7lr878otob4g4l0n6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyACvqRaOhGQz-XMJN7zGakmQIkxdXiNDyo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "23479163395-th7gad1u4p3jl8v7lr878otob4g4l0n6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
