@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -12,6 +13,9 @@ class SignUpScreen extends StatelessWidget {
   SignUpScreen({super.key});
 
   final AuthController auth = Get.put(AuthController());
+
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -53,6 +57,7 @@ class SignUpScreen extends StatelessWidget {
                 SizedBox(
                   width: 400,
                   child: TextFormField(
+                    controller: emailController,
                     decoration: const InputDecoration(
                       labelStyle: TextStyle(
                         color: Vx.gray300,
@@ -93,6 +98,7 @@ class SignUpScreen extends StatelessWidget {
                   child: SizedBox(
                     width: 400,
                     child: TextFormField(
+                      controller: passwordController,
                       obscureText: true,
                       decoration: const InputDecoration(
                         labelStyle: TextStyle(
@@ -189,7 +195,25 @@ class SignUpScreen extends StatelessWidget {
                       "Sign Up",
                       style: TextStyle(color: Vx.gray100, fontSize: 16),
                     ),
-                    onPressed: () {},
+                    onPressed: () async {
+                      try {
+                        final FirebaseAuth auth = FirebaseAuth.instance;
+                        User? user;
+                        final UserCredential userCredential = await auth.createUserWithEmailAndPassword(
+                            email: emailController.text,
+                            password: passwordController.text,
+                        );
+                        user = userCredential.user;
+                      } on FirebaseAuthException catch (e) {
+                        if (e.code == 'weak-password') {
+                          print('The password provided is too weak.');
+                        } else if (e.code == 'email-already-in-use') {
+                          print('The account already exists for that email.');
+                        }
+                      } catch (e) {
+                        print(e);
+                      }
+                    },
                   ),
                 ),
                 const SizedBox(
