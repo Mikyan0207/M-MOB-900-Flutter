@@ -73,17 +73,15 @@ workflows:
       - name: Build APK with Flutter
         script: |
           flutter build apk --release --build-name=1.0.0 --build-number=$(($(google-play get-latest-build-number --package-name "$PACKAGE_NAME" --tracks="$GOOGLE_PLAY_TRACK") + 1))
-      - name: Set up code signing settings on Xcode project
-        script: xcode-project use-profiles
       - name: Build iOS
         script: |
           flutter build appbundle --debug
           find . -name "Podfile" -execdir pod install \;
-          flutter build ipa --release --build-name=1.0.0
+          flutter build ios --debug --no-codesign
       - name: Build MacOS
         script: |
           flutter config --enable-macos-desktop
-          flutter build macos --release
+          flutter build macos --release --no-codesign
       - name: Build Web
         script: |
           flutter config --enable-web
