@@ -14,14 +14,14 @@ class App extends StatelessWidget {
     return GetMaterialApp(
       builder: (BuildContext context, Widget? child) => ResponsiveWrapper.builder(
         BouncingScrollWrapper.builder(context, child!),
-        maxWidth: 1920,
+        maxWidth: 3840,
         minWidth: 480,
         defaultScale: true,
         breakpoints: const <ResponsiveBreakpoint>[
           ResponsiveBreakpoint.resize(450, name: MOBILE),
           ResponsiveBreakpoint.autoScale(800, name: TABLET),
           ResponsiveBreakpoint.autoScale(1000, name: TABLET),
-          ResponsiveBreakpoint.resize(1200, name: DESKTOP),
+          ResponsiveBreakpoint.autoScale(1200, name: DESKTOP),
           ResponsiveBreakpoint.autoScale(2460, name: "4K"),
         ],
         background: Container(
@@ -31,7 +31,7 @@ class App extends StatelessWidget {
       title: 'Starlight',
       debugShowCheckedModeBanner: false,
       routes: Routes.getAll(),
-      initialRoute: RouteList.signIn,
+      initialRoute: RouteList.home,
       theme: appTheme(context),
     );
   }

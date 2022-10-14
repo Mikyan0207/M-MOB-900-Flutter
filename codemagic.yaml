@@ -81,7 +81,7 @@ workflows:
       - name: Build MacOS
         script: |
           flutter config --enable-macos-desktop
-          flutter build macos --release --no-codesign
+          flutter build macos --release
       - name: Build Web
         script: |
           flutter config --enable-web
