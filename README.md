@@ -18,6 +18,13 @@ Inspired from Tailwindcss and SwiftUI.
 
 <br>
 
+### Responsive Framework
+Responsive Framework adapts your UI to different screen sizes automatically. Create your UI once and have it display pixel perfect on mobile, tablet, and desktop!
+<br><br>
+[Link](https://pub.dev/packages/responsive_framework)
+
+<br>
+
 ### GetX
 GetX is an extra-light and powerful solution for Flutter.<br>
 It combines high-performance state management, intelligent dependency injection, and route management quickly
@@ -33,6 +40,14 @@ HTTP fetching at runtime, ideal for development. Can also be used in production 
 <br><br>
 
 [Link](https://pub.dev/packages/google_fonts)
+
+<br>
+
+### Flutter SVG
+Draw SVG (and some Android VectorDrawable (XML)) files on a Flutter Widget.
+<br><br>
+
+[Link](https://pub.dev/packages/flutter_svg)
 
 <br>
 
