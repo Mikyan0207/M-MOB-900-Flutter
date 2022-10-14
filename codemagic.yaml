@@ -59,11 +59,10 @@ workflows:
           
           code_coverage=$(lcov --list $FCI_BUILD_DIR/coverage/lcov.info | sed -n "s/.*Total:|\(.*\)%.*/\1/p")
           
-          echo "Code Coverage: ${code_coverage}% " | bc); then { echo "uploading to codecov" }; fi 
+          echo "Code Coverage: ${code_coverage}% "
           if (( $(echo "$code_coverage < $CODE_COVERAGE_TARGET" | bc) ))
             then { echo "code coverage is less than expected" && exit 1; }
           fi
-
         test_report: test-results/flutter.json
       - name: Codecov upload
         script: |
