@@ -20,7 +20,8 @@ class PercentageRow extends StatelessWidget {
           .asMap(),
       children: <TableRow>[
         TableRow(
-          children: children,
+          children: children.map((Widget e) => IntrinsicHeight(child: e))
+              .toList(),
         ),
       ],
     );

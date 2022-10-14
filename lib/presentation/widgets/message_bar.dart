@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:starlight/presentation/widgets/percentage_row.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class MessageBar extends StatelessWidget {
-  const MessageBar({super.key});
+  MessageBar({super.key});
+
+  final TextEditingController textarea = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -13,109 +16,98 @@ class MessageBar extends StatelessWidget {
           child: ConstrainedBox(
             constraints: const BoxConstraints(
               minHeight: 25,
-              maxHeight: 150,
+              maxHeight: 50,
             ),
             child: DecoratedBox(
               decoration: BoxDecoration(
                 color: Vx.gray600,
-                borderRadius: BorderRadius.circular(6),
+                borderRadius: BorderRadius.circular(7),
               ),
               child: Padding(
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 8.0,
+                  horizontal: 2.0,
                 ),
-                child: IntrinsicHeight(
-                  child: Row(
-                    children: <Widget>[
-                      const Flexible(
-                        child: Icon(
-                          Icons.add_circle,
-                          color: Vx.gray400,
-                        ),
+                child: PercentageRow(
+                  percentages: const <double>[5, 80, 15],
+                  children: <Widget>[
+                    IconButton(
+                      icon: const Icon(
+                        Icons.add_circle,
+                        color: Vx.gray400,
                       ),
-                      Expanded(
-                        flex: 86,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                          child: Form(
-                            key: UniqueKey(),
-                            child: TextFormField(
-                              keyboardType: TextInputType.multiline,
-                              style: const TextStyle(
-                                color: Vx.gray300,
-                              ),
-                              cursorColor: Vx.gray400,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                focusedBorder: InputBorder.none,
-                                enabledBorder: InputBorder.none,
-                                errorBorder: InputBorder.none,
-                                disabledBorder: InputBorder.none,
-                                hintStyle: TextStyle(
-                                  color: Vx.gray500,
-                                  fontSize: Theme.of(context)
-                                      .textTheme
-                                      .subtitle2!
-                                      .fontSize,
-                                ),
-                                hintText: 'Message #{CHANNEL}',
-                                contentPadding: const EdgeInsets.all(15),
-                              ),
+                      onPressed: () {},
+                    ),
+                    Form(
+                      key: UniqueKey(),
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(
+                          maxHeight: 150,
+                        ),
+                        child: TextFormField(
+                          controller: textarea,
+                          maxLines: null,
+                          keyboardType: TextInputType.multiline,
+                          style: const TextStyle(
+                            color: Vx.gray100,
+                          ),
+                          cursorColor: Vx.gray400,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            focusedBorder: InputBorder.none,
+                            enabledBorder: InputBorder.none,
+                            errorBorder: InputBorder.none,
+                            disabledBorder: InputBorder.none,
+                            hintStyle: TextStyle(
+                              color: Vx.gray500,
+                              fontSize: Theme.of(context)
+                                  .textTheme
+                                  .subtitle2!
+                                  .fontSize,
                             ),
+                            hintText: 'Message #{CHANNEL}',
                           ),
                         ),
                       ),
-                      Flexible(
-                        flex: 20,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: <Widget>[
-                            const Flexible(
-                              flex: 5,
-                              child: Icon(
-                                Icons.sticky_note_2,
-                                color: Vx.gray300,
-                              ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        Flexible(
+                          child: IconButton(
+                            icon: const Icon(
+                              Icons.sticky_note_2,
+                              color: Vx.gray300,
                             ),
-                            const Flexible(
-                              flex: 5,
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 5.0,
-                                ),
-                                child: Icon(
-                                  Icons.emoji_emotions,
-                                  color: Vx.gray300,
-                                ),
-                              ),
-                            ),
-                            const Flexible(
-                              flex: 5,
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(
-                                  vertical: 8.0,
-                                ),
-                                child: VerticalDivider(
-                                  thickness: 0.5,
-                                  color: Vx.white,
-                                ),
-                              ),
-                            ),
-                            Flexible(
-                              flex: 5,
-                              child: IconButton(
-                                icon: const Icon(
-                                  Icons.send,
-                                  color: Vx.indigo400,
-                                ),
-                                onPressed: () {},
-                              ),
-                            ),
-                          ],
+                            onPressed: () {},
+                          ),
                         ),
-                      )
-                    ],
-                  ),
+                        Flexible(
+                          child: IconButton(
+                            icon: const Icon(
+                              Icons.emoji_emotions,
+                              color: Vx.gray300,
+                            ),
+                            onPressed: () {},
+                          ),
+                        ),
+                        const Flexible(
+                          child: VerticalDivider(
+                            thickness: 0.5,
+                            color: Vx.gray500,
+                          ),
+                        ),
+                        Flexible(
+                          child: IconButton(
+                            icon: const Icon(
+                              Icons.send,
+                              color: Vx.indigo400,
+                            ),
+                            onPressed: () {},
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
                 ),
               ),
             ),
