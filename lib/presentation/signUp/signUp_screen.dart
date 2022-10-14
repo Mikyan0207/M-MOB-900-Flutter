@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -181,7 +182,25 @@ class SignUpScreen extends StatelessWidget {
                       "Sign Up",
                       style: TextStyle(color: Vx.gray100, fontSize: 16),
                     ),
-                    onPressed: () {},
+                    onPressed: () async {
+                      try {
+                        final FirebaseAuth auth = FirebaseAuth.instance;
+                        User? user;
+                        final UserCredential userCredential = await auth.createUserWithEmailAndPassword(
+                            email: "barry.allen@example.com",
+                            password: "SuperSecretPassword!",
+                        );
+                        user = userCredential.user;
+                      } on FirebaseAuthException catch (e) {
+                        if (e.code == 'weak-password') {
+                          print('The password provided is too weak.');
+                        } else if (e.code == 'email-already-in-use') {
+                          print('The account already exists for that email.');
+                        }
+                      } catch (e) {
+                        print(e);
+                      }
+                    },
                   ),
                 ),
                 const SizedBox(

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -143,7 +144,22 @@ class SignInScreen extends StatelessWidget {
                       "Sign In",
                       style: TextStyle(color: Vx.gray100, fontSize: 16),
                     ),
-                    onPressed: () {},
+                    onPressed: () async {
+
+                      try {
+                        UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+                            email: "barry.allen@example.com",
+                            password: "SuperSecretPassword!",
+                        );
+                      } on FirebaseAuthException catch (e) {
+                        if (e.code == 'user-not-found') {
+                          print('No user found for that email.');
+                        } else if (e.code == 'wrong-password') {
+                          print('Wrong password provided for that user.');
+                        }
+                      }
+
+                    },
                   ),
                 ),
                 const SizedBox(
