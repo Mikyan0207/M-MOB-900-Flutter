@@ -1,38 +1,231 @@
+import 'dart:io';
+import 'dart:js';
+//import 'dart:html';
+import 'dart:math';
+import 'dart:typed_data';
+import 'package:image_picker_for_web/image_picker_for_web.dart';
+
+import 'package:image_cropper_for_web/image_cropper_for_web.dart';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/gestures.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_cropper/image_cropper.dart';
+//import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:starlight/presentation/sign_up/sign_up_screen.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
 import 'package:velocity_x/velocity_x.dart';
+import 'package:cross_file_image/cross_file_image.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../auth/auth_controller.dart';
+import '../widgets/CustomButton.dart';
+import '../widgets/ProfileWidget.dart';
+import 'AvatarClipper.dart';
 
-const darkColor = Color(0xFF49535C);
+const Color darkColor = Color(0xFF49535C);
 
-class AvatarClipper extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    return Path()
-      ..lineTo(0, size.height)
-      ..lineTo(8, size.height)
-      ..arcToPoint(Offset(114, size.height), radius: Radius.circular(1))
-      ..lineTo(size.width, size.height)
-      ..lineTo(size.width, 0)
-      ..close();
-  }
+
+class UserInfoScreen extends StatefulWidget {
+  const UserInfoScreen({super.key});
 
   @override
-  bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
-    return true;
-  }
+  State<UserInfoScreen> createState() => _UserInfoScreenState();
 }
 
-class userInfoScreen extends StatelessWidget {
-  userInfoScreen({super.key});
+class _UserInfoScreenState extends State<UserInfoScreen> {
+  XFile? imageFile;
+
+  File? imageFile2;
+
+  String? imageUrl;
+
+  String? myImage;
+
+  String? myName;
+
+  String? extension;
 
   final AuthController auth = Get.put(AuthController());
+
+  void _showImageDialog(BuildContext context)
+  {
+    showDialog(
+        context: context,
+        builder: (BuildContext context)
+        {
+          return AlertDialog(
+            title: const Text("Choose an option"),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                InkWell(
+                  onTap: ()
+                    {
+                     _getFromCamera();
+                    },
+                  child: Row(
+                    children: const [
+                      Padding(
+                        padding: EdgeInsets.all(4.0),
+                        child: Icon(
+                          Icons.camera,
+                          color: Colors.red,
+                        ),
+                      ),
+                      Text(
+                          "Camera",
+                        style: TextStyle(color: Colors.red),
+                      )
+                    ],
+                  ),
+                ),
+                InkWell(
+                  onTap: ()
+                  {
+                    _getFromGallery();
+                  },
+                  child: Row(
+                    children: const [
+                      Padding(
+                        padding: EdgeInsets.all(4.0),
+                        child: Icon(
+                          Icons.image,
+                          color: Colors.red,
+                        ),
+                      ),
+                      Text(
+                        "Image",
+                        style: TextStyle(color: Colors.red),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ),
+          );
+        }
+    );
+  }
+
+  void _getFromCamera() async
+  {
+
+  }
+
+  void _getFromGallery() async
+  {
+    //todo add this code for ios and android
+    /*
+    var pickedFile2 = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedFile2 != null)
+    {
+      imageFile2 = File(pickedFile2.path);
+      _upload_image();
+    }
+    */
+
+    //todo this code works for web
+    final XFile? pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    //final XFile? pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+
+    imageFile = XFile(pickedFile!.path);
+    if (imageFile != null)
+    {
+      _addGoodExtension(pickedFile.name);
+    }
+    _cropImage(pickedFile.path);
+  }
+
+  void _cropImage(String filePath) async
+  {
+    final CroppedFile? croppedImage = await ImageCropper().cropImage(
+      sourcePath: filePath,
+      maxHeight: 2080,
+      maxWidth: 2080,
+      aspectRatioPresets: [
+      CropAspectRatioPreset.square,
+      CropAspectRatioPreset.ratio3x2,
+      CropAspectRatioPreset.original,
+      CropAspectRatioPreset.ratio4x3,
+      CropAspectRatioPreset.ratio16x9
+      ],
+      uiSettings: [
+        AndroidUiSettings(
+            toolbarTitle: 'Cropper',
+            toolbarColor: Colors.deepOrange,
+            toolbarWidgetColor: Colors.white,
+            initAspectRatio: CropAspectRatioPreset.original,
+            lockAspectRatio: false,),
+        IOSUiSettings(
+          title: 'Cropper',
+        ),
+        WebUiSettings(
+          context: this.context,
+        ),
+      ],
+    );
+
+    if (croppedImage != null)
+    {
+      imageFile = XFile(croppedImage.path);
+      _upload_image();
+    }
+  }
+
+  void _addGoodExtension(String name)
+  {
+    extension = name.split('.').last.toString();
+  }
+
+  void _upload_image() async
+  {
+    /* todo code for ios and android
+    if (imageFile2 == null)
+    {
+      Fluttertoast.showToast(msg: "Please select an Image");
+      return;
+    }
+     */
+
+    if (imageFile == null)
+    {
+      await Fluttertoast.showToast(msg: "Please select an Image");
+      return;
+    }
+
+    try
+    {
+      //print(imageFile?.path);
+      final Reference ref = FirebaseStorage.instance.ref().child('userAvatarProfile/').child(DateTime.now().toString());
+      // if web
+      final SettableMetadata newMetadata = SettableMetadata(
+        cacheControl: "public,max-age=300",
+        contentType: "image/$extension",
+      );
+      await ref.putData(await imageFile!.readAsBytes(), newMetadata);
+      // todo add for IOS and Android (under this line)
+      //await ref.putFile(imageFile2!);
+      imageUrl = await ref.getDownloadURL();
+      await FirebaseFirestore.instance.collection('Users').doc("doc").update({
+      'Avatar': imageUrl,
+      });
+      imageFile = null;
+      extension = null;
+      await Fluttertoast.showToast(msg: "Image uploaded");
+    }
+    catch(e)
+    {
+      await Fluttertoast.showToast(msg: e.toString());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +276,9 @@ class userInfoScreen extends StatelessWidget {
                               children: [
                                 ProfileWidget(
                                   imagePath: "https://ddrg.farmasi.unej.ac.id/wp-content/uploads/sites/6/2017/10/unknown-person-icon-Image-from.png",
-                                  onClicked: ()  {},
+                                  onClicked: ()  {
+                                    _showImageDialog(context);
+                                  },
                                 ),
                                 const SizedBox(width: 20),
                                 Column(
@@ -139,61 +334,25 @@ class userInfoScreen extends StatelessWidget {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 8.0,
-                                    vertical: 18.0,
-                                  ),
-                                  backgroundColor: AppColors.primaryColor,
-                                  elevation: 0,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(6),
-                                  ),
-                                ),
-                                child: const Text(
-                                  "Modify",
-                                  style: TextStyle(color: Vx.gray100, fontSize: 10),
-                                ),
-                                onPressed: () {},
+                              CustomButton(
+                                customText: "Modify",
+                                onClicked: ()  {
+                                  null;
+                                },
                               ),
                               const SizedBox(height: 40),
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 8.0,
-                                    vertical: 18.0,
-                                  ),
-                                  backgroundColor: AppColors.primaryColor,
-                                  elevation: 0,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(6),
-                                  ),
-                                ),
-                                child: const Text(
-                                  "Modify",
-                                  style: TextStyle(color: Vx.gray100, fontSize: 10),
-                                ),
-                                onPressed: () {},
+                              CustomButton(
+                                  customText: "Modify",
+                                  onClicked: ()  {
+                                    null;
+                                  },
                               ),
                               const SizedBox(height: 40),
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 8.0,
-                                    vertical: 18.0,
-                                  ),
-                                  backgroundColor: AppColors.primaryColor,
-                                  elevation: 0,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(6),
-                                  ),
-                                ),
-                                child: const Text(
-                                  "Modify",
-                                  style: TextStyle(color: Vx.gray100, fontSize: 10),
-                                ),
-                                onPressed: () {},
+                              CustomButton(
+                                customText: "Modify",
+                                onClicked: ()  {
+                                  null;
+                                },
                               ),
                             ]
                           )
@@ -210,76 +369,4 @@ class userInfoScreen extends StatelessWidget {
     );
     throw UnimplementedError();
   }
-}
-class ProfileWidget extends StatelessWidget {
-
-  const ProfileWidget({
-    Key? key,
-    required this.imagePath,
-    required this.onClicked,
-  }) : super(key: key);
-  final String imagePath;
-  final VoidCallback onClicked;
-
-  @override
-  Widget build(BuildContext context) {
-    final Color color = Theme.of(context).colorScheme.primary;
-
-    return Center(
-      child: Stack(
-        children: [
-          buildImage(),
-          Positioned(
-            bottom: 0,
-            right: 4,
-            child: buildEditIcon(color),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget buildImage() {
-    final NetworkImage image = NetworkImage(imagePath);
-
-    return ClipOval(
-      child: Material(
-        color: Colors.transparent,
-        child: Ink.image(
-          image: image,
-          fit: BoxFit.cover,
-          width: 100,
-          height: 100,
-          child: InkWell(onTap: onClicked),
-        ),
-      ),
-    );
-  }
-
-  Widget buildEditIcon(Color color) => buildCircle(
-    color: Colors.white,
-    all: 3,
-    child: buildCircle(
-      color: color,
-      all: 8,
-      child: const Icon(
-        Icons.edit,
-        color: Colors.white,
-        size: 20,
-      ),
-    ),
-  );
-
-  Widget buildCircle({
-    required Widget child,
-    required double all,
-    required Color color,
-  }) =>
-      ClipOval(
-        child: Container(
-          padding: EdgeInsets.all(all),
-          color: color,
-          child: child,
-        ),
-      );
 }

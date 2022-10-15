@@ -2,12 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_firebase/models/user.dart';
 
 class DatabaseService {
-  final String uid;
 
   DatabaseService(this.uid);
+  final String uid;
 
   final CollectionReference<Map<String, dynamic>> userCollection =
-  FirebaseFirestore.instance.collection("users");
+  FirebaseFirestore.instance.collection("Users");
 
   Future<void> saveUser(String name, int waterCounter) async {
     return await userCollection.doc(uid).set({'name': name, 'waterCount': waterCounter});

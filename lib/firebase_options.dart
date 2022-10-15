@@ -80,4 +80,14 @@ class DefaultFirebaseOptions {
     iosClientId: '23479163395-k9i2ts2ld0n60oio9msoq197jhvcghbv.apps.googleusercontent.com',
     iosBundleId: 'com.example.starlight',
   );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: '',
+    appId: '',
+    messagingSenderId: '',
+    projectId: '',
+    authDomain: '',
+    storageBucket: '',
+    measurementId: '',
+  );
 }
