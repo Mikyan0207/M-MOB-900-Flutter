@@ -3,6 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:starlight/presentation/home/home_screen.dart';
 import 'package:starlight/presentation/sign_up/sign_up_screen.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -157,18 +158,12 @@ class SignInScreen extends StatelessWidget {
                     ),
                     onPressed: () async {
 
-                      try {
-                        final FirebaseAuth auth = FirebaseAuth.instance;
-                        final UserCredential userCredential = await auth.signInWithEmailAndPassword(
-                          email: emailController.text,
-                          password: passwordController.text,
-                        );
-                        // User? user = userCredential.user;
-                      } on FirebaseAuthException catch (e) {
-                        if (e.code == 'user-not-found') {
-                        } else if (e.code == 'wrong-password') {
-                        }
+                      if (await auth.loginAsync(emailController.text, passwordController.text)) {
+                        await Get.to(const Home());
                       }
+
+                      // TODO(florian): Error message.
+
                     },
                   ),
                 ),

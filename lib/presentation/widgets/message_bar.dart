@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:starlight/presentation/themes/theme_colors.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class MessageBar extends StatelessWidget {
@@ -19,7 +20,7 @@ class MessageBar extends StatelessWidget {
             ),
             child: DecoratedBox(
               decoration: BoxDecoration(
-                color: Vx.gray500,
+                color: AppColors.black400,
                 borderRadius: BorderRadius.circular(7),
               ),
               child: Padding(
@@ -42,44 +43,41 @@ class MessageBar extends StatelessWidget {
                       ),
                       Expanded(
                         flex: 9,
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 5.0),
-                          child: Form(
-                            key: UniqueKey(),
-                            child: ConstrainedBox(
-                              constraints: const BoxConstraints(
-                                maxHeight: 150,
+                        child: Form(
+                          key: UniqueKey(),
+                          child: ConstrainedBox(
+                            constraints: const BoxConstraints(
+                              maxHeight: 150,
+                            ),
+                            child: TextFormField(
+                              controller: textarea,
+                              maxLines: null,
+                              keyboardType: TextInputType.multiline,
+                              style: const TextStyle(
+                                color: Vx.gray100,
                               ),
-                              child: TextFormField(
-                                controller: textarea,
-                                maxLines: null,
-                                keyboardType: TextInputType.multiline,
-                                style: const TextStyle(
-                                  color: Vx.gray100,
+                              cursorColor: Vx.gray400,
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                focusedBorder: InputBorder.none,
+                                enabledBorder: InputBorder.none,
+                                errorBorder: InputBorder.none,
+                                disabledBorder: InputBorder.none,
+                                hintStyle: TextStyle(
+                                  color: Vx.gray500,
+                                  fontSize: Theme.of(context)
+                                      .textTheme
+                                      .subtitle2!
+                                      .fontSize,
                                 ),
-                                cursorColor: Vx.gray400,
-                                decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  focusedBorder: InputBorder.none,
-                                  enabledBorder: InputBorder.none,
-                                  errorBorder: InputBorder.none,
-                                  disabledBorder: InputBorder.none,
-                                  hintStyle: TextStyle(
-                                    color: Vx.gray500,
-                                    fontSize: Theme.of(context)
-                                        .textTheme
-                                        .subtitle2!
-                                        .fontSize,
-                                  ),
-                                  hintText: 'Message #{CHANNEL}',
-                                ),
+                                hintText: 'Message #{CHANNEL}',
                               ),
                             ),
                           ),
                         ),
                       ),
                       Flexible(
-                        flex: context.isMobile ? 6 : 4,
+                        flex: 7,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: <Widget>[
@@ -101,11 +99,11 @@ class MessageBar extends StatelessWidget {
                                 onPressed: () {},
                               ),
                             ),
-                            const Flexible(
+                            Flexible(
                               child: Padding(
-                                padding: EdgeInsets.symmetric(vertical: 6.0),
+                                padding: const EdgeInsets.symmetric(vertical: 10.0),
                                 child: VerticalDivider(
-                                  thickness: 0.5,
+                                  thickness: context.isMobile ? 1 : 0.5,
                                   color: Vx.gray400,
                                 ),
                               ),

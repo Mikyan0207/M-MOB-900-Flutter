@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:starlight/presentation/themes/theme_colors.dart';
 
 class RightPanel extends StatelessWidget {
   const RightPanel({super.key});
@@ -7,7 +8,7 @@ class RightPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.blue,
+      color: AppColors.black700,
     );
   }
   

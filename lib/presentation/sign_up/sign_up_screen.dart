@@ -3,6 +3,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:starlight/domain/entities/user_entity.dart';
+import 'package:starlight/domain/repositories/user_repository.dart';
 import 'package:starlight/presentation/sign_in/sign_in_screen.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -13,6 +15,7 @@ class SignUpScreen extends StatelessWidget {
   SignUpScreen({super.key});
 
   final AuthController auth = Get.put(AuthController());
+  final UserRepository userRepository = UserRepository();
 
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -199,11 +202,19 @@ class SignUpScreen extends StatelessWidget {
                       try {
                         final FirebaseAuth auth = FirebaseAuth.instance;
                         User? user;
-                        final UserCredential userCredential = await auth.createUserWithEmailAndPassword(
-                            email: emailController.text,
-                            password: passwordController.text,
+                        final UserCredential userCredential =
+                            await auth.createUserWithEmailAndPassword(
+                          email: emailController.text,
+                          password: passwordController.text,
                         );
                         user = userCredential.user;
+
+                        await userRepository.create(
+                          UserEntity(
+                            id: user?.uid,
+                            email: user?.email,
+                          ),
+                        );
                       } on FirebaseAuthException catch (e) {
                         if (e.code == 'weak-password') {
                           print('The password provided is too weak.');
