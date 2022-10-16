@@ -1,29 +1,13 @@
 import 'dart:io';
-import 'dart:js';
-//import 'dart:html';
-import 'dart:math';
-import 'dart:typed_data';
-import 'package:image_picker_for_web/image_picker_for_web.dart';
-
-import 'package:image_cropper_for_web/image_cropper_for_web.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/gestures.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:image_cropper/image_cropper.dart';
-//import 'package:image_picker/image_picker.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get/get.dart';
-import 'package:starlight/presentation/sign_up/sign_up_screen.dart';
-import 'package:starlight/presentation/themes/theme_colors.dart';
-import 'package:velocity_x/velocity_x.dart';
-import 'package:cross_file_image/cross_file_image.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 import '../../auth/auth_controller.dart';
 import '../widgets/CustomButton.dart';
@@ -122,26 +106,15 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
 
   void _getFromGallery() async
   {
-    //todo add this code for ios and android
-    /*
-    var pickedFile2 = await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (pickedFile2 != null)
-    {
-      imageFile2 = File(pickedFile2.path);
-      _upload_image();
-    }
-    */
-
-    //todo this code works for web
     final XFile? pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
-    //final XFile? pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
 
+    print(pickedFile?.path);
     imageFile = XFile(pickedFile!.path);
     if (imageFile != null)
     {
       _addGoodExtension(pickedFile.name);
+      _cropImage(pickedFile.path);
     }
-    _cropImage(pickedFile.path);
   }
 
   void _cropImage(String filePath) async

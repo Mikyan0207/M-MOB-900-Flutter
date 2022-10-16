@@ -17,7 +17,7 @@ dependencies:
   firebase_crashlytics: "^2.0.4"
   firebase_storage: "^10.3.11"
   image_picker: "^0.8.6"
-  fluttertoast: 8.0.6
+  fluttertoast: ^8.1.1
   intl: 0.17.0
   cloud_firestore: "^3.5.1"
 
@@ -35,8 +35,6 @@ dependencies:
   adaptive_breakpoints: ^0.1.4
   cross_file_image: ^1.0.0
   image_cropper: ^3.0.0
-  universal_html: ^2.0.8
-  image_picker_for_web: ^2.1.10
 dev_dependencies: 
   flutter_lints: ^2.0.0
   pubspec_dependency_sorter: ^0.0.1
