@@ -7,11 +7,13 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
+import 'package:starlight/presentation/userInfo/AlertDialogWidgetChangeInfo.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import '../../auth/auth_controller.dart';
 import '../widgets/CustomButton.dart';
 import '../widgets/ProfileWidget.dart';
+import 'AlertDialogWidgetChangeInfo.dart';
 import 'AvatarClipper.dart';
 
 const Color darkColor = Color(0xFF49535C);
@@ -39,60 +41,18 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
 
   final AuthController auth = Get.put(AuthController());
 
-  void _showImageDialog(BuildContext context)
+  // todo create a widget 
+  void _showImageDialog(BuildContext context, String title, List<Widget> widgetChildren)
   {
     showDialog(
         context: context,
         builder: (BuildContext context)
         {
           return AlertDialog(
-            title: const Text("Choose an option"),
+            title: Text(title),
             content: Column(
               mainAxisSize: MainAxisSize.min,
-              children: [
-                InkWell(
-                  onTap: ()
-                    {
-                     _getFromCamera();
-                    },
-                  child: Row(
-                    children: const [
-                      Padding(
-                        padding: EdgeInsets.all(4.0),
-                        child: Icon(
-                          Icons.camera,
-                          color: Colors.red,
-                        ),
-                      ),
-                      Text(
-                          "Camera",
-                        style: TextStyle(color: Colors.red),
-                      )
-                    ],
-                  ),
-                ),
-                InkWell(
-                  onTap: ()
-                  {
-                    _getFromGallery();
-                  },
-                  child: Row(
-                    children: const [
-                      Padding(
-                        padding: EdgeInsets.all(4.0),
-                        child: Icon(
-                          Icons.image,
-                          color: Colors.red,
-                        ),
-                      ),
-                      Text(
-                        "Image",
-                        style: TextStyle(color: Colors.red),
-                      )
-                    ],
-                  ),
-                )
-              ],
+              children: widgetChildren,
             ),
           );
         }
@@ -108,7 +68,6 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
   {
     final XFile? pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
 
-    print(pickedFile?.path);
     imageFile = XFile(pickedFile!.path);
     if (imageFile != null)
     {
@@ -141,7 +100,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
           title: 'Cropper',
         ),
         WebUiSettings(
-          context: this.context,
+          context: context,
         ),
       ],
     );
@@ -160,14 +119,6 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
 
   void _upload_image() async
   {
-    /* todo code for ios and android
-    if (imageFile2 == null)
-    {
-      Fluttertoast.showToast(msg: "Please select an Image");
-      return;
-    }
-     */
-
     if (imageFile == null)
     {
       await Fluttertoast.showToast(msg: "Please select an Image");
@@ -176,16 +127,12 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
 
     try
     {
-      //print(imageFile?.path);
       final Reference ref = FirebaseStorage.instance.ref().child('userAvatarProfile/').child(DateTime.now().toString());
-      // if web
       final SettableMetadata newMetadata = SettableMetadata(
         cacheControl: "public,max-age=300",
         contentType: "image/$extension",
       );
       await ref.putData(await imageFile!.readAsBytes(), newMetadata);
-      // todo add for IOS and Android (under this line)
-      //await ref.putFile(imageFile2!);
       imageUrl = await ref.getDownloadURL();
       await FirebaseFirestore.instance.collection('Users').doc("doc").update({
       'Avatar': imageUrl,
@@ -250,7 +197,50 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                 ProfileWidget(
                                   imagePath: "https://ddrg.farmasi.unej.ac.id/wp-content/uploads/sites/6/2017/10/unknown-person-icon-Image-from.png",
                                   onClicked: ()  {
-                                    _showImageDialog(context);
+                                    _showImageDialog(context, "Choose an option", [
+                                      InkWell(
+                                        onTap: ()
+                                        {
+                                          _getFromCamera();
+                                        },
+                                        child: Row(
+                                          children: const [
+                                            Padding(
+                                              padding: EdgeInsets.all(4.0),
+                                              child: Icon(
+                                                Icons.camera,
+                                                color: Colors.red,
+                                              ),
+                                            ),
+                                            Text(
+                                              "Camera",
+                                              style: TextStyle(color: Colors.red),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                      InkWell(
+                                        onTap: ()
+                                        {
+                                          _getFromGallery();
+                                        },
+                                        child: Row(
+                                          children: const [
+                                            Padding(
+                                              padding: EdgeInsets.all(4.0),
+                                              child: Icon(
+                                                Icons.image,
+                                                color: Colors.red,
+                                              ),
+                                            ),
+                                            Text(
+                                              "Image",
+                                              style: TextStyle(color: Colors.red),
+                                            )
+                                          ],
+                                        ),
+                                      )
+                                    ],);
                                   },
                                 ),
                                 const SizedBox(width: 20),
@@ -310,23 +300,23 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                               CustomButton(
                                 customText: "Modify",
                                 onClicked: ()  {
-                                  null;
+                                  displayModifyInfoDialog(context, "Change your username");
                                 },
                               ),
                               const SizedBox(height: 40),
                               CustomButton(
                                   customText: "Modify",
                                   onClicked: ()  {
-                                    null;
+                                    displayModifyInfoDialog(context, "Change your email");
                                   },
                               ),
                               const SizedBox(height: 40),
                               CustomButton(
                                 customText: "Modify",
                                 onClicked: ()  {
-                                  null;
+                                  displayModifyInfoDialog(context, "Modify your password");
                                 },
-                              ),
+                              ),,
                             ]
                           )
                         ],
