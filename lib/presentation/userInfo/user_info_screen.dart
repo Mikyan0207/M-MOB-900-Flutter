@@ -41,7 +41,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
 
   final AuthController auth = Get.put(AuthController());
 
-  // todo create a widget 
+  // todo create a widget
   void _showImageDialog(BuildContext context, String title, List<Widget> widgetChildren)
   {
     showDialog(
@@ -300,23 +300,23 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                               CustomButton(
                                 customText: "Modify",
                                 onClicked: ()  {
-                                  displayModifyInfoDialog(context, "Change your username");
+                                  displayModifyInfoDialog(context, "Change your username", "Username");
                                 },
                               ),
                               const SizedBox(height: 40),
                               CustomButton(
                                   customText: "Modify",
                                   onClicked: ()  {
-                                    displayModifyInfoDialog(context, "Change your email");
+                                    displayModifyInfoDialog(context, "Change your email", "email");
                                   },
                               ),
                               const SizedBox(height: 40),
                               CustomButton(
                                 customText: "Modify",
                                 onClicked: ()  {
-                                  displayModifyInfoDialog(context, "Modify your password");
+                                  displayModifyInfoDialog(context, "Modify your password", "password");
                                 },
-                              ),,
+                              ),
                             ]
                           )
                         ],

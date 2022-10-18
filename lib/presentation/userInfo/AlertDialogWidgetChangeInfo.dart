@@ -1,10 +1,31 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import '../themes/theme_colors.dart';
 import '../widgets/CustomButton.dart';
 
-Future<void> displayModifyInfoDialog(BuildContext context, String title) async {
+void updateDataUserInFirebase(String field, String value) async
+{
+  try
+  {
+    await FirebaseFirestore.instance.collection('Users').doc("doc").update({
+      field: value,
+    });
+
+    await Fluttertoast.showToast(msg: "$field changed");
+  }
+  catch(e)
+  {
+    await Fluttertoast.showToast(msg: e.toString());
+  }
+
+
+
+}
+
+Future<void> displayModifyInfoDialog(BuildContext context, String title, String contentString) async {
   String? valueText;
   String? codeDialog;
   final TextEditingController textFieldController = TextEditingController();
@@ -19,12 +40,32 @@ Future<void> displayModifyInfoDialog(BuildContext context, String title) async {
                 valueText = value;
             },
             controller: textFieldController,
-            decoration: const InputDecoration(hintText: "Text Field in Dialog"),
+            decoration: InputDecoration(
+              labelStyle: const TextStyle(
+                color: Vx.gray300,
+                fontWeight: FontWeight.w300,
+              ),
+              labelText: contentString,
+              focusedBorder: const OutlineInputBorder(
+                borderSide:
+                BorderSide(color: Color(0xFF8667f2), width: 2),
+              ),
+              enabledBorder: const OutlineInputBorder(
+                borderSide:
+                BorderSide(color: Color(0xFF8667f2), width: 2),
+              ),
+              errorBorder: const OutlineInputBorder(
+                borderSide:
+                BorderSide(color: Color(0xFF8667f2), width: 2),
+              ),
+            ),
           ),
           actions: <Widget>[
             CustomButton(customText: 'Submit', onClicked: () {
                 codeDialog = valueText;
                 // todo update in firebase data of user
+                updateDataUserInFirebase(contentString, textFieldController.text);
+                return;
             },
             ),
           ],
