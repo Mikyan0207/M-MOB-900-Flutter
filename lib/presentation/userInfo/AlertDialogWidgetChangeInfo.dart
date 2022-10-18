@@ -26,8 +26,6 @@ void updateDataUserInFirebase(String field, String value) async
 }
 
 Future<void> displayModifyInfoDialog(BuildContext context, String title, String contentString) async {
-  String? valueText;
-  String? codeDialog;
   final TextEditingController textFieldController = TextEditingController();
 
   return showDialog(
@@ -36,9 +34,6 @@ Future<void> displayModifyInfoDialog(BuildContext context, String title, String 
         return AlertDialog(
           title: Text(title),
           content: TextField(
-            onChanged: (String value) {
-                valueText = value;
-            },
             controller: textFieldController,
             decoration: InputDecoration(
               labelStyle: const TextStyle(
@@ -62,8 +57,6 @@ Future<void> displayModifyInfoDialog(BuildContext context, String title, String 
           ),
           actions: <Widget>[
             CustomButton(customText: 'Submit', onClicked: () {
-                codeDialog = valueText;
-                // todo update in firebase data of user
                 updateDataUserInFirebase(contentString, textFieldController.text);
                 return;
             },
