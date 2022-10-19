@@ -15,7 +15,7 @@ class SignInScreen extends StatelessWidget {
   final AuthController auth = Get.put(AuthController());
 
   final TextEditingController emailController = TextEditingController();
-  final   TextEditingController passwordController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -158,12 +158,12 @@ class SignInScreen extends StatelessWidget {
                     onPressed: () async {
 
                       try {
-                        final FirebaseAuth auth = FirebaseAuth.instance;
-                        final UserCredential userCredential = await auth.signInWithEmailAndPassword(
+                        final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+                        //todo: store response in variable and assign to auth from GetX -> final UserCredential userCredential =
+                        await firebaseAuth.signInWithEmailAndPassword(
                           email: emailController.text,
                           password: passwordController.text,
                         );
-                        // User? user = userCredential.user;
                       } on FirebaseAuthException catch (e) {
                         if (e.code == 'user-not-found') {
                         } else if (e.code == 'wrong-password') {

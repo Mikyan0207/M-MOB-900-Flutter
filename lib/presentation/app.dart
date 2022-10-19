@@ -31,7 +31,7 @@ class App extends StatelessWidget {
       title: 'Starlight',
       debugShowCheckedModeBanner: false,
       routes: Routes.getAll(),
-      initialRoute: RouteList.home,
+      initialRoute: RouteList.userInfo,
       theme: appTheme(context),
     );
   }
