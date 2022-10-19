@@ -61,7 +61,15 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
 
   void _getFromCamera() async
   {
+    // todo try this code on mobile phone + hide this choice for web  
+    final XFile? pickedFile = await ImagePicker().pickImage(source: ImageSource.camera);
 
+    imageFile = XFile(pickedFile!.path);
+    if (imageFile != null)
+    {
+      _addGoodExtension(pickedFile.name);
+      _cropImage(pickedFile.path);
+    }
   }
 
   void _getFromGallery() async
