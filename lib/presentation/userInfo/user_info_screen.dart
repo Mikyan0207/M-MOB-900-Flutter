@@ -2,19 +2,18 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
-import 'package:starlight/presentation/userInfo/AlertDialogWidgetChangeInfo.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:starlight/presentation/userInfo/alert_dialog_widget_change_info.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import '../../auth/auth_controller.dart';
-import '../widgets/CustomButton.dart';
-import '../widgets/ProfileWidget.dart';
-import 'AlertDialogWidgetChangeInfo.dart';
-import 'AvatarClipper.dart';
+import '../widgets/custom_button.dart';
+import '../widgets/profile_widget.dart';
+import 'avatar_clipper.dart';
 
 const Color darkColor = Color(0xFF49535C);
 
@@ -55,7 +54,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
               children: widgetChildren,
             ),
           );
-        }
+        },
     );
   }
 
@@ -90,14 +89,14 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
       sourcePath: filePath,
       maxHeight: 2080,
       maxWidth: 2080,
-      aspectRatioPresets: [
-      CropAspectRatioPreset.square,
-      CropAspectRatioPreset.ratio3x2,
-      CropAspectRatioPreset.original,
-      CropAspectRatioPreset.ratio4x3,
-      CropAspectRatioPreset.ratio16x9
+      aspectRatioPresets: <CropAspectRatioPreset> [
+        CropAspectRatioPreset.square,
+        CropAspectRatioPreset.ratio3x2,
+        CropAspectRatioPreset.original,
+        CropAspectRatioPreset.ratio4x3,
+        CropAspectRatioPreset.ratio16x9
       ],
-      uiSettings: [
+      uiSettings: <PlatformUiSettings> [
         AndroidUiSettings(
             toolbarTitle: 'Cropper',
             toolbarColor: Colors.deepOrange,
@@ -116,7 +115,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     if (croppedImage != null)
     {
       imageFile = XFile(croppedImage.path);
-      _upload_image();
+      uploadImage();
     }
   }
 
@@ -125,7 +124,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     extension = name.split('.').last.toString();
   }
 
-  void _upload_image() async
+  void uploadImage() async
   {
     if (imageFile == null)
     {
@@ -142,7 +141,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
       );
       await ref.putData(await imageFile!.readAsBytes(), newMetadata);
       imageUrl = await ref.getDownloadURL();
-      await FirebaseFirestore.instance.collection('Users').doc("doc").update({
+      await FirebaseFirestore.instance.collection('Users').doc("doc").update(<String, Object?>{
       'Avatar': imageUrl,
       });
       imageFile = null;
@@ -179,11 +178,11 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+                  children: <Widget>[
                     SizedBox(
                       height: 150,
                       child: Stack(
-                        children: [
+                        children:<Widget> [
                           ClipPath(
                             clipper: AvatarClipper(),
                             child: Container(
@@ -201,18 +200,18 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                             left: 11,
                             top: 50,
                             child: Row(
-                              children: [
+                              children:<Widget> [
                                 ProfileWidget(
                                   imagePath: "https://ddrg.farmasi.unej.ac.id/wp-content/uploads/sites/6/2017/10/unknown-person-icon-Image-from.png",
                                   onClicked: ()  {
-                                    _showImageDialog(context, "Choose an option", [
+                                    _showImageDialog(context, "Choose an option", <Widget>[
                                       InkWell(
                                         onTap: ()
                                         {
                                           _getFromCamera();
                                         },
                                         child: Row(
-                                          children: const [
+                                          children: const <Widget> [
                                             Padding(
                                               padding: EdgeInsets.all(4.0),
                                               child: Icon(
@@ -233,7 +232,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                           _getFromGallery();
                                         },
                                         child: Row(
-                                          children: const [
+                                          children: const <Widget>[
                                             Padding(
                                               padding: EdgeInsets.all(4.0),
                                               child: Icon(
@@ -254,7 +253,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                 const SizedBox(width: 20),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: const [
+                                  children: const <Widget> [
                                     Text(
                                       "Username",
                                       style: TextStyle(
@@ -278,10 +277,10 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
+                        children:<Widget> [
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: const [
+                            children: const <Widget> [
                               Text(
                                 style: TextStyle( fontSize: 16 ,fontWeight: FontWeight.bold),
                                 "Username:",
@@ -304,7 +303,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                           ),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
+                            children: <Widget>[
                               CustomButton(
                                 customText: "Modify",
                                 onClicked: ()  {
@@ -325,8 +324,8 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                   displayModifyInfoDialog(context, "Modify your password", "password");
                                 },
                               ),
-                            ]
-                          )
+                            ],
+                          ),
                         ],
                       ),
                     ),
@@ -338,6 +337,5 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
         ),
       ),
     );
-    throw UnimplementedError();
   }
 }

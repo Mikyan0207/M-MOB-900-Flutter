@@ -3,15 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:velocity_x/velocity_x.dart';
 
-import '../themes/theme_colors.dart';
-import '../widgets/CustomButton.dart';
+import '../widgets/custom_button.dart';
 
 void updateDataUserInFirebase(String field, String value) async
 {
   // todo if change email and password -> change in firebase authentication
   try
   {
-    await FirebaseFirestore.instance.collection('Users').doc("doc").update({
+    await FirebaseFirestore.instance.collection('Users').doc("doc").update(<String, Object?>{
       field: value,
     });
 

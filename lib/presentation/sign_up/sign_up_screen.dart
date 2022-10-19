@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:starlight/presentation/sign_in/sign_in_screen.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -14,8 +15,8 @@ class SignUpScreen extends StatelessWidget {
 
   final AuthController auth = Get.put(AuthController());
 
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -197,21 +198,18 @@ class SignUpScreen extends StatelessWidget {
                     ),
                     onPressed: () async {
                       try {
-                        final FirebaseAuth auth = FirebaseAuth.instance;
-                        User? user;
-                        final UserCredential userCredential = await auth.createUserWithEmailAndPassword(
-                            email: emailController.text,
-                            password: passwordController.text,
+                        final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+                        //todo: store response in variable and assign to auth from GetX -> final UserCredential userCredential =
+                        await firebaseAuth.signInWithEmailAndPassword(
+                          email: emailController.text,
+                          password: passwordController.text,
                         );
-                        user = userCredential.user;
                       } on FirebaseAuthException catch (e) {
                         if (e.code == 'weak-password') {
-                          print('The password provided is too weak.');
-                        } else if (e.code == 'email-already-in-use') {
-                          print('The account already exists for that email.');
+                          await Fluttertoast.showToast(msg: 'The password provided is too weak.');
                         }
                       } catch (e) {
-                        print(e);
+                        await Fluttertoast.showToast(msg: e.toString());
                       }
                     },
                   ),

@@ -23,10 +23,6 @@ class CustomButton extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
-    final Color color = Theme
-        .of(context)
-        .colorScheme
-        .primary;
 
     return ElevatedButton(
       style: ElevatedButton.styleFrom(

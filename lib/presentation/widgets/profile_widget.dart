@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ProfileWidget extends StatelessWidget {
@@ -17,7 +16,7 @@ class ProfileWidget extends StatelessWidget {
 
     return Center(
       child: Stack(
-        children: [
+        children: <Widget> [
           buildImage(),
           Positioned(
             bottom: 0,
