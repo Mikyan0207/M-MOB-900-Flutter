@@ -8,6 +8,7 @@ import '../widgets/CustomButton.dart';
 
 void updateDataUserInFirebase(String field, String value) async
 {
+  // todo if change email and password -> change in firebase authentication
   try
   {
     await FirebaseFirestore.instance.collection('Users').doc("doc").update({
