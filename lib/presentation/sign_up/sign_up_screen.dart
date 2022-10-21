@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:starlight/domain/entities/user_entity.dart';
+import 'package:starlight/domain/repositories/user_repository.dart';
 import 'package:starlight/presentation/sign_in/sign_in_screen.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -14,6 +16,7 @@ class SignUpScreen extends StatelessWidget {
   SignUpScreen({super.key});
 
   final AuthController auth = Get.put(AuthController());
+  final UserRepository userRepository = UserRepository();
 
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -199,10 +202,19 @@ class SignUpScreen extends StatelessWidget {
                     onPressed: () async {
                       try {
                         final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-                        //todo: store response in variable and assign to auth from GetX -> final UserCredential userCredential =
-                        await firebaseAuth.signInWithEmailAndPassword(
+                        User? user;
+                        final UserCredential userCredential =
+                            await firebaseAuth.createUserWithEmailAndPassword(
                           email: emailController.text,
                           password: passwordController.text,
+                        );
+                        user = userCredential.user;
+
+                        await userRepository.create(
+                          UserEntity(
+                            id: user?.uid,
+                            email: user?.email,
+                          ),
                         );
                       } on FirebaseAuthException catch (e) {
                         if (e.code == 'weak-password') {

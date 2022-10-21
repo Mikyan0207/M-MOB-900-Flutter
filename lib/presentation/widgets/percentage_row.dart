@@ -15,7 +15,7 @@ class PercentageRow extends StatelessWidget {
     return Table(
       defaultVerticalAlignment: TableCellVerticalAlignment.middle,
       columnWidths: percentages
-          .map((double p) => IntrinsicColumnWidth(flex: p))
+          .map((double p) => FlexColumnWidth(p))
           .toList()
           .asMap(),
       children: <TableRow>[

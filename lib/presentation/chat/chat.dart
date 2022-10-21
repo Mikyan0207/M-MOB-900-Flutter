@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:starlight/presentation/themes/theme_colors.dart';
 import 'package:starlight/presentation/widgets/message_bar.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -9,7 +10,7 @@ class Chat extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: Vx.gray700,
+        color: AppColors.black500,
         height: double.infinity,
         width: double.infinity,
         child: Column(

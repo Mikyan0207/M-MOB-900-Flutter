@@ -1,11 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:overlapping_panels/overlapping_panels.dart';
+import 'package:starlight/presentation/chat/chat.dart';
 import 'package:starlight/presentation/left/left_panel.dart';
 import 'package:starlight/presentation/right/right_panel.dart';
 import 'package:velocity_x/velocity_x.dart';
-
-import '../chat/chat.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});
@@ -32,24 +31,12 @@ class Home extends StatelessWidget {
               },
             ),
           ),
-          web: SizedBox(
-            width: double.infinity,
-            height: double.infinity,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: const <Widget>[
-                Expanded(
-                  child: LeftPanel(),
-                ),
-                Expanded(
-                  flex: 5,
-                  child: Chat(),
-                ),
-                Expanded(
-                  child: RightPanel(),
-                ),
-              ],
-            ),
+          web: Row(
+            children: const <Widget>[
+              SizedBox(width: 350, child: LeftPanel()),
+              Expanded(child: Chat()),
+              SizedBox(width: 275, child: RightPanel()),
+            ],
           ),
         ),
       ],
