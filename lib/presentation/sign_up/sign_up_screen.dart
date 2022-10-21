@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:starlight/domain/entities/user_entity.dart';
 import 'package:starlight/domain/repositories/user_repository.dart';
@@ -17,8 +18,8 @@ class SignUpScreen extends StatelessWidget {
   final AuthController auth = Get.put(AuthController());
   final UserRepository userRepository = UserRepository();
 
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -200,10 +201,10 @@ class SignUpScreen extends StatelessWidget {
                     ),
                     onPressed: () async {
                       try {
-                        final FirebaseAuth auth = FirebaseAuth.instance;
+                        final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
                         User? user;
                         final UserCredential userCredential =
-                            await auth.createUserWithEmailAndPassword(
+                            await firebaseAuth.createUserWithEmailAndPassword(
                           email: emailController.text,
                           password: passwordController.text,
                         );
@@ -217,12 +218,10 @@ class SignUpScreen extends StatelessWidget {
                         );
                       } on FirebaseAuthException catch (e) {
                         if (e.code == 'weak-password') {
-                          print('The password provided is too weak.');
-                        } else if (e.code == 'email-already-in-use') {
-                          print('The account already exists for that email.');
+                          await Fluttertoast.showToast(msg: 'The password provided is too weak.');
                         }
                       } catch (e) {
-                        print(e);
+                        await Fluttertoast.showToast(msg: e.toString());
                       }
                     },
                   ),
