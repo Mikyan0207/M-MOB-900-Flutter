@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -7,7 +8,18 @@ import '../widgets/custom_button.dart';
 
 void updateDataUserInFirebase(String field, String value) async
 {
-  // todo if change email and password -> change in firebase authentication
+  // todo check if it's work
+
+  if (field == "mail" || field == "password")
+  {
+    final User? user = FirebaseAuth.instance.currentUser;
+    if (field == "mail") {
+      await user?.updateEmail(value);
+    } else {
+      await user?.updatePassword(value);
+    }
+  }
+
   try
   {
     await FirebaseFirestore.instance.collection('Users').doc("doc").update(<String, Object?>{
