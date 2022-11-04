@@ -1,5 +1,6 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:starlight/domain/entities/user_entity.dart';
 import 'package:starlight/domain/repositories/user_repository.dart';
@@ -22,15 +23,19 @@ class AuthController extends GetxController {
         return false;
       }
 
-      print(userCredential.user!.uid);
-
       currentUser = await _userRepository.get(userCredential.user!.uid);
-
-      print(currentUser);
+      await Fluttertoast.showToast(msg: 'Nique mouk');
 
       return true;
 
-    } on FirebaseAuthException catch (_) {
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        await Fluttertoast.showToast(msg: 'User not find');
+      }
+      else
+      {
+        await Fluttertoast.showToast(msg: e.toString());
+      }
       return false;
     }
   }

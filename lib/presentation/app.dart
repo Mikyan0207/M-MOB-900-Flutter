@@ -38,7 +38,7 @@ class App extends StatelessWidget {
       ],
       debugShowCheckedModeBanner: false,
       routes: Routes.getAll(),
-      initialRoute: RouteList.userInfo,
+      initialRoute: RouteList.signIn,
       theme: appTheme(context),
     );
   }

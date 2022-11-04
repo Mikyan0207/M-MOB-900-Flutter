@@ -19,22 +19,13 @@ dependencies:
   image_picker: "^0.8.6"
   fluttertoast: ^8.1.1
   intl: 0.17.0
-  cloud_firestore: "^3.5.1"
 
   blackfoot_flutter_lint: ^1.0.6
   cloud_firestore: ^3.5.1
   cupertino_icons: ^1.0.2
-  firebase_auth: ^3.11.2
-  firebase_core: ^1.2.0
-  firebase_crashlytics: ^2.0.4
-  firebase_storage: ^10.3.11
   flutter_svg: ^1.1.5
-  fluttertoast: 8.0.6
   get: ^4.6.5
   google_fonts: ^3.0.1
-  image_picker: 0.7.4
-  intl: 0.17.0
-  overlapping_panels: ^0.0.3
   velocity_x: ^3.5.1
   flutter: 
     sdk: flutter
