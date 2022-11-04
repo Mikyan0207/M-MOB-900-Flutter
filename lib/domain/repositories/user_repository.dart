@@ -21,8 +21,6 @@ class UserRepository {
             .first
             .data();
 
-    print("Hello ${data['Servers'] as List<dynamic>}");
-
     final UserEntity user = UserEntity.fromJson(data);
 
     for (String serverId in data['Servers']) {
