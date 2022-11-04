@@ -63,6 +63,7 @@ class SignUpScreen extends StatelessWidget {
                   width: 400,
                   child: TextFormField(
                     controller: emailController,
+                    style: const TextStyle(color: AppColors.white),
                     decoration: const InputDecoration(
                       labelStyle: TextStyle(
                         color: Vx.gray300,
@@ -105,6 +106,7 @@ class SignUpScreen extends StatelessWidget {
                     child: TextFormField(
                       controller: passwordController,
                       obscureText: true,
+                      style: const TextStyle(color: AppColors.white),
                       decoration: const InputDecoration(
                         labelStyle: TextStyle(
                           color: Vx.gray300,
@@ -220,7 +222,8 @@ class SignUpScreen extends StatelessWidget {
                         await Get.to(() => const Home());
                       } on FirebaseAuthException catch (e) {
                         if (e.code == 'weak-password') {
-                          await Fluttertoast.showToast(msg: 'The password provided is too weak.');
+                          await Fluttertoast.showToast(
+                              msg: 'The password provided is too weak.');
                         }
                       } catch (e) {
                         await Fluttertoast.showToast(msg: e.toString());

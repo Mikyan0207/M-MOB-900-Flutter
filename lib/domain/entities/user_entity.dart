@@ -28,7 +28,7 @@ class UserEntity {
       avatar: json['Avatar'],
       discriminator: json['Discriminator'],
       email: json['Email'],
-      servers: ServerEntity.fromJsonList(json['Servers']),
+      servers: <ServerEntity>[],
     );
 
     return ue;
