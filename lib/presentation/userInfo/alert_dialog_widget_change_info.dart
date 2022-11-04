@@ -20,9 +20,6 @@ void updateDataUserInFirebase(String field, String value) async
   {
     await Fluttertoast.showToast(msg: e.toString());
   }
-
-
-
 }
 
 Future<void> displayModifyInfoDialog(BuildContext context, String title, String contentString) async {
