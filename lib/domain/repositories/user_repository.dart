@@ -23,19 +23,22 @@ class UserRepository {
 
     final UserEntity user = UserEntity.fromJson(data);
 
+    if (data['Servers'] == null) {
+      return user;
+    }
+
     for (String serverId in data['Servers']) {
-      print("getting severs $serverId");
+      print("Getting server $serverId");
       final Map<String, dynamic>? server =
           (await firestore.collection("Servers").doc(serverId).get()).data();
 
-      if (server == null) continue;
+      if (server == null) {
+        continue;
+      }
 
-      print(server);
-
+      server['Id'] = serverId;
       user.servers?.add(ServerEntity.fromJson(server));
     }
-
-    print("Hello ${data['Servers']}");
 
     return user;
   }
