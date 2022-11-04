@@ -13,10 +13,10 @@ class MessageEntity {
 
   factory MessageEntity.fromJson(dynamic json) => MessageEntity(
         id: json['Id'],
-        author: UserEntity.fromJson(json['Author']),
+        author: json['Author'],
         content: json['Content'],
-        channel: ChannelEntity.fromJson(json['Content']),
-        time: json['Content'],
+        channel: json['Channel'],
+        time: json['Time'],
       );
 
   static List<MessageEntity> fromJsonList(List<dynamic> jsonList) =>

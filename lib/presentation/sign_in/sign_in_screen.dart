@@ -60,6 +60,7 @@ class SignInScreen extends StatelessWidget {
                   width: 400,
                   child: TextFormField(
                     controller: emailController,
+                    style: const TextStyle(color: AppColors.white),
                     decoration: const InputDecoration(
                       labelStyle: TextStyle(
                         color: Vx.gray300,
@@ -101,6 +102,7 @@ class SignInScreen extends StatelessWidget {
                     width: 400,
                     child: TextFormField(
                       controller: passwordController,
+                      style: const TextStyle(color: AppColors.white),
                       obscureText: true,
                       decoration: const InputDecoration(
                         labelStyle: TextStyle(
