@@ -1,10 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:overlapping_panels/overlapping_panels.dart';
-import 'package:starlight/domain/controllers/server_controller.dart';
-import 'package:starlight/domain/repositories/channel_repository.dart';
-import 'package:starlight/domain/repositories/server_repository.dart';
 import 'package:starlight/presentation/chat/chat.dart';
 import 'package:starlight/presentation/left/left_panel.dart';
 import 'package:starlight/presentation/right/right_panel.dart';

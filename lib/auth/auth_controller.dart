@@ -49,16 +49,12 @@ class AuthController extends GetxController {
         return false;
       }
 
-      print(userCredential.user);
-
       currentUser = await _userRepository.create(
         UserEntity(
           id: userCredential.user!.providerData[0].uid!,
           email: userCredential.user!.email,
         ),
       );
-
-      print(currentUser);
 
       return true;
     } on FirebaseAuthException catch (_) {

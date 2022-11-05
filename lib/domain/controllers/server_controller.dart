@@ -50,7 +50,6 @@ class ServerController extends GetxController {
     }
 
     channels(await _channelRespository.getServerChannels(currentServer!.id!));
-    print(channels);
 
     return channels;
   }

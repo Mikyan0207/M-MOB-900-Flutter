@@ -223,7 +223,8 @@ class SignUpScreen extends StatelessWidget {
                       } on FirebaseAuthException catch (e) {
                         if (e.code == 'weak-password') {
                           await Fluttertoast.showToast(
-                              msg: 'The password provided is too weak.');
+                            msg: 'The password provided is too weak.',
+                          );
                         }
                       } catch (e) {
                         await Fluttertoast.showToast(msg: e.toString());

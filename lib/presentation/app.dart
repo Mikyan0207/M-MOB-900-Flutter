@@ -4,8 +4,6 @@ import 'package:starlight/auth/auth_controller.dart';
 import 'package:starlight/common/constants/route_constants.dart';
 import 'package:starlight/domain/controllers/channel_controller.dart';
 import 'package:starlight/domain/controllers/server_controller.dart';
-import 'package:starlight/domain/repositories/server_repository.dart';
-import 'package:starlight/domain/repositories/user_repository.dart';
 import 'package:starlight/presentation/home/home_screen.dart';
 import 'package:starlight/presentation/routes.dart';
 import 'package:starlight/presentation/sign_in/sign_in_screen.dart';

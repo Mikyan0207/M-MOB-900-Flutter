@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:starlight/domain/entities/channel_entity.dart';
 import 'package:starlight/domain/entities/user_entity.dart';
 
 class MessageEntity {
