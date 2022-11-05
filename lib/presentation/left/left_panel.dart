@@ -1,40 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:starlight/auth/auth_controller.dart';
+import 'package:starlight/domain/controllers/channel_controller.dart';
+import 'package:starlight/domain/controllers/server_controller.dart';
+import 'package:starlight/domain/entities/channel_entity.dart';
 import 'package:starlight/domain/entities/server_entity.dart';
-import 'package:starlight/domain/repositories/server_repository.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
 import 'package:starlight/presentation/widgets/server_icon.dart';
 import 'package:starlight/presentation/widgets/starlight_icon_button.dart';
 import 'package:velocity_x/velocity_x.dart';
 
-class LeftPanel extends StatefulWidget {
-  const LeftPanel({super.key});
+class LeftPanel extends StatelessWidget {
+  LeftPanel({super.key});
 
-  @override
-  State<LeftPanel> createState() => _LeftPanelState();
-}
-
-class _LeftPanelState extends State<LeftPanel> {
-  final ServerRepository serverRepository = ServerRepository();
-  final AuthController auth = Get.put(AuthController());
+  final AuthController auth = Get.find();
+  final ServerController serverController = Get.find();
+  final ChannelController channelController = Get.find();
 
   final String iconPlaceholder =
       "https://static.vecteezy.com/system/resources/previews/007/479/717/original/icon-contacts-suitable-for-mobile-apps-symbol-long-shadow-style-simple-design-editable-design-template-simple-symbol-illustration-vector.jpg";
 
-  late List<ServerEntity>? _servers = <ServerEntity>[];
-
-  @override
-  void initState() {
-    _servers = auth.currentUser?.servers;
-
-    _servers ??= <ServerEntity>[];
-
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
+    if (auth.currentUser == null) {
+      Get.toNamed("SignInScreen");
+    }
+
+    serverController.setServersFromUser(auth.currentUser!);
+
     return Container(
       width: double.infinity,
       color: Vx.gray800,
@@ -53,7 +46,7 @@ class _LeftPanelState extends State<LeftPanel> {
                   padding: const EdgeInsets.only(top: 12.0),
                   child: Column(
                     children: <Widget>[
-                      loadServerIcons(_servers),
+                      loadServerIcons(serverController.servers),
                       const SizedBox(
                         height: 10,
                       ),
@@ -77,6 +70,11 @@ class _LeftPanelState extends State<LeftPanel> {
                 color: AppColors.black700,
                 borderRadius: BorderRadius.only(topLeft: Radius.circular(8)),
               ),
+              child: Column(
+                children: <Widget>[
+                  Obx(() => loadChannels(serverController.channels)),
+                ],
+              ),
             ),
           ),
         ],
@@ -84,8 +82,29 @@ class _LeftPanelState extends State<LeftPanel> {
     );
   }
 
-  Widget loadServerIcons(List<ServerEntity>? servers) {
+  Widget loadChannels(List<ChannelEntity>? channels) {
+    if (channels == null) {
+      return Container();
+    }
 
+    return Row(
+      children: channels
+          .map(
+            (ChannelEntity item) => Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16.0),
+              child: TextButton(
+                onPressed: () {
+                  channelController.setCurrentChannel(item);
+                },
+                child: Text(item.id),
+              ),
+            ),
+          )
+          .toList(),
+    );
+  }
+
+  Widget loadServerIcons(List<ServerEntity>? servers) {
     if (servers == null) {
       return Container();
     }
@@ -99,6 +118,10 @@ class _LeftPanelState extends State<LeftPanel> {
                 icon: iconPlaceholder,
                 iconSize: 50,
                 iconRadius: 25,
+                onIconClicked: () async {
+                  serverController.setCurrentServer(item);
+                  await serverController.getChannelsForCurrentServer();
+                },
               ),
             ),
           )

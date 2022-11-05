@@ -3,17 +3,25 @@ import 'package:starlight/domain/entities/server_entity.dart';
 import 'package:starlight/domain/entities/user_entity.dart';
 
 class ServerRepository {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
   Future<List<ServerEntity>> getAll() async {
-    final FirebaseFirestore firestore = FirebaseFirestore.instance;
     return ServerEntity.fromJsonList(
-      await firestore.collection("Servers").snapshots().toList(),
+      await _firestore.collection("Servers").snapshots().toList(),
+    );
+  }
+
+  Future<ServerEntity> getServer(String serverId) async {
+    return ServerEntity.fromJson(
+      (await _firestore.collection("Servers").doc(serverId).get()).data(),
     );
   }
 
   Future<ServerEntity> create(ServerEntity server) async {
-    final FirebaseFirestore firestore = FirebaseFirestore.instance;
-    final DocumentReference<Map<String, dynamic>> document = await firestore.collection("Servers").add(server.toJson());
-    final Map<String, dynamic>? data = (await document.snapshots().first).data();
+    final DocumentReference<Map<String, dynamic>> document =
+        await _firestore.collection("Servers").add(server.toJson());
+    final Map<String, dynamic>? data =
+        (await document.snapshots().first).data();
     ServerEntity firestoreServer = ServerEntity.fromJson(data);
 
     firestoreServer.id = document.id;
@@ -23,18 +31,20 @@ class ServerRepository {
   }
 
   Future<ServerEntity> update(ServerEntity server) async {
-    final FirebaseFirestore firestore = FirebaseFirestore.instance;
-
-    await firestore.collection("Servers").doc(server.id).update(server.toJson());
+    await _firestore
+        .collection("Servers")
+        .doc(server.id)
+        .update(server.toJson());
 
     return server;
   }
 
   Future<ServerEntity> joinServer(ServerEntity server, UserEntity user) async {
-    final FirebaseFirestore firestore = FirebaseFirestore.instance;
-
-    await firestore.collection("Users").doc(user.id).update(user.toJson());
-    await firestore.collection("Servers").doc(server.id).update(server.toJson());
+    await _firestore.collection("Users").doc(user.id).update(user.toJson());
+    await _firestore
+        .collection("Servers")
+        .doc(server.id)
+        .update(server.toJson());
 
     return server;
   }

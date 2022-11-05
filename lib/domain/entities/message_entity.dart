@@ -7,7 +7,7 @@ class MessageEntity {
     this.id,
     this.author,
     this.content,
-    this.channel,
+    this.channelId,
     this.time,
   });
 
@@ -15,7 +15,7 @@ class MessageEntity {
         id: json['Id'],
         author: json['Author'],
         content: json['Content'],
-        channel: json['Channel'],
+        channelId: json['ChannelId'],
         time: json['Time'],
       );
 
@@ -25,6 +25,6 @@ class MessageEntity {
   String? id;
   UserEntity? author;
   String? content;
-  ChannelEntity? channel;
+  String? channelId;
   Timestamp? time;
 }

@@ -44,7 +44,7 @@ class UserEntity {
       'Avatar': avatar,
       'Discriminator': discriminator,
       'Email': email,
-      'Servers': servers,
+      'Servers': servers?.map((ServerEntity e) => e.id).toList(),
     };
   }
 
