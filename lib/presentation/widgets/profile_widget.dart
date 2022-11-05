@@ -6,26 +6,40 @@ class ProfileWidget extends StatelessWidget {
     Key? key,
     required this.imagePath,
     required this.onClicked,
+    required this.showEdit,
   }) : super(key: key);
   final String imagePath;
   final VoidCallback onClicked;
+  final bool showEdit;
 
   @override
   Widget build(BuildContext context) {
     final Color color = Theme.of(context).colorScheme.primary;
 
-    return Center(
-      child: Stack(
-        children: <Widget> [
-          buildImage(),
-          Positioned(
-            bottom: 0,
-            right: 4,
-            child: buildEditIcon(color),
-          ),
-        ],
-      ),
-    );
+
+    if (showEdit == true)
+    {
+      return Center(
+        child: Stack(
+          children: <Widget> [
+            buildImage(),
+            Positioned(
+              bottom: 0,
+              right: 4,
+              child: buildEditIcon(color),
+            ),
+          ],
+        ),
+      );
+    } else {
+      return Center(
+        child: Stack(
+          children: <Widget> [
+            buildImage(),
+          ],
+        ),
+      );
+    }
   }
 
   Widget buildImage() {

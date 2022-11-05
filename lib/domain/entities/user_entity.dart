@@ -9,6 +9,7 @@ class UserEntity {
     this.discriminator,
     this.email,
     this.servers,
+    this.idDocument,
   });
 
   UserEntity.copy(UserEntity ue)
@@ -19,6 +20,7 @@ class UserEntity {
           discriminator: ue.discriminator,
           email: ue.email,
           servers: ue.servers,
+          idDocument: ue.idDocument,
         );
 
   factory UserEntity.fromJson(dynamic json) {
@@ -29,6 +31,7 @@ class UserEntity {
       discriminator: json['Discriminator'],
       email: json['Email'],
       servers: <ServerEntity>[],
+      idDocument: json['IdDocument'],
     );
 
     return ue;
@@ -45,6 +48,7 @@ class UserEntity {
       'Discriminator': discriminator,
       'Email': email,
       'Servers': servers,
+      'IdDocument': idDocument,
     };
   }
 
@@ -54,4 +58,5 @@ class UserEntity {
   String? discriminator;
   String? email;
   List<ServerEntity>? servers;
+  String? idDocument;
 }

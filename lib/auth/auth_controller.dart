@@ -55,16 +55,15 @@ class AuthController extends GetxController {
         return false;
       }
 
-      print(userCredential.user);
-
       currentUser = await _userRepository.create(
         UserEntity(
-          id: userCredential.user!.providerData[0].uid!,
+          id: userCredential.user!.uid,
+          username: userCredential.user!.email?.split('@').first,
           email: userCredential.user!.email,
         ),
       );
 
-      print(currentUser);
+      print(currentUser?.idDocument);
 
       return true;
 

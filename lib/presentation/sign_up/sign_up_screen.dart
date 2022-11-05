@@ -204,22 +204,11 @@ class SignUpScreen extends StatelessWidget {
                     ),
                     onPressed: () async {
                       try {
-                        final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-                        User? user;
-                        final UserCredential userCredential =
-                            await firebaseAuth.createUserWithEmailAndPassword(
-                          email: emailController.text,
-                          password: passwordController.text,
-                        );
-                        user = userCredential.user;
-
-                        await userRepository.create(
-                          UserEntity(
-                            id: user?.uid,
-                            email: user?.email,
-                          ),
-                        );
-                        await Get.to(() => const Home());
+                      if (await auth.registerAsync(
+                          emailController.text, passwordController.text)) {
+                        await Get.to(const Home());
+                        // TODO(florian): Error message.
+                      }
                       } on FirebaseAuthException catch (e) {
                         if (e.code == 'weak-password') {
                           await Fluttertoast.showToast(

@@ -4,6 +4,8 @@ import 'package:starlight/auth/auth_controller.dart';
 import 'package:starlight/domain/entities/server_entity.dart';
 import 'package:starlight/domain/repositories/server_repository.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
+import 'package:starlight/presentation/userInfo/user_info_screen.dart';
+import 'package:starlight/presentation/widgets/profile_widget.dart';
 import 'package:starlight/presentation/widgets/server_icon.dart';
 import 'package:starlight/presentation/widgets/starlight_icon_button.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -51,7 +53,8 @@ class _LeftPanelState extends State<LeftPanel> {
                 ),
                 child: Padding(
                   padding: const EdgeInsets.only(top: 12.0),
-                  child: Column(
+                  child:
+                  Column(
                     children: <Widget>[
                       loadServerIcons(_servers),
                       const SizedBox(
@@ -63,7 +66,17 @@ class _LeftPanelState extends State<LeftPanel> {
                         iconHoverColor: Vx.white,
                         backgroundColor: AppColors.black700,
                         backgroundHoverColor: Vx.green400,
-                      )
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      ProfileWidget(
+                        imagePath: "https://ddrg.farmasi.unej.ac.id/wp-content/uploads/sites/6/2017/10/unknown-person-icon-Image-from.png",
+                        onClicked: ()  {
+                          Get.to(() => const UserInfoScreen());
+                        },
+                        showEdit: false,
+                      ),
                     ],
                   ),
                 ),

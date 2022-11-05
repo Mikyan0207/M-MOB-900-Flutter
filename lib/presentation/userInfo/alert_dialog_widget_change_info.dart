@@ -2,35 +2,41 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:velocity_x/velocity_x.dart';
 
+import '../../auth/auth_controller.dart';
 import '../widgets/custom_button.dart';
 
 void updateDataUserInFirebase(String field, String value) async
 {
-  // todo check if it's work
+  final AuthController auth = Get.put(AuthController());
 
-  if (field == "mail" || field == "password")
+  // todo check if it's work
+  if (field == "password")
   {
     final User? user = FirebaseAuth.instance.currentUser;
-    if (field == "mail") {
+    await user?.updatePassword(value);
+  } else
+  {
+    if (field == "Email")
+    {
+      final User? user = FirebaseAuth.instance.currentUser;
       await user?.updateEmail(value);
-    } else {
-      await user?.updatePassword(value);
     }
-  }
 
-  try
-  {
-    await FirebaseFirestore.instance.collection('Users').doc("doc").update(<String, Object?>{
-      field: value,
-    });
+    try
+    {
+      await FirebaseFirestore.instance.collection('Users').doc(auth.currentUser?.idDocument).update(<String, Object?>{
+        field: value,
+      });
 
-    await Fluttertoast.showToast(msg: "$field changed");
-  }
-  catch(e)
-  {
-    await Fluttertoast.showToast(msg: e.toString());
+      await Fluttertoast.showToast(msg: "$field changed");
+    }
+    catch(e)
+    {
+      await Fluttertoast.showToast(msg: e.toString());
+    }
   }
 }
 

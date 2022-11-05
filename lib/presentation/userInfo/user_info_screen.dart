@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -139,14 +140,16 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
         cacheControl: "public,max-age=300",
         contentType: "image/$extension",
       );
+
       await ref.putData(await imageFile!.readAsBytes(), newMetadata);
       imageUrl = await ref.getDownloadURL();
-      await FirebaseFirestore.instance.collection('Users').doc("doc").update(<String, Object?>{
-      'Avatar': imageUrl,
+      await FirebaseFirestore.instance.collection('Users').doc(auth.currentUser?.idDocument).update(<String, Object?>{
+        'Avatar': imageUrl,
       });
       imageFile = null;
       extension = null;
       await Fluttertoast.showToast(msg: "Image uploaded");
+      await Get.to(const UserInfoScreen());
     }
     catch(e)
     {
@@ -202,7 +205,8 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                             child: Row(
                               children:<Widget> [
                                 ProfileWidget(
-                                  imagePath: "https://ddrg.farmasi.unej.ac.id/wp-content/uploads/sites/6/2017/10/unknown-person-icon-Image-from.png",
+                                  imagePath: getImageFromUser(auth),
+                                  showEdit: true,
                                   onClicked: ()  {
                                     _showImageDialog(context, "Choose an option", <Widget>[
                                       InkWell(
@@ -280,22 +284,22 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                         children:<Widget> [
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: const <Widget> [
-                              Text(
+                            children: <Widget> [
+                              const Text(
                                 style: TextStyle( fontSize: 16 ,fontWeight: FontWeight.bold),
                                 "Username:",
                               ),
                               Text(
-                                "Myusername \n\n",
+                                "${auth.currentUser?.username as String}\n\n",
                               ),
-                              Text(
+                              const Text(
                                 style: TextStyle( fontSize: 16 ,fontWeight: FontWeight.bold),
                                 "Email:",
                               ),
                               Text(
-                                "MyEmail \n\n",
+                                "${auth.currentUser?.email as String}\n\n",
                               ),
-                              Text(
+                              const Text(
                                 style: TextStyle( fontSize: 16 ,fontWeight: FontWeight.bold),
                                 "Password: \n *******",
                               ),
@@ -314,7 +318,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                               CustomButton(
                                   customText: "Modify",
                                   onClicked: ()  {
-                                    displayModifyInfoDialog(context, "Change your email", "email");
+                                    displayModifyInfoDialog(context, "Change your email", "Email");
                                   },
                               ),
                               const SizedBox(height: 40),
@@ -338,4 +342,10 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
       ),
     );
   }
+}
+
+String getImageFromUser(AuthController currentAuth)
+{
+
+  return currentAuth.currentUser?.avatar?? "https://ddrg.farmasi.unej.ac.id/wp-content/uploads/sites/6/2017/10/unknown-person-icon-Image-from.png";
 }
