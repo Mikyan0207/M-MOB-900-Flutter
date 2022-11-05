@@ -72,7 +72,7 @@ workflows:
           ./codecov -t ${CODECOV_TOKEN} -f "test-results/flutter.json"
       - name: Build APK with Flutter
         script: |
-          flutter build apk --stacktrace --release --build-name=1.0.0
+          flutter build apk --release --build-name=1.0.0
       - name: Build iOS
         script: |
           flutter build appbundle --debug
