@@ -13,7 +13,8 @@ class MessageBox extends StatelessWidget {
     return Expanded(
       child: Row(
         children: <Widget>[
-          // TODO: AVATAR ICI.
+          // ignore: todo
+          // TODO(Mikyan): avatar ici
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
