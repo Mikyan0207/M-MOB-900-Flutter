@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:starlight/domain/entities/server_entity.dart';
 
 class UserEntity {
@@ -28,7 +27,7 @@ class UserEntity {
       avatar: json['Avatar'],
       discriminator: json['Discriminator'],
       email: json['Email'],
-      servers: ServerEntity.fromJsonList(json['Servers']),
+      servers: <ServerEntity>[],
     );
 
     return ue;
@@ -44,7 +43,7 @@ class UserEntity {
       'Avatar': avatar,
       'Discriminator': discriminator,
       'Email': email,
-      'Servers': servers,
+      'Servers': servers?.map((ServerEntity e) => e.id).toList(),
     };
   }
 

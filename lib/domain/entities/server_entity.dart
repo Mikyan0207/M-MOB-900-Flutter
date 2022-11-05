@@ -11,14 +11,24 @@ class ServerEntity {
     this.channels,
   });
 
-  factory ServerEntity.fromJson(dynamic json) => ServerEntity(
-        id: json['Id'],
-        name: json['Name'],
-        description: json['Description'],
-        icon: json['Icon'],
-        members: UserEntity.fromJsonList(json['Members']),
-        channels: ChannelEntity.fromJsonList(json['Channels']),
-      );
+  factory ServerEntity.fromJson(dynamic json) {
+    final ServerEntity e = ServerEntity();
+
+    e.id = json['Id'];
+    e.name = json['Name'];
+    e.description = json['Description'];
+    e.icon = json['Icon'];
+
+    if (json['Members'] != null) {
+      e.members = UserEntity.fromJsonList(json['Members']);
+    }
+
+    if (json['Channels'] != null) {
+      e.channels = ChannelEntity.fromJsonList(json['Channels']);
+    }
+
+    return e;
+  }
 
   static List<ServerEntity> fromJsonList(List<dynamic>? jsonList) {
     if (jsonList == null) {
@@ -29,7 +39,7 @@ class ServerEntity {
   }
 
   Map<String, dynamic> toJson() {
-    return <String, dynamic> {
+    return <String, dynamic>{
       'Id': id,
       'Name': name,
       'Description': description,

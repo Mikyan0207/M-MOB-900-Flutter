@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:starlight/domain/entities/server_entity.dart';
 import 'package:starlight/domain/entities/user_entity.dart';
 
 class UserRepository {
@@ -20,17 +21,24 @@ class UserRepository {
             .first
             .data();
 
-    print("Hello $data");
+    final UserEntity user = UserEntity.fromJson(data);
 
+    if (data['Servers'] == null) {
+      return user;
+    }
 
-    data['Servers'] =
-        await (data['Servers'] as DocumentReference<Map<String, dynamic>>)
-            .snapshots()
-            .map((DocumentSnapshot<Map<String, dynamic>> event) => event.data())
-            .toList();
+    for (String serverId in data['Servers']) {
+      final Map<String, dynamic>? server =
+          (await firestore.collection("Servers").doc(serverId).get()).data();
 
-    print("Hello ${data['Servers']}");
+      if (server == null) {
+        continue;
+      }
 
-    return UserEntity.fromJson(data);
+      server['Id'] = serverId;
+      user.servers?.add(ServerEntity.fromJson(server));
+    }
+
+    return user;
   }
 }

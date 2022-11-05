@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:starlight/domain/entities/channel_entity.dart';
 import 'package:starlight/domain/entities/user_entity.dart';
 
 class MessageEntity {
@@ -7,16 +6,16 @@ class MessageEntity {
     this.id,
     this.author,
     this.content,
-    this.channel,
+    this.channelId,
     this.time,
   });
 
   factory MessageEntity.fromJson(dynamic json) => MessageEntity(
         id: json['Id'],
-        author: UserEntity.fromJson(json['Author']),
+        author: json['Author'],
         content: json['Content'],
-        channel: ChannelEntity.fromJson(json['Content']),
-        time: json['Content'],
+        channelId: json['ChannelId'],
+        time: json['Time'],
       );
 
   static List<MessageEntity> fromJsonList(List<dynamic> jsonList) =>
@@ -25,6 +24,6 @@ class MessageEntity {
   String? id;
   UserEntity? author;
   String? content;
-  ChannelEntity? channel;
+  String? channelId;
   Timestamp? time;
 }
