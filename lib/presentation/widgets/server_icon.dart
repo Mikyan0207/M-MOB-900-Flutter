@@ -46,16 +46,16 @@ class _ServerIconState extends State<ServerIcon>
 
   @override
   Widget build(BuildContext context) {
-    return MouseRegion(
-      onEnter: (PointerEvent d) => <void>{
-        iconController.forward(),
-      },
-      onExit: (PointerEvent d) => <void>{
-        iconController.reverse(),
-      },
-      child: SizedBox(
-        width: _size,
-        height: _size,
+    return SizedBox(
+      width: _size,
+      height: _size,
+      child: MouseRegion(
+        onEnter: (PointerEvent d) => <void>{
+          iconController.forward(),
+        },
+        onExit: (PointerEvent d) => <void>{
+          iconController.reverse(),
+        },
         child: ClipRRect(
           borderRadius: BorderRadius.circular(iconAnimation.value),
           child: Material(

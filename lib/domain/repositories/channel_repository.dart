@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:starlight/domain/entities/channel_entity.dart';
 
-class ChannelRespository {
+class ChannelRepository {
   Future<List<ChannelEntity>> getServerChannels(String serverId) async {
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
 

@@ -14,7 +14,7 @@ class ServerController extends GetxController {
   RxList<ChannelEntity> channels = <ChannelEntity>[].obs;
 
   final ServerRepository _serverRepository = ServerRepository();
-  final ChannelRespository _channelRespository = ChannelRespository();
+  final ChannelRepository _channelRespository = ChannelRepository();
 
   void setServersFromUser(UserEntity ue) {
     if (ue.servers == null) {

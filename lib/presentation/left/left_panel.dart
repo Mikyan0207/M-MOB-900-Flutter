@@ -88,16 +88,32 @@ class LeftPanel extends StatelessWidget {
     }
 
     return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: channels
           .map(
             (ChannelEntity item) => Padding(
               padding: const EdgeInsets.symmetric(vertical: 16.0),
-              child: TextButton(
-                onPressed: () {
-                  channelController.setCurrentChannel(item);
-                },
-                child: Text(item.id),
-              ),
+              child: serverController.currentChannel.value.id == item.id
+                  ? Container(
+                      color: Vx.gray500,
+                      child: Text(
+                        item.id,
+                        style: const TextStyle(color: Vx.white),
+                      ),
+                    )
+                  : TextButton(
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(Vx.red300),
+                      ),
+                      onPressed: () {
+                        channelController.setCurrentChannel(item);
+                      },
+                      child: Text(
+                        item.id,
+                        style: const TextStyle(color: Vx.white),
+                      ),
+                    ),
             ),
           )
           .toList(),
@@ -109,11 +125,10 @@ class LeftPanel extends StatelessWidget {
       return Container();
     }
 
-    return Row(
+    return Column(
       children: servers
           .map(
-            (ServerEntity item) => Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
+            (ServerEntity item) => Center(
               child: ServerIcon(
                 icon: iconPlaceholder,
                 iconSize: 50,
@@ -121,6 +136,11 @@ class LeftPanel extends StatelessWidget {
                 onIconClicked: () async {
                   serverController.setCurrentServer(item);
                   await serverController.getChannelsForCurrentServer();
+                  if (serverController.channels.isNotEmpty) {
+                    channelController.setCurrentChannel(
+                      serverController.channels[0],
+                    );
+                  }
                 },
               ),
             ),

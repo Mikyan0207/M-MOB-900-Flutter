@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:starlight/domain/controllers/channel_controller.dart';
 import 'package:starlight/domain/entities/message_entity.dart';
-import 'package:starlight/domain/entities/user_entity.dart';
-import 'package:starlight/domain/repositories/user_repository.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
 import 'package:starlight/presentation/widgets/message_bar.dart';
 import 'package:starlight/presentation/widgets/message_box.dart';
@@ -12,7 +10,6 @@ import 'package:starlight/presentation/widgets/message_box.dart';
 class Chat extends StatelessWidget {
   Chat({super.key});
 
-  final UserRepository _userRepository = UserRepository();
   final ChannelController _channelController = Get.find();
 
   @override
@@ -46,29 +43,29 @@ class Chat extends StatelessWidget {
                       ),
                     );
                   } else {
+                    snapshot.data!.docs.sort(
+                      (
+                        QueryDocumentSnapshot<Map<String, dynamic>> a,
+                        QueryDocumentSnapshot<Map<String, dynamic>> b,
+                      ) =>
+                          (b.data()['Time'] as Timestamp).toDate().compareTo(
+                                (a.data()['Time'] as Timestamp).toDate(),
+                              ),
+                    );
                     return ListView.builder(
                       padding: const EdgeInsets.all(10.0),
                       itemBuilder: (BuildContext context, int index) {
-                        return FutureBuilder<UserEntity?>(
-                          future: _userRepository
-                              .get(snapshot.data!.docs[index].data()['Author']),
-                          builder: (
-                            BuildContext context,
-                            AsyncSnapshot<UserEntity?> user,
-                          ) {
-                            final Map<String, dynamic> msg =
-                                snapshot.data!.docs[index].data();
-
-                            msg['Author'] = user.data;
-                            return MessageBox(
-                              message: MessageEntity.fromJson(msg),
-                            );
-                          },
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 12.0),
+                          child: MessageBox(
+                            message: MessageEntity.fromJson(
+                              snapshot.data!.docs[index].data(),
+                            ),
+                          ),
                         );
                       },
                       itemCount: snapshot.data!.docs.length,
                       shrinkWrap: true,
-                      reverse: true,
                       controller: ScrollController(),
                     );
                   }

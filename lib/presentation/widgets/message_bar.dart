@@ -1,4 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:starlight/auth/auth_controller.dart';
+import 'package:starlight/domain/controllers/channel_controller.dart';
+import 'package:starlight/domain/entities/message_entity.dart';
+import 'package:starlight/domain/repositories/message_repository.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -6,6 +12,9 @@ class MessageBar extends StatelessWidget {
   MessageBar({super.key});
 
   final TextEditingController textarea = TextEditingController();
+  final ChannelController _channelController = Get.find();
+  final MessageRepository _messageRepository = MessageRepository();
+  final AuthController _authController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +79,8 @@ class MessageBar extends StatelessWidget {
                                       .subtitle2!
                                       .fontSize,
                                 ),
-                                hintText: 'Message #{CHANNEL}',
+                                hintText:
+                                    'Message #${_channelController.currentChannel.value.name}',
                               ),
                             ),
                           ),
@@ -101,7 +111,8 @@ class MessageBar extends StatelessWidget {
                             ),
                             Flexible(
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 10.0),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 10.0),
                                 child: VerticalDivider(
                                   thickness: context.isMobile ? 1 : 0.5,
                                   color: Vx.gray400,
@@ -114,7 +125,21 @@ class MessageBar extends StatelessWidget {
                                   Icons.send,
                                   color: Vx.indigo300,
                                 ),
-                                onPressed: () {},
+                                onPressed: () async {
+                                  if (textarea.text.isEmptyOrNull) {
+                                    return;
+                                  }
+
+                                  await _messageRepository.create(
+                                    MessageEntity(
+                                      author: _authController.currentUser!,
+                                      content: textarea.text,
+                                      channelId: _channelController
+                                          .currentChannel.value.id,
+                                      time: Timestamp.now(),
+                                    ),
+                                  );
+                                },
                               ),
                             ),
                           ],
