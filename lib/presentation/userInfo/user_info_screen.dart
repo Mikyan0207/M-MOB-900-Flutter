@@ -205,7 +205,6 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                             child: Row(
                               children:<Widget> [
                                 ProfileWidget(
-                                  imagePath: getImageFromUser(auth),
                                   showEdit: true,
                                   onClicked: ()  {
                                     _showImageDialog(context, "Choose an option", <Widget>[
@@ -342,10 +341,4 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
       ),
     );
   }
-}
-
-String getImageFromUser(AuthController currentAuth)
-{
-
-  return currentAuth.currentUser?.avatar?? "https://ddrg.farmasi.unej.ac.id/wp-content/uploads/sites/6/2017/10/unknown-person-icon-Image-from.png";
 }

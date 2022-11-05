@@ -1,16 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+
+import '../../auth/auth_controller.dart';
 
 class ProfileWidget extends StatelessWidget {
 
-  const ProfileWidget({
+  ProfileWidget({
     Key? key,
-    required this.imagePath,
+    this.imagePath,
     required this.onClicked,
     required this.showEdit,
   }) : super(key: key);
-  final String imagePath;
+  String? imagePath;
   final VoidCallback onClicked;
   final bool showEdit;
+
+  final AuthController auth = Get.put(AuthController());
+
+  String getImageFromUser()
+  {
+    if (imagePath != null)
+    {
+      return imagePath as String;
+    }
+    return auth.currentUser?.avatar?? "https://ddrg.farmasi.unej.ac.id/wp-content/uploads/sites/6/2017/10/unknown-person-icon-Image-from.png";
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +58,7 @@ class ProfileWidget extends StatelessWidget {
   }
 
   Widget buildImage() {
-    final NetworkImage image = NetworkImage(imagePath);
+    final NetworkImage image = NetworkImage(getImageFromUser());
 
     return ClipOval(
       child: Material(

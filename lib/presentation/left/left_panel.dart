@@ -5,6 +5,7 @@ import 'package:starlight/domain/entities/server_entity.dart';
 import 'package:starlight/domain/repositories/server_repository.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
 import 'package:starlight/presentation/userInfo/user_info_screen.dart';
+import 'package:starlight/presentation/widgets/profile_bar.dart';
 import 'package:starlight/presentation/widgets/profile_widget.dart';
 import 'package:starlight/presentation/widgets/server_icon.dart';
 import 'package:starlight/presentation/widgets/starlight_icon_button.dart';
@@ -70,19 +71,13 @@ class _LeftPanelState extends State<LeftPanel> {
                       const SizedBox(
                         height: 10,
                       ),
-                      ProfileWidget(
-                        imagePath: "https://ddrg.farmasi.unej.ac.id/wp-content/uploads/sites/6/2017/10/unknown-person-icon-Image-from.png",
-                        onClicked: ()  {
-                          Get.to(() => const UserInfoScreen());
-                        },
-                        showEdit: false,
-                      ),
                     ],
                   ),
                 ),
               ),
             ),
           ),
+
           Expanded(
             flex: 3,
             child: Container(
@@ -90,9 +85,16 @@ class _LeftPanelState extends State<LeftPanel> {
                 color: AppColors.black700,
                 borderRadius: BorderRadius.only(topLeft: Radius.circular(8)),
               ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget> [
+                  ProfileBar(),
+                ],
+              ),
             ),
           ),
         ],
+
       ),
     );
   }
