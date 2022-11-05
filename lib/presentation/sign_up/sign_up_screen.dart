@@ -147,6 +147,7 @@ class SignUpScreen extends StatelessWidget {
                     width: 400,
                     child: TextFormField(
                       obscureText: true,
+                      style: const TextStyle(color: AppColors.white),
                       decoration: const InputDecoration(
                         labelStyle: TextStyle(
                           color: Vx.gray300,
