@@ -4,8 +4,10 @@ import 'package:get/get.dart';
 import 'package:starlight/domain/controllers/channel_controller.dart';
 import 'package:starlight/domain/entities/message_entity.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
+import 'package:starlight/presentation/widgets/messages_list.dart';
 import 'package:starlight/presentation/widgets/message_bar.dart';
 import 'package:starlight/presentation/widgets/message_box.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 class Chat extends StatelessWidget {
   Chat({super.key});
@@ -20,59 +22,56 @@ class Chat extends StatelessWidget {
         height: double.infinity,
         width: double.infinity,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
-            Obx(
-              () => StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                stream: FirebaseFirestore.instance
-                    .collection("Messages")
-                    .where(
-                      "ChannelId",
-                      isEqualTo: _channelController.currentChannel.value.id,
-                    )
-                    .snapshots(),
-                builder: (
-                  BuildContext context,
-                  AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot,
-                ) {
-                  if (!snapshot.hasData) {
-                    return const Center(
-                      child: Text(
-                        "No Messages",
-                        style: TextStyle(color: AppColors.white),
+            Container(
+              width: double.infinity,
+              height: 60,
+              decoration: const BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(
+                    color: AppColors.black900,
+                  ),
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10.0,
+                  vertical: 14.5,
+                ),
+                child: Row(
+                  children: <Widget>[
+                    const Padding(
+                      padding: EdgeInsets.only(right: 3.0),
+                      child: Icon(
+                        Icons.numbers_rounded,
+                        color: Vx.gray400,
+                        size: 26,
                       ),
-                    );
-                  } else {
-                    snapshot.data!.docs.sort(
-                      (
-                        QueryDocumentSnapshot<Map<String, dynamic>> a,
-                        QueryDocumentSnapshot<Map<String, dynamic>> b,
-                      ) =>
-                          (b.data()['Time'] as Timestamp).toDate().compareTo(
-                                (a.data()['Time'] as Timestamp).toDate(),
-                              ),
-                    );
-                    return ListView.builder(
-                      padding: const EdgeInsets.all(10.0),
-                      itemBuilder: (BuildContext context, int index) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 12.0),
-                          child: MessageBox(
-                            message: MessageEntity.fromJson(
-                              snapshot.data!.docs[index].data(),
-                            ),
-                          ),
-                        );
-                      },
-                      itemCount: snapshot.data!.docs.length,
-                      shrinkWrap: true,
-                      controller: ScrollController(),
-                    );
-                  }
-                },
+                    ),
+                    Obx(
+                      () => Text(
+                        _channelController.currentChannel.value.name
+                            .toLowerCase(),
+                        style: const TextStyle(
+                          color: Vx.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-            MessageBar(),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  Expanded(child: MessagesList()),
+                  MessageBar(),
+                ],
+              ),
+            ),
           ],
         ),
       ),
