@@ -7,6 +7,7 @@ import 'package:starlight/domain/entities/channel_entity.dart';
 import 'package:starlight/domain/entities/server_entity.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
 import 'package:starlight/presentation/widgets/channel_card.dart';
+import 'package:starlight/presentation/widgets/profile_bar.dart';
 import 'package:starlight/presentation/widgets/server_icon.dart';
 import 'package:starlight/presentation/widgets/starlight_icon_button.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -135,24 +136,27 @@ class LeftPanel extends StatelessWidget {
                         )
                       else
                         Container(),
-                      Obx(
-                        () => ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: serverController.channels.length,
-                          controller: ScrollController(),
-                          itemBuilder: (BuildContext context, int index) {
-                            final ChannelEntity currentChannel =
-                                serverController.channels[index];
-                            final bool isSelectedChannel =
-                                channelController.currentChannel.value.id ==
-                                    serverController.channels[index].id;
-                            return ChannelCard(
-                              isSelectedChannel: isSelectedChannel,
-                              currentChannel: currentChannel,
-                            );
-                          },
+                      Expanded(
+                        child: Obx(
+                          () => ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: serverController.channels.length,
+                            controller: ScrollController(),
+                            itemBuilder: (BuildContext context, int index) {
+                              final ChannelEntity currentChannel =
+                                  serverController.channels[index];
+                              final bool isSelectedChannel =
+                                  channelController.currentChannel.value.id ==
+                                      serverController.channels[index].id;
+                              return ChannelCard(
+                                isSelectedChannel: isSelectedChannel,
+                                currentChannel: currentChannel,
+                              );
+                            },
+                          ),
                         ),
                       ),
+                      ProfileBar()
                     ],
                   ),
                 ),

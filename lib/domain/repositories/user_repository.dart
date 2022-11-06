@@ -7,8 +7,12 @@ class UserRepository {
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
     final DocumentReference<Map<String, dynamic>> document =
         await firestore.collection("Users").add(e.toJson());
+    e.idDocument = document.id;
+    await document.set(e.toJson());
+
     final Map<String, dynamic>? data =
         (await document.snapshots().first).data();
+
 
     return UserEntity.fromJson(data);
   }

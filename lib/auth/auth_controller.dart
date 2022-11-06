@@ -23,12 +23,14 @@ class AuthController extends GetxController {
       }
 
       currentUser = await _userRepository.get(userCredential.user!.uid);
-      await Fluttertoast.showToast(msg: 'Nique mouk');
+      if (currentUser != null) {
+        await Fluttertoast.showToast(msg: "Current User is null");
+      }
 
       return true;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
-        await Fluttertoast.showToast(msg: 'User not find');
+        await Fluttertoast.showToast(msg: 'User not found');
       } else {
         await Fluttertoast.showToast(msg: e.toString());
       }
@@ -51,7 +53,8 @@ class AuthController extends GetxController {
 
       currentUser = await _userRepository.create(
         UserEntity(
-          id: userCredential.user!.providerData[0].uid!,
+          id: userCredential.user!.uid,
+          username: userCredential.user!.email?.split('@').first,
           email: userCredential.user!.email,
         ),
       );
