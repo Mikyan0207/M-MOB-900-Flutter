@@ -3,8 +3,8 @@ import 'package:get/get.dart';
 
 class CameraXController extends GetxController {
 
-  late final List<CameraDescription> cameras;
-  late final CameraDescription firstCamera;
+  late List<CameraDescription> cameras;
+  late CameraDescription firstCamera;
   late CameraDescription camera;
 
   Future<void> initCamera() async {
