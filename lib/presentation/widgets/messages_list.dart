@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:starlight/domain/controllers/channel_controller.dart';
 import 'package:starlight/domain/entities/message_entity.dart';

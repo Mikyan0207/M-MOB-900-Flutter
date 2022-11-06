@@ -1,12 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:starlight/domain/controllers/channel_controller.dart';
-import 'package:starlight/domain/entities/message_entity.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
-import 'package:starlight/presentation/widgets/messages_list.dart';
 import 'package:starlight/presentation/widgets/message_bar.dart';
-import 'package:starlight/presentation/widgets/message_box.dart';
+import 'package:starlight/presentation/widgets/messages_list.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class Chat extends StatelessWidget {
@@ -68,7 +65,7 @@ class Chat extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   Expanded(child: MessagesList()),
-                  MessageBar(),
+                  const MessageBar(),
                 ],
               ),
             ),

@@ -10,7 +10,7 @@ import 'package:starlight/presentation/themes/theme_colors.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class MessageBar extends StatefulWidget {
-  MessageBar({super.key});
+  const MessageBar({super.key});
 
   @override
   State<MessageBar> createState() => _MessageBarState();
