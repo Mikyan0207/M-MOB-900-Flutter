@@ -1,8 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:starlight/presentation/home/home_screen.dart';
 import 'package:starlight/presentation/sign_up/sign_up_screen.dart';
@@ -161,8 +159,11 @@ class SignInScreen extends StatelessWidget {
                     ),
                     onPressed: () async {
                       if (await auth.loginAsync(
-                          emailController.text, passwordController.text)) {
+                        emailController.text,
+                        passwordController.text,
+                      )) {
                         await Get.to(const Home());
+                        // ignore: todo
                         // TODO(florian): Error message.
                       }
                     },

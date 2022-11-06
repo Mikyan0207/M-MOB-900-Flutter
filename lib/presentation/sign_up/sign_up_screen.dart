@@ -4,19 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:starlight/domain/entities/user_entity.dart';
+import 'package:starlight/auth/auth_controller.dart';
 import 'package:starlight/domain/repositories/user_repository.dart';
 import 'package:starlight/presentation/home/home_screen.dart';
 import 'package:starlight/presentation/sign_in/sign_in_screen.dart';
+import 'package:starlight/presentation/themes/theme_colors.dart';
 import 'package:velocity_x/velocity_x.dart';
-
-import '../../auth/auth_controller.dart';
-import '../themes/theme_colors.dart';
 
 class SignUpScreen extends StatelessWidget {
   SignUpScreen({super.key});
 
-  final AuthController auth = Get.put(AuthController());
+  final AuthController auth = Get.find();
   final UserRepository userRepository = UserRepository();
 
   final TextEditingController emailController = TextEditingController();
@@ -205,15 +203,18 @@ class SignUpScreen extends StatelessWidget {
                     ),
                     onPressed: () async {
                       try {
-                      if (await auth.registerAsync(
-                          emailController.text, passwordController.text)) {
-                        await Get.to(const Home());
-                        // TODO(florian): Error message.
-                      }
+                        if (await auth.registerAsync(
+                          emailController.text,
+                          passwordController.text,
+                        )) {
+                          await Get.to(const Home());
+                          // TODO(florian): Error message.
+                        }
                       } on FirebaseAuthException catch (e) {
                         if (e.code == 'weak-password') {
                           await Fluttertoast.showToast(
-                              msg: 'The password provided is too weak.');
+                            msg: 'The password provided is too weak.',
+                          );
                         }
                       } catch (e) {
                         await Fluttertoast.showToast(msg: e.toString());

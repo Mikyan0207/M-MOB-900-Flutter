@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:starlight/domain/entities/server_entity.dart';
 
 class UserEntity {
@@ -47,8 +46,8 @@ class UserEntity {
       'Avatar': avatar,
       'Discriminator': discriminator,
       'Email': email,
-      'Servers': servers,
       'IdDocument': idDocument,
+      'Servers': servers?.map((ServerEntity e) => e.id).toList(),
     };
   }
 

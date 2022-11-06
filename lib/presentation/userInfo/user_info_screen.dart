@@ -2,14 +2,17 @@ import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:starlight/auth/auth_controller.dart';
 import 'package:starlight/presentation/userInfo/alert_dialog_widget_change_info.dart';
+import 'package:starlight/presentation/userInfo/avatar_clipper.dart';
+import 'package:starlight/presentation/widgets/custom_button.dart';
+import 'package:starlight/presentation/widgets/profile_widget.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import '../../auth/auth_controller.dart';
@@ -20,7 +23,6 @@ import '../widgets/profile_widget.dart';
 import 'avatar_clipper.dart';
 
 const Color darkColor = Color(0xFF49535C);
-
 
 class UserInfoScreen extends StatefulWidget {
   const UserInfoScreen({super.key});
@@ -42,24 +44,27 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
 
   String? extension;
 
-  final AuthController auth = Get.put(AuthController());
+  //final AuthController auth = Get.put(AuthController());
   final CameraXController camera = Get.put(CameraXController());
+  final AuthController auth = Get.find();
 
   // todo create a widget
-  void _showImageDialog(BuildContext context, String title, List<Widget> widgetChildren)
-  {
+  void _showImageDialog(
+    BuildContext context,
+    String title,
+    List<Widget> widgetChildren,
+  ) {
     showDialog(
-        context: context,
-        builder: (BuildContext context)
-        {
-          return AlertDialog(
-            title: Text(title),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: widgetChildren,
-            ),
-          );
-        },
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: widgetChildren,
+          ),
+        );
+      },
     );
   }
 
@@ -76,38 +81,37 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     //}
   }
 
-  void _getFromGallery() async
-  {
-    final XFile? pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+  void _getFromGallery() async {
+    final XFile? pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
 
     imageFile = XFile(pickedFile!.path);
-    if (imageFile != null)
-    {
+    if (imageFile != null) {
       _addGoodExtension(pickedFile.name);
       _cropImage(pickedFile.path);
     }
   }
 
-  void _cropImage(String filePath) async
-  {
+  void _cropImage(String filePath) async {
     final CroppedFile? croppedImage = await ImageCropper().cropImage(
       sourcePath: filePath,
       maxHeight: 2080,
       maxWidth: 2080,
-      aspectRatioPresets: <CropAspectRatioPreset> [
+      aspectRatioPresets: <CropAspectRatioPreset>[
         CropAspectRatioPreset.square,
         CropAspectRatioPreset.ratio3x2,
         CropAspectRatioPreset.original,
         CropAspectRatioPreset.ratio4x3,
         CropAspectRatioPreset.ratio16x9
       ],
-      uiSettings: <PlatformUiSettings> [
+      uiSettings: <PlatformUiSettings>[
         AndroidUiSettings(
-            toolbarTitle: 'Cropper',
-            toolbarColor: Colors.deepOrange,
-            toolbarWidgetColor: Colors.white,
-            initAspectRatio: CropAspectRatioPreset.original,
-            lockAspectRatio: false,),
+          toolbarTitle: 'Cropper',
+          toolbarColor: Colors.deepOrange,
+          toolbarWidgetColor: Colors.white,
+          initAspectRatio: CropAspectRatioPreset.original,
+          lockAspectRatio: false,
+        ),
         IOSUiSettings(
           title: 'Cropper',
         ),
@@ -117,29 +121,27 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
       ],
     );
 
-    if (croppedImage != null)
-    {
+    if (croppedImage != null) {
       imageFile = XFile(croppedImage.path);
       uploadImage();
     }
   }
 
-  void _addGoodExtension(String name)
-  {
+  void _addGoodExtension(String name) {
     extension = name.split('.').last.toString();
   }
 
-  void uploadImage() async
-  {
-    if (imageFile == null)
-    {
+  void uploadImage() async {
+    if (imageFile == null) {
       await Fluttertoast.showToast(msg: "Please select an Image");
       return;
     }
 
-    try
-    {
-      final Reference ref = FirebaseStorage.instance.ref().child('userAvatarProfile/').child(DateTime.now().toString());
+    try {
+      final Reference ref = FirebaseStorage.instance
+          .ref()
+          .child('userAvatarProfile/')
+          .child(DateTime.now().toString());
       final SettableMetadata newMetadata = SettableMetadata(
         cacheControl: "public,max-age=300",
         contentType: "image/$extension",
@@ -147,26 +149,25 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
 
       await ref.putData(await imageFile!.readAsBytes(), newMetadata);
       imageUrl = await ref.getDownloadURL();
-      await FirebaseFirestore.instance.collection('Users').doc(auth.currentUser?.idDocument).update(<String, Object?>{
+      await FirebaseFirestore.instance
+          .collection('Users')
+          .doc(auth.currentUser?.idDocument)
+          .update(<String, Object?>{
         'Avatar': imageUrl,
       });
       imageFile = null;
       extension = null;
       await Fluttertoast.showToast(msg: "Image uploaded");
       await Get.to(const UserInfoScreen());
-    }
-    catch(e)
-    {
+    } catch (e) {
       await Fluttertoast.showToast(msg: e.toString());
     }
   }
 
   @override
   Widget build(BuildContext context) {
-
     return SafeArea(
-      child:
-        Material(
+      child: Material(
         child: Container(
           height: double.infinity,
           width: double.infinity,
@@ -189,7 +190,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                     SizedBox(
                       height: 150,
                       child: Stack(
-                        children:<Widget> [
+                        children: <Widget>[
                           ClipPath(
                             clipper: AvatarClipper(),
                             child: Container(
@@ -207,7 +208,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                             left: 11,
                             top: 50,
                             child: Row(
-                              children:<Widget> [
+                              children: <Widget>[
                                 ProfileWidget(
                                   showEdit: true,
                                   onClicked: () async {
@@ -230,26 +231,27 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                                 Icons.camera,
                                                 color: Colors.red,
                                               ),
-                                            ),
-                                            Text(
-                                              "Camera",
-                                              style: TextStyle(color: Colors.red),
-                                            )
-                                          ],
+                                              Text(
+                                                "Camera",
+                                                style: TextStyle(
+                                                  color: Colors.red,
+                                                ),
+                                              )
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                      InkWell(
-                                        onTap: ()
-                                        {
-                                          _getFromGallery();
-                                        },
-                                        child: Row(
-                                          children: const <Widget>[
-                                            Padding(
-                                              padding: EdgeInsets.all(4.0),
-                                              child: Icon(
-                                                Icons.image,
-                                                color: Colors.red,
+                                        InkWell(
+                                          onTap: () {
+                                            _getFromGallery();
+                                          },
+                                          child: Row(
+                                            children: const <Widget>[
+                                              Padding(
+                                                padding: EdgeInsets.all(4.0),
+                                                child: Icon(
+                                                  Icons.image,
+                                                  color: Colors.red,
+                                                ),
                                               ),
                                             ),
                                             Text(
@@ -267,7 +269,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                 const SizedBox(width: 20),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget> [
+                                  children: const <Widget>[
                                     Text(
                                       auth.currentUser?.username?? "Username",
                                       style: const TextStyle(
@@ -291,26 +293,35 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children:<Widget> [
+                        children: <Widget>[
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget> [
+                            children: <Widget>[
                               const Text(
-                                style: TextStyle( fontSize: 16 ,fontWeight: FontWeight.bold),
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
                                 "Username:",
                               ),
                               Text(
                                 "${auth.currentUser?.username as String}\n\n",
                               ),
                               const Text(
-                                style: TextStyle( fontSize: 16 ,fontWeight: FontWeight.bold),
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
                                 "Email:",
                               ),
                               Text(
                                 "${auth.currentUser?.email as String}\n\n",
                               ),
                               const Text(
-                                style: TextStyle( fontSize: 16 ,fontWeight: FontWeight.bold),
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
                                 "Password: \n *******",
                               ),
                             ],
@@ -320,22 +331,34 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                             children: <Widget>[
                               CustomButton(
                                 customText: "Modify",
-                                onClicked: ()  {
-                                  displayModifyInfoDialog(context, "Change your username", "Username");
+                                onClicked: () {
+                                  displayModifyInfoDialog(
+                                    context,
+                                    "Change your username",
+                                    "Username",
+                                  );
                                 },
                               ),
                               const SizedBox(height: 40),
                               CustomButton(
-                                  customText: "Modify",
-                                  onClicked: ()  {
-                                    displayModifyInfoDialog(context, "Change your email", "Email");
-                                  },
+                                customText: "Modify",
+                                onClicked: () {
+                                  displayModifyInfoDialog(
+                                    context,
+                                    "Change your email",
+                                    "Email",
+                                  );
+                                },
                               ),
                               const SizedBox(height: 40),
                               CustomButton(
                                 customText: "Modify",
-                                onClicked: ()  {
-                                  displayModifyInfoDialog(context, "Modify your password", "password");
+                                onClicked: () {
+                                  displayModifyInfoDialog(
+                                    context,
+                                    "Modify your password",
+                                    "password",
+                                  );
                                 },
                               ),
                             ],
