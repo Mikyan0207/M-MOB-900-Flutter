@@ -1,42 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-
-import '../../auth/auth_controller.dart';
+import 'package:starlight/auth/auth_controller.dart';
 
 class ProfileWidget extends StatelessWidget {
-
   ProfileWidget({
     Key? key,
     this.imagePath,
     required this.onClicked,
     required this.showEdit,
   }) : super(key: key);
-  String? imagePath;
+
+  final String? imagePath;
   final VoidCallback onClicked;
   final bool showEdit;
 
-  final AuthController auth = Get.put(AuthController());
+  final AuthController auth = Get.find();
 
-  String getImageFromUser()
-  {
-    if (imagePath != null)
-    {
+  String getImageFromUser() {
+    if (imagePath != null) {
       return imagePath as String;
     }
-    return auth.currentUser?.avatar?? "https://ddrg.farmasi.unej.ac.id/wp-content/uploads/sites/6/2017/10/unknown-person-icon-Image-from.png";
+    return auth.currentUser?.avatar ??
+        "https://ddrg.farmasi.unej.ac.id/wp-content/uploads/sites/6/2017/10/unknown-person-icon-Image-from.png";
   }
 
   @override
   Widget build(BuildContext context) {
     final Color color = Theme.of(context).colorScheme.primary;
 
-
-    if (showEdit == true)
-    {
+    if (showEdit == true) {
       return Center(
         child: Stack(
-          children: <Widget> [
+          children: <Widget>[
             buildImage(),
             Positioned(
               bottom: 0,
@@ -49,7 +44,7 @@ class ProfileWidget extends StatelessWidget {
     } else {
       return Center(
         child: Stack(
-          children: <Widget> [
+          children: <Widget>[
             buildImage(),
           ],
         ),
@@ -75,18 +70,18 @@ class ProfileWidget extends StatelessWidget {
   }
 
   Widget buildEditIcon(Color color) => buildCircle(
-    color: Colors.white,
-    all: 3,
-    child: buildCircle(
-      color: color,
-      all: 8,
-      child: const Icon(
-        Icons.edit,
         color: Colors.white,
-        size: 20,
-      ),
-    ),
-  );
+        all: 3,
+        child: buildCircle(
+          color: color,
+          all: 8,
+          child: const Icon(
+            Icons.edit,
+            color: Colors.white,
+            size: 20,
+          ),
+        ),
+      );
 
   Widget buildCircle({
     required Widget child,
