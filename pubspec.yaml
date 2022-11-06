@@ -42,23 +42,4 @@ dev_dependencies:
 flutter: 
   assets: 
     - assets/
-  fonts: 
-    - 
-      family: Whitney
-      fonts: 
-        - 
-          asset: assets/fonts/whitneylightitalic.otf
-          weight: 100
-        - 
-          asset: assets/fonts/whitneylight.otf
-          weight: 100
-        - 
-          asset: assets/fonts/whitneymedium.otf
-          weight: 500
-        - 
-          asset: assets/fonts/whitneysemibold.otf
-          weight: 600
-        - 
-          asset: assets/fonts/whitneybold.otf
-          weight: 800
   uses-material-design: true

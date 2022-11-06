@@ -35,7 +35,11 @@ class MessageBox extends StatelessWidget {
                       date: message.time!.toDate(),
                       builder: (BuildContext context, String value) => Text(
                         value,
-                        style: const TextStyle(color: Vx.gray400, fontSize: 14),
+                        style: const TextStyle(
+                          color: Vx.gray400,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w100,
+                        ),
                       ),
                     ),
                   ),

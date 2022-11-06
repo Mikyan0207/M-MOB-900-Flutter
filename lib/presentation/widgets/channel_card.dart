@@ -8,24 +8,25 @@ import 'package:velocity_x/velocity_x.dart';
 class ChannelCard extends StatelessWidget {
   ChannelCard({
     Key? key,
-    required this.isSelectedChannel,
-    required this.currentChannel,
+    required this.channel,
   }) : super(key: key);
 
-  final bool isSelectedChannel;
-  final ChannelEntity currentChannel;
+  final ChannelEntity channel;
 
   final ChannelController _channelController = Get.find();
 
   @override
   Widget build(BuildContext context) {
+    final bool isSelectedChannel =
+        channel.id == _channelController.currentChannel.value.id;
+
     return InkWell(
       onTap: () {
-        if (_channelController.currentChannel.value.id == currentChannel.id) {
+        if (_channelController.currentChannel.value.id == channel.id) {
           return;
         }
 
-        _channelController.setCurrentChannel(currentChannel);
+        _channelController.setCurrentChannel(channel);
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(
@@ -47,28 +48,13 @@ class ChannelCard extends StatelessWidget {
                 const Padding(
                   padding: EdgeInsets.only(right: 5.0),
                   child: Icon(
-                    Icons.numbers,
+                    Icons.numbers_rounded,
                     size: 22,
                     color: Vx.gray400,
                   ),
                 ),
                 Text(
-                  currentChannel.name.isEmptyOrNull
-                      ? currentChannel.id.trim().substring(
-                            0,
-                            currentChannel.id.length > 20
-                                ? 20
-                                : currentChannel.id.length,
-                          )
-                      : currentChannel.name
-                          .trim()
-                          .substring(
-                            0,
-                            currentChannel.name.length > 20
-                                ? 20
-                                : currentChannel.name.length,
-                          )
-                          .toLowerCase(),
+                  getChannelName(),
                   style: TextStyle(
                     color: isSelectedChannel ? Vx.white : Vx.gray400,
                     fontSize: 16,
@@ -82,5 +68,20 @@ class ChannelCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String getChannelName() {
+    return channel.name.isEmptyOrNull
+        ? channel.id.trim().substring(
+              0,
+              channel.id.length > 20 ? 20 : channel.id.length,
+            )
+        : channel.name
+            .trim()
+            .substring(
+              0,
+              channel.name.length > 20 ? 20 : channel.name.length,
+            )
+            .toLowerCase();
   }
 }

@@ -139,7 +139,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
       imageUrl = await ref.getDownloadURL();
       await FirebaseFirestore.instance
           .collection('Users')
-          .doc(auth.currentUser?.idDocument)
+          .doc(auth.currentUser.value.idDocument)
           .update(<String, Object?>{
         'Avatar': imageUrl,
       });
@@ -290,8 +290,10 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                 ),
                                 "Username:",
                               ),
-                              Text(
-                                "${auth.currentUser?.username as String}\n\n",
+                              Obx(
+                                () => Text(
+                                  "${auth.currentUser.value.username}\n\n",
+                                ),
                               ),
                               const Text(
                                 style: TextStyle(
@@ -300,8 +302,10 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                 ),
                                 "Email:",
                               ),
-                              Text(
-                                "${auth.currentUser?.email as String}\n\n",
+                              Obx(
+                                () => Text(
+                                  "${auth.currentUser.value.email}\n\n",
+                                ),
                               ),
                               const Text(
                                 style: TextStyle(

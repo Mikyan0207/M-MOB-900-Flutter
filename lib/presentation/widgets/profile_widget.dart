@@ -20,8 +20,9 @@ class ProfileWidget extends StatelessWidget {
     if (imagePath != null) {
       return imagePath as String;
     }
-    return auth.currentUser?.avatar ??
-        "https://ddrg.farmasi.unej.ac.id/wp-content/uploads/sites/6/2017/10/unknown-person-icon-Image-from.png";
+    return auth.currentUser.value.avatar.isEmpty
+        ? "https://ddrg.farmasi.unej.ac.id/wp-content/uploads/sites/6/2017/10/unknown-person-icon-Image-from.png"
+        : auth.currentUser.value.avatar;
   }
 
   @override

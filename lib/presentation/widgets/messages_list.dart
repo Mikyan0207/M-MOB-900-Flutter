@@ -37,7 +37,7 @@ class MessagesList extends StatelessWidget {
               ),
             );
           } else {
-            return buildChannelList(parseMessages(snapshot.data!.docs));
+            return buildMessageList(parseMessages(snapshot.data!.docs));
           }
         },
       ),
@@ -66,7 +66,7 @@ class MessagesList extends StatelessWidget {
     return messages;
   }
 
-  ListView buildChannelList(List<Map<String, dynamic>> messages) {
+  ListView buildMessageList(List<Map<String, dynamic>> messages) {
     return ListView.builder(
       padding: const EdgeInsets.all(10.0),
       itemBuilder: (BuildContext context, int index) {

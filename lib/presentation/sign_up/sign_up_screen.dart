@@ -207,8 +207,7 @@ class SignUpScreen extends StatelessWidget {
                           emailController.text,
                           passwordController.text,
                         )) {
-                          await Get.to(const Home());
-                          // TODO(florian): Error message.
+                          await Get.to(() => Home());
                         }
                       } on FirebaseAuthException catch (e) {
                         if (e.code == 'weak-password') {

@@ -6,11 +6,10 @@ import 'package:starlight/domain/repositories/channel_repository.dart';
 import 'package:starlight/domain/repositories/server_repository.dart';
 
 class ServerController extends GetxController {
-  ServerEntity? currentServer;
+  Rx<ServerEntity> currentServer = ServerEntity().obs;
   Rx<ChannelEntity> currentChannel = ChannelEntity().obs;
-  Rx<String> currentChannelId = ''.obs;
 
-  List<ServerEntity> servers = <ServerEntity>[];
+  RxList<ServerEntity> servers = <ServerEntity>[].obs;
   RxList<ChannelEntity> channels = <ChannelEntity>[].obs;
 
   final ServerRepository _serverRepository = ServerRepository();
@@ -25,12 +24,12 @@ class ServerController extends GetxController {
       return;
     }
 
-    servers = ue.servers!;
-    currentServer = servers[0];
+    servers(ue.servers!);
+    currentServer(servers[0]);
   }
 
   Future<List<ServerEntity>> getServersAsync() async {
-    servers = await _serverRepository.getAll();
+    servers(await _serverRepository.getAll());
 
     return servers;
   }
@@ -38,21 +37,22 @@ class ServerController extends GetxController {
   Future<ServerEntity> getServerAsync(String serverId) async {
     final ServerEntity server = await _serverRepository.getServer(serverId);
 
-    currentServer = server;
+    currentServer(server);
     channels(await getChannelsForCurrentServer());
 
     return server;
   }
 
   Future<List<ChannelEntity>> getChannelsForCurrentServer() async {
-    if (currentServer == null || currentServer?.id == null) {
+    if (currentServer.value.id?.isEmpty ?? true) {
       return channels;
     }
 
-    channels(await _channelRespository.getServerChannels(currentServer!.id!));
+    channels(
+        await _channelRespository.getServerChannels(currentServer.value.id!));
 
     return channels;
   }
 
-  void setCurrentServer(ServerEntity e) => currentServer = e;
+  void setCurrentServer(ServerEntity e) => currentServer(e);
 }

@@ -10,23 +10,17 @@ class ChannelEntity {
     this.messages = const <MessageEntity>[],
   });
 
-  factory ChannelEntity.fromJson(dynamic json) {
-    final ChannelEntity ce = ChannelEntity(
-      id: json['Id'] ?? '',
-      name: json['Name'] ?? '',
-      description: json['Description'] ?? '',
-    );
-
-    if (json['Members'] != null) {
-      ce.members = json['Members'];
-    }
-
-    if (json['Messages'] != null) {
-      ce.messages = json['Messages'];
-    }
-
-    return ce;
-  }
+  factory ChannelEntity.fromJson(dynamic json) => ChannelEntity(
+        id: json['Id'] ?? '',
+        name: json['Name'] ?? '',
+        description: json['Description'] ?? '',
+        members: json['Members'] != null
+            ? UserEntity.fromJsonList(json['Members'])
+            : const <UserEntity>[],
+        messages: json['Messages'] != null
+            ? MessageEntity.fromJsonList(json['Messages'])
+            : const <MessageEntity>[],
+      );
 
   static List<ChannelEntity> fromJsonList(List<dynamic> jsonList) =>
       jsonList.map((dynamic json) => ChannelEntity.fromJson(json)).toList();

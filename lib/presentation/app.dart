@@ -25,7 +25,7 @@ class App extends StatelessWidget {
       },
       getPages: <GetPage<Widget>>[
         GetPage<Widget>(
-          name: '/',
+          name: '/Home',
           page: <Widget>() => const Home(),
         ),
         GetPage<Widget>(

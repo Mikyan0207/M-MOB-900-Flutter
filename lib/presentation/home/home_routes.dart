@@ -5,7 +5,7 @@ import '../../common/constants/route_constants.dart';
 class HomeRoutes {
   static Map<String, WidgetBuilder> getAll() {
     return <String, WidgetBuilder>{
-      RouteList.home: (BuildContext context) => const Home(),
+      RouteList.home: (BuildContext context) => Home(),
     };
   }
 }

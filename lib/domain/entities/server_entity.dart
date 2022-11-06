@@ -3,32 +3,26 @@ import 'package:starlight/domain/entities/user_entity.dart';
 
 class ServerEntity {
   ServerEntity({
-    this.id,
-    this.name,
-    this.description,
-    this.icon,
-    this.members,
-    this.channels,
+    this.id = '',
+    this.name = '',
+    this.description = '',
+    this.icon = '',
+    this.members = const <UserEntity>[],
+    this.channels = const <ChannelEntity>[],
   });
 
-  factory ServerEntity.fromJson(dynamic json) {
-    final ServerEntity e = ServerEntity();
-
-    e.id = json['Id'];
-    e.name = json['Name'];
-    e.description = json['Description'];
-    e.icon = json['Icon'];
-
-    if (json['Members'] != null) {
-      e.members = UserEntity.fromJsonList(json['Members']);
-    }
-
-    if (json['Channels'] != null) {
-      e.channels = ChannelEntity.fromJsonList(json['Channels']);
-    }
-
-    return e;
-  }
+  factory ServerEntity.fromJson(dynamic json) => ServerEntity(
+        id: json['Id'] ?? '',
+        name: json['Name'] ?? '',
+        description: json['Description'] ?? '',
+        icon: json['Icon'] ?? '',
+        members: json['Members'] != null
+            ? UserEntity.fromJsonList(json['Members'])
+            : const <UserEntity>[],
+        channels: json['Channels'] != null
+            ? ChannelEntity.fromJsonList(json['Channels'])
+            : const <ChannelEntity>[],
+      );
 
   static List<ServerEntity> fromJsonList(List<dynamic>? jsonList) {
     if (jsonList == null) {
@@ -44,15 +38,32 @@ class ServerEntity {
       'Name': name,
       'Description': description,
       'Icon': icon,
-      'Members': members,
-      'Channels': channels,
+      'Members': members
+          .map(
+            (UserEntity ue) => <String, dynamic>{
+              'Id': ue.id,
+              'Username': ue.username,
+              'Avatar': ue.avatar,
+              'Discriminator': ue.discriminator,
+            },
+          )
+          .toList(),
+      'Channels': channels
+          .map(
+            (ChannelEntity ce) => <String, dynamic>{
+              'Id': ce.id,
+              'Name': ce.name,
+              'Description': ce.description,
+            },
+          )
+          .toList(),
     };
   }
 
-  String? id;
-  String? name;
-  String? description;
-  String? icon;
-  List<UserEntity>? members;
-  List<ChannelEntity>? channels;
+  String id;
+  String name;
+  String description;
+  String icon;
+  List<UserEntity> members;
+  List<ChannelEntity> channels;
 }

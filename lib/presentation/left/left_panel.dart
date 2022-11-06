@@ -3,12 +3,10 @@ import 'package:get/get.dart';
 import 'package:starlight/auth/auth_controller.dart';
 import 'package:starlight/domain/controllers/channel_controller.dart';
 import 'package:starlight/domain/controllers/server_controller.dart';
-import 'package:starlight/domain/entities/channel_entity.dart';
-import 'package:starlight/domain/entities/server_entity.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
-import 'package:starlight/presentation/widgets/channel_card.dart';
+import 'package:starlight/presentation/widgets/channel_list.dart';
 import 'package:starlight/presentation/widgets/profile_bar.dart';
-import 'package:starlight/presentation/widgets/server_icon.dart';
+import 'package:starlight/presentation/widgets/server_list.dart';
 import 'package:starlight/presentation/widgets/starlight_icon_button.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -19,16 +17,13 @@ class LeftPanel extends StatelessWidget {
   final ServerController serverController = Get.find();
   final ChannelController channelController = Get.find();
 
-  final String iconPlaceholder =
-      "https://static.vecteezy.com/system/resources/previews/007/479/717/original/icon-contacts-suitable-for-mobile-apps-symbol-long-shadow-style-simple-design-editable-design-template-simple-symbol-illustration-vector.jpg";
-
   @override
   Widget build(BuildContext context) {
-    if (auth.currentUser == null) {
+    if (auth.currentUser.value.id.isEmptyOrNull) {
       Get.toNamed("SignInScreen");
     }
 
-    serverController.setServersFromUser(auth.currentUser!);
+    serverController.setServersFromUser(auth.currentUser.value);
     serverController.getChannelsForCurrentServer().then(
           (_) => channelController.setCurrentChannel(
             serverController.channels[0],
@@ -55,7 +50,7 @@ class LeftPanel extends StatelessWidget {
                       padding: const EdgeInsets.only(top: 12.0),
                       child: Column(
                         children: <Widget>[
-                          loadServerIcons(serverController.servers),
+                          ServerList(),
                           const SizedBox(
                             height: 10,
                           ),
@@ -83,8 +78,8 @@ class LeftPanel extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      if (serverController.currentServer != null)
-                        Container(
+                      Obx(
+                        () => Container(
                           width: double.infinity,
                           height: 60,
                           decoration: const BoxDecoration(
@@ -101,7 +96,7 @@ class LeftPanel extends StatelessWidget {
                               children: <Widget>[
                                 Expanded(
                                   child: Text(
-                                    serverController.currentServer!.name!,
+                                    serverController.currentServer.value.name,
                                     style: const TextStyle(
                                       color: Vx.white,
                                       fontSize: 16,
@@ -133,28 +128,10 @@ class LeftPanel extends StatelessWidget {
                               ],
                             ),
                           ),
-                        )
-                      else
-                        Container(),
-                      Expanded(
-                        child: Obx(
-                          () => ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: serverController.channels.length,
-                            controller: ScrollController(),
-                            itemBuilder: (BuildContext context, int index) {
-                              final ChannelEntity currentChannel =
-                                  serverController.channels[index];
-                              final bool isSelectedChannel =
-                                  channelController.currentChannel.value.id ==
-                                      serverController.channels[index].id;
-                              return ChannelCard(
-                                isSelectedChannel: isSelectedChannel,
-                                currentChannel: currentChannel,
-                              );
-                            },
-                          ),
                         ),
+                      ),
+                      Expanded(
+                        child: ChannelList(),
                       ),
                       ProfileBar()
                     ],
@@ -165,61 +142,6 @@ class LeftPanel extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-
-  List<Widget> loadChannels(List<ChannelEntity>? channels) {
-    if (channels == null) {
-      return <Widget>[];
-    }
-
-    return channels.map(
-      (ChannelEntity item) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 16.0),
-          child: Obx(
-            () => Text(
-              item.id,
-              style: TextStyle(
-                color: Vx.white,
-                backgroundColor:
-                    serverController.currentChannel.value.id != item.id
-                        ? Vx.gray500
-                        : Vx.red500,
-              ),
-            ),
-          ),
-        );
-      },
-    ).toList();
-  }
-
-  Widget loadServerIcons(List<ServerEntity>? servers) {
-    if (servers == null) {
-      return Container();
-    }
-
-    return Column(
-      children: servers
-          .map(
-            (ServerEntity item) => Center(
-              child: ServerIcon(
-                icon: iconPlaceholder,
-                iconSize: 50,
-                iconRadius: 25,
-                onIconClicked: () async {
-                  serverController.setCurrentServer(item);
-                  await serverController.getChannelsForCurrentServer();
-                  if (serverController.channels.isNotEmpty) {
-                    channelController.setCurrentChannel(
-                      serverController.channels[0],
-                    );
-                  }
-                },
-              ),
-            ),
-          )
-          .toList(),
     );
   }
 }

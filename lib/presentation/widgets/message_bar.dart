@@ -81,7 +81,8 @@ class _MessageBarState extends State<MessageBar> {
                                       )) {
                                     await _messageRepository.create(
                                       MessageEntity(
-                                        author: _authController.currentUser!,
+                                        author:
+                                            _authController.currentUser.value,
                                         content: textarea.text.trim(),
                                         channelId: _channelController
                                             .currentChannel.value.id,
@@ -169,7 +170,7 @@ class _MessageBarState extends State<MessageBar> {
 
                                   await _messageRepository.create(
                                     MessageEntity(
-                                      author: _authController.currentUser!,
+                                      author: _authController.currentUser.value,
                                       content: textarea.text,
                                       channelId: _channelController
                                           .currentChannel.value.id,
