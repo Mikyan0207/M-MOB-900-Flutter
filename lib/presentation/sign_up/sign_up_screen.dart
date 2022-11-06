@@ -207,7 +207,7 @@ class SignUpScreen extends StatelessWidget {
                           emailController.text,
                           passwordController.text,
                         )) {
-                          await Get.to(() => Home());
+                          await Get.to(() => const Home());
                         }
                       } on FirebaseAuthException catch (e) {
                         if (e.code == 'weak-password') {

@@ -162,7 +162,7 @@ class SignInScreen extends StatelessWidget {
                         emailController.text,
                         passwordController.text,
                       )) {
-                        await Get.to(() => Home());
+                        await Get.to(() => const Home());
                       }
                     },
                   ),

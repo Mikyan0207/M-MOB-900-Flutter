@@ -36,7 +36,10 @@ void updateDataUserInFirebase(String field, String value) async {
 }
 
 Future<void> displayModifyInfoDialog(
-    BuildContext context, String title, String contentString) async {
+  BuildContext context,
+  String title,
+  String contentString,
+) async {
   final TextEditingController textFieldController = TextEditingController();
 
   return showDialog(

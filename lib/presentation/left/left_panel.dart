@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:starlight/auth/auth_controller.dart';
-import 'package:starlight/domain/controllers/channel_controller.dart';
 import 'package:starlight/domain/controllers/server_controller.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
 import 'package:starlight/presentation/widgets/channel_list.dart';
