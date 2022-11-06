@@ -6,6 +6,7 @@ import 'package:starlight/domain/controllers/server_controller.dart';
 import 'package:starlight/domain/entities/channel_entity.dart';
 import 'package:starlight/domain/entities/server_entity.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
+import 'package:starlight/presentation/widgets/profile_bar.dart';
 import 'package:starlight/presentation/widgets/server_icon.dart';
 import 'package:starlight/presentation/widgets/starlight_icon_button.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -56,7 +57,10 @@ class LeftPanel extends StatelessWidget {
                         iconHoverColor: Vx.white,
                         backgroundColor: AppColors.black700,
                         backgroundHoverColor: Vx.green400,
-                      )
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
                     ],
                   ),
                 ),
@@ -73,6 +77,7 @@ class LeftPanel extends StatelessWidget {
               child: Column(
                 children: <Widget>[
                   Obx(() => loadChannels(serverController.channels)),
+                  ProfileBar(),
                 ],
               ),
             ),
