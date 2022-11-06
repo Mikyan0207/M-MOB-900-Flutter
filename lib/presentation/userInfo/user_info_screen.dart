@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:camera/camera.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -12,6 +13,8 @@ import 'package:starlight/presentation/userInfo/alert_dialog_widget_change_info.
 import 'package:velocity_x/velocity_x.dart';
 
 import '../../auth/auth_controller.dart';
+import '../../domain/controllers/camera_controller.dart';
+import '../picture/take_picture_screen.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/profile_widget.dart';
 import 'avatar_clipper.dart';
@@ -40,6 +43,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
   String? extension;
 
   final AuthController auth = Get.put(AuthController());
+  final CameraXController camera = Get.put(CameraXController());
 
   // todo create a widget
   void _showImageDialog(BuildContext context, String title, List<Widget> widgetChildren)
@@ -62,14 +66,14 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
   void _getFromCamera() async
   {
     // todo try this code on mobile phone + hide this choice for web  
-    final XFile? pickedFile = await ImagePicker().pickImage(source: ImageSource.camera);
+    //final XFile? pickedFile = await ImagePicker().pickImage(source: ImageSource.camera);
 
-    imageFile = XFile(pickedFile!.path);
-    if (imageFile != null)
-    {
-      _addGoodExtension(pickedFile.name);
-      _cropImage(pickedFile.path);
-    }
+    //imageFile = XFile(pickedFile!.path);
+    //if (imageFile != null)
+    //{
+      //_addGoodExtension(pickedFile.name);
+      //_cropImage(pickedFile.path);
+    //}
   }
 
   void _getFromGallery() async
@@ -206,12 +210,17 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                               children:<Widget> [
                                 ProfileWidget(
                                   showEdit: true,
-                                  onClicked: ()  {
+                                  onClicked: () async {
+                                    await camera.initCamera();
+                                    await Get.to(const TakePictureScreen());
+                                    /*
                                     _showImageDialog(context, "Choose an option", <Widget>[
                                       InkWell(
-                                        onTap: ()
-                                        {
-                                          _getFromCamera();
+                                        onTap: () async {
+                                          final List<CameraDescription> cameras = await availableCameras();
+                                          final CameraDescription firstCamera = cameras.first;
+
+                                          TakePictureScreen( camera: firstCamera );
                                         },
                                         child: Row(
                                           children: const <Widget> [
@@ -251,20 +260,22 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                         ),
                                       )
                                     ],);
+
+                                     */
                                   },
                                 ),
                                 const SizedBox(width: 20),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: const <Widget> [
+                                  children: <Widget> [
                                     Text(
-                                      "Username",
-                                      style: TextStyle(
+                                      auth.currentUser?.username?? "Username",
+                                      style: const TextStyle(
                                         fontSize: 32,
                                         color: Color(0xFFFFFFFF),
                                       ),
                                     ),
-                                    SizedBox(height: 50),
+                                    const SizedBox(height: 50),
                                   ],
                                 )
                               ],
