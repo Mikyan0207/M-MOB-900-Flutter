@@ -5,28 +5,21 @@ import 'package:starlight/domain/entities/channel_entity.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
 import 'package:velocity_x/velocity_x.dart';
 
-class ChannelCard extends StatelessWidget {
-  ChannelCard({
+class ChannelCard extends GetView<ChannelController> {
+  const ChannelCard({
     Key? key,
+    required this.isSelected,
     required this.channel,
   }) : super(key: key);
 
   final ChannelEntity channel;
-
-  final ChannelController _channelController = Get.find();
+  final bool isSelected;
 
   @override
   Widget build(BuildContext context) {
-    final bool isSelectedChannel =
-        channel.id == _channelController.currentChannel.value.id;
-
     return InkWell(
       onTap: () {
-        if (_channelController.currentChannel.value.id == channel.id) {
-          return;
-        }
-
-        _channelController.setCurrentChannel(channel);
+        controller.setCurrentChannel(channel);
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(
@@ -35,7 +28,7 @@ class ChannelCard extends StatelessWidget {
         ),
         child: Container(
           decoration: BoxDecoration(
-            color: isSelectedChannel ? AppColors.gray200 : Colors.transparent,
+            color: isSelected ? AppColors.gray200 : Colors.transparent,
             borderRadius: BorderRadius.circular(4.0),
           ),
           child: Padding(
@@ -56,10 +49,10 @@ class ChannelCard extends StatelessWidget {
                 Text(
                   getChannelName(),
                   style: TextStyle(
-                    color: isSelectedChannel ? Vx.white : Vx.gray400,
+                    color: isSelected ? Vx.white : Vx.gray400,
                     fontSize: 16,
                     fontWeight:
-                        isSelectedChannel ? FontWeight.w600 : FontWeight.normal,
+                        isSelected ? FontWeight.w600 : FontWeight.normal,
                   ),
                 ),
               ],

@@ -1,6 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:starlight/domain/controllers/channel_controller.dart';
+import 'package:starlight/auth/auth_controller.dart';
 import 'package:starlight/domain/controllers/server_controller.dart';
 import 'package:starlight/domain/entities/server_entity.dart';
 import 'package:starlight/presentation/widgets/server_icon.dart';
@@ -10,34 +11,89 @@ class ServerList extends StatelessWidget {
 
   final String iconPlaceholder =
       "https://static.vecteezy.com/system/resources/previews/007/479/717/original/icon-contacts-suitable-for-mobile-apps-symbol-long-shadow-style-simple-design-editable-design-template-simple-symbol-illustration-vector.jpg";
-  final ServerController serverController = Get.find();
-  final ChannelController channelController = Get.find();
+
+  final AuthController _authController = Get.find();
+  final ServerController _serverController = Get.find();
 
   @override
   Widget build(BuildContext context) {
     return Obx(
-      () => Column(
-        children: serverController.servers
-            .map(
-              (ServerEntity item) => Center(
-                child: ServerIcon(
-                  icon: iconPlaceholder,
-                  iconSize: 50,
-                  iconRadius: 25,
-                  onIconClicked: () async {
-                    serverController.setCurrentServer(item);
-                    await serverController.getChannelsForCurrentServer();
-                    if (serverController.channels.isNotEmpty) {
-                      channelController.setCurrentChannel(
-                        serverController.channels[0],
-                      );
-                    }
-                  },
-                ),
-              ),
+      () => StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+        stream: FirebaseFirestore.instance
+            .collection("Servers")
+            .where(
+              "Id",
+              whereIn: _authController.currentUser.value.servers
+                  .map((ServerEntity e) => e.id)
+                  .toList(),
             )
-            .toList(),
+            .snapshots(),
+        builder: (
+          BuildContext context,
+          AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot,
+        ) {
+          if (!snapshot.hasData) {
+            return Container();
+          } else {
+            return buildServerList(parseServers(snapshot.data!.docs));
+          }
+        },
       ),
+    );
+  }
+
+  List<Map<String, dynamic>> parseServers(
+    List<QueryDocumentSnapshot<Map<String, dynamic>>> docs,
+  ) {
+    final List<Map<String, dynamic>> servers = docs
+        .map(
+          (
+            QueryDocumentSnapshot<Map<String, dynamic>> e,
+          ) =>
+              e.data(),
+        )
+        .toList();
+
+    // messages.sort((
+    //   Map<String, dynamic> a,
+    //   Map<String, dynamic> b,
+    // ) {
+    //   return (b['Time'] as Timestamp).compareTo(a['Time'] as Timestamp);
+    // });
+
+    return servers;
+  }
+
+  ListView buildServerList(List<Map<String, dynamic>> servers) {
+    return ListView.builder(
+      padding: const EdgeInsets.all(10.0),
+      shrinkWrap: true,
+      itemCount: servers.length,
+      controller: ScrollController(),
+      itemBuilder: (BuildContext context, int index) {
+        final ServerEntity se = ServerEntity.fromJson(servers[index]);
+
+        if (index == 0) {
+          Future<void>.delayed(
+            Duration.zero,
+            () => _serverController.setCurrentServer(se),
+          );
+        }
+
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12.0),
+          child: Center(
+            child: ServerIcon(
+              icon: se.icon.isNotEmpty ? se.icon : iconPlaceholder,
+              iconSize: 50,
+              iconRadius: 25,
+              onIconClicked: () async {
+                await _serverController.setCurrentServer(se);
+              },
+            ),
+          ),
+        );
+      },
     );
   }
 }

@@ -13,23 +13,10 @@ import 'package:velocity_x/velocity_x.dart';
 class LeftPanel extends StatelessWidget {
   LeftPanel({super.key});
 
-  final AuthController auth = Get.find();
-  final ServerController serverController = Get.find();
-  final ChannelController channelController = Get.find();
+  final ServerController _serverController = Get.find();
 
   @override
   Widget build(BuildContext context) {
-    if (auth.currentUser.value.id.isEmptyOrNull) {
-      Get.toNamed("SignInScreen");
-    }
-
-    serverController.setServersFromUser(auth.currentUser.value);
-    serverController.getChannelsForCurrentServer().then(
-          (_) => channelController.setCurrentChannel(
-            serverController.channels[0],
-          ),
-        );
-
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -39,30 +26,30 @@ class LeftPanel extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 4.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: AppColors.black900,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 12.0),
-                      child: Column(
-                        children: <Widget>[
-                          ServerList(),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          const StarlightIconButton(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: AppColors.black900,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 12.0),
+                    child: Column(
+                      children: <Widget>[
+                        Expanded(child: ServerList()),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: StarlightIconButton(
                             icon: Icons.add_circle,
                             iconColor: Vx.green600,
                             iconHoverColor: Vx.white,
                             backgroundColor: AppColors.black700,
                             backgroundHoverColor: Vx.green400,
-                          )
-                        ],
-                      ),
+                          ),
+                        )
+                      ],
                     ),
                   ),
                 ),
@@ -96,7 +83,7 @@ class LeftPanel extends StatelessWidget {
                               children: <Widget>[
                                 Expanded(
                                   child: Text(
-                                    serverController.currentServer.value.name,
+                                    _serverController.currentServer.value.name,
                                     style: const TextStyle(
                                       color: Vx.white,
                                       fontSize: 16,
@@ -107,7 +94,7 @@ class LeftPanel extends StatelessWidget {
                                   color: AppColors.black900,
                                   offset: const Offset(-192, 52),
                                   icon: const Icon(
-                                    Icons.arrow_downward_rounded,
+                                    Icons.arrow_drop_down_rounded,
                                     size: 22,
                                     color: Vx.gray400,
                                   ),

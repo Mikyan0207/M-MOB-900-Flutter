@@ -11,29 +11,33 @@ class ChannelList extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
-  final ServerController serverController = Get.find();
-  final ChannelController channelController = Get.find();
+  final ServerController _serverController = Get.find();
+  final ChannelController _channelController = Get.find();
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-      stream: FirebaseFirestore.instance
-          .collection("Channels")
-          .where(
-            "ServerId",
-            isEqualTo: serverController.currentServer.value.id,
-          )
-          .snapshots(),
-      builder: (
-        BuildContext context,
-        AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot,
-      ) {
-        if (!snapshot.hasData) {
-          return Container();
-        } else {
-          return buildChannelList(parseChannels(snapshot.data!.docs));
-        }
-      },
+    return Obx(
+      () => StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+        stream: FirebaseFirestore.instance
+            .collection("Channels")
+            .where(
+              "ServerId",
+              isEqualTo: _serverController.currentServer.value.id,
+            )
+            .snapshots(),
+        builder: (
+          BuildContext context,
+          AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot,
+        ) {
+          if (!snapshot.hasData) {
+            return buildChannelList(
+              _serverController.currentServer.value.channels,
+            );
+          } else {
+            return buildChannelListFromMap(parseChannels(snapshot.data!.docs));
+          }
+        },
+      ),
     );
   }
 
@@ -52,17 +56,25 @@ class ChannelList extends StatelessWidget {
     return channels;
   }
 
-  ListView buildChannelList(List<Map<String, dynamic>> channels) {
+  ListView buildChannelList(List<ChannelEntity> channels) {
     return ListView.builder(
       shrinkWrap: true,
       itemCount: channels.length,
       controller: ScrollController(),
       itemBuilder: (BuildContext context, int index) {
-        final ChannelEntity channel = ChannelEntity.fromJson(channels[index]);
         return ChannelCard(
-          channel: channel,
+          isSelected:
+              _channelController.currentChannel.value.id == channels[index].id,
+          channel: channels[index],
         );
       },
     );
   }
+
+  ListView buildChannelListFromMap(List<Map<String, dynamic>> channels) =>
+      buildChannelList(
+        channels
+            .map((Map<String, dynamic> e) => ChannelEntity.fromJson(e))
+            .toList(),
+      );
 }
