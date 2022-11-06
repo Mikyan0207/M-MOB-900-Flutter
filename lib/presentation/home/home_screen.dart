@@ -6,8 +6,18 @@ import 'package:starlight/presentation/left/left_panel.dart';
 import 'package:starlight/presentation/right/right_panel.dart';
 import 'package:velocity_x/velocity_x.dart';
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
   const Home({super.key});
+
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,12 +27,12 @@ class Home extends StatelessWidget {
           mobile: OverlappingPanels(
             left: Builder(
               builder: (BuildContext context) {
-                return const LeftPanel();
+                return LeftPanel();
               },
             ),
             main: Builder(
               builder: (BuildContext context) {
-                return const Chat();
+                return Chat();
               },
             ),
             right: Builder(
@@ -32,10 +42,10 @@ class Home extends StatelessWidget {
             ),
           ),
           web: Row(
-            children: const <Widget>[
+            children: <Widget>[
               SizedBox(width: 350, child: LeftPanel()),
               Expanded(child: Chat()),
-              SizedBox(width: 275, child: RightPanel()),
+              const SizedBox(width: 275, child: RightPanel()),
             ],
           ),
         ),

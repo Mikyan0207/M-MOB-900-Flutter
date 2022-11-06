@@ -32,7 +32,6 @@ class UserRepository {
     }
 
     for (String serverId in data['Servers']) {
-      print("Getting server $serverId");
       final Map<String, dynamic>? server =
           (await firestore.collection("Servers").doc(serverId).get()).data();
 
