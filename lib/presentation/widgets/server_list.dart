@@ -73,13 +73,6 @@ class ServerList extends StatelessWidget {
       itemBuilder: (BuildContext context, int index) {
         final ServerEntity se = ServerEntity.fromJson(servers[index]);
 
-        if (index == 0) {
-          Future<void>.delayed(
-            Duration.zero,
-            () => _serverController.setCurrentServer(se),
-          );
-        }
-
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 12.0),
           child: Center(

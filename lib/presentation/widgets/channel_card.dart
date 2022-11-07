@@ -8,54 +8,62 @@ import 'package:velocity_x/velocity_x.dart';
 class ChannelCard extends GetView<ChannelController> {
   const ChannelCard({
     Key? key,
-    required this.isSelected,
     required this.channel,
   }) : super(key: key);
 
   final ChannelEntity channel;
-  final bool isSelected;
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        controller.setCurrentChannel(channel);
-      },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          vertical: 16.0,
-          horizontal: 6.0,
-        ),
-        child: Container(
-          decoration: BoxDecoration(
-            color: isSelected ? AppColors.gray200 : Colors.transparent,
-            borderRadius: BorderRadius.circular(4.0),
+    return Obx(
+      () => InkWell(
+        onTap: () {
+          if (controller.currentChannel.value.id == channel.id) {
+            return;
+          }
+          controller.setCurrentChannel(channel);
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 6.0,
           ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 8.0,
-              vertical: 8.0,
+          child: Container(
+            decoration: BoxDecoration(
+              color: controller.currentChannel.value.id == channel.id
+                  ? AppColors.gray200
+                  : Colors.transparent,
+              borderRadius: BorderRadius.circular(4.0),
             ),
-            child: Row(
-              children: <Widget>[
-                const Padding(
-                  padding: EdgeInsets.only(right: 5.0),
-                  child: Icon(
-                    Icons.numbers_rounded,
-                    size: 22,
-                    color: Vx.gray400,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 8.0,
+                vertical: 8.0,
+              ),
+              child: Row(
+                children: <Widget>[
+                  const Padding(
+                    padding: EdgeInsets.only(right: 5.0),
+                    child: Icon(
+                      Icons.numbers_rounded,
+                      size: 22,
+                      color: Vx.gray400,
+                    ),
                   ),
-                ),
-                Text(
-                  getChannelName(),
-                  style: TextStyle(
-                    color: isSelected ? Vx.white : Vx.gray400,
-                    fontSize: 16,
-                    fontWeight:
-                        isSelected ? FontWeight.w600 : FontWeight.normal,
+                  Text(
+                    getChannelName(),
+                    style: TextStyle(
+                      color: controller.currentChannel.value.id == channel.id
+                          ? Vx.white
+                          : Vx.gray400,
+                      fontSize: 16,
+                      fontWeight:
+                          controller.currentChannel.value.id == channel.id
+                              ? FontWeight.w600
+                              : FontWeight.normal,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

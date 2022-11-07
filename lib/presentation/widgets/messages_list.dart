@@ -21,7 +21,7 @@ class MessagesList extends StatelessWidget {
         stream: FirebaseFirestore.instance
             .collection("Messages")
             .where(
-              "ChannelId",
+              "Channel.Id",
               isEqualTo: _channelController.currentChannel.value.id,
             )
             .snapshots(),

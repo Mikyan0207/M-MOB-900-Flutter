@@ -84,8 +84,8 @@ class _MessageBarState extends State<MessageBar> {
                                         author:
                                             _authController.currentUser.value,
                                         content: textarea.text.trim(),
-                                        channelId: _channelController
-                                            .currentChannel.value.id,
+                                        channel: _channelController
+                                            .currentChannel.value,
                                         time: Timestamp.now(),
                                       ),
                                     );
@@ -172,8 +172,8 @@ class _MessageBarState extends State<MessageBar> {
                                     MessageEntity(
                                       author: _authController.currentUser.value,
                                       content: textarea.text,
-                                      channelId: _channelController
-                                          .currentChannel.value.id,
+                                      channel: _channelController
+                                          .currentChannel.value,
                                       time: Timestamp.now(),
                                     ),
                                   );

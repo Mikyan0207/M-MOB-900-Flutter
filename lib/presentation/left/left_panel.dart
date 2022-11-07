@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:starlight/domain/controllers/server_controller.dart';
+import 'package:starlight/domain/entities/channel_entity.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
 import 'package:starlight/presentation/widgets/channel_list.dart';
+import 'package:starlight/presentation/widgets/create_channel_dialog.dart';
 import 'package:starlight/presentation/widgets/profile_bar.dart';
 import 'package:starlight/presentation/widgets/server_list.dart';
 import 'package:starlight/presentation/widgets/starlight_icon_button.dart';
@@ -96,6 +98,18 @@ class LeftPanel extends StatelessWidget {
                                     size: 22,
                                     color: Vx.gray400,
                                   ),
+                                  onSelected: (int value) {
+                                    if (value != 1) {
+                                      return;
+                                    }
+
+                                    Get.dialog<ChannelEntity>(
+                                      CreateChannelDialog(),
+                                      barrierDismissible: false,
+                                      barrierColor:
+                                          Vx.gray800.withOpacity(0.75),
+                                    );
+                                  },
                                   itemBuilder: (BuildContext context) =>
                                       <PopupMenuEntry<int>>[
                                     const PopupMenuItem<int>(
@@ -115,7 +129,7 @@ class LeftPanel extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Expanded(
+                      const Expanded(
                         child: ChannelList(),
                       ),
                       ProfileBar()

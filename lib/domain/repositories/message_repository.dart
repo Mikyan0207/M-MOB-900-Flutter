@@ -8,13 +8,9 @@ class MessageRepository {
     final DocumentReference<Map<String, dynamic>> document =
         await _firestore.collection("Messages").add(message.toJson());
 
-    final Map<String, dynamic>? response = (await document.get()).data();
+    message.id = document.id;
+    await document.set(message.toJson());
 
-    if (response == null) {
-      return message;
-    }
-
-    message.id = response['Id'];
     return message;
   }
 }
