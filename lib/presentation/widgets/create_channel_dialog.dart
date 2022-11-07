@@ -197,6 +197,37 @@ class CreateChannelDialog extends GetView<ServerController> {
                             height: 45,
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
+                                splashFactory: NoSplash.splashFactory,
+                                padding: const EdgeInsets.all(
+                                  8.0,
+                                ),
+                                backgroundColor: Colors.transparent,
+                                shadowColor: Colors.transparent,
+                                elevation: 0,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                    6.0,
+                                  ),
+                                ),
+                              ),
+                              child: const Text(
+                                "Cancel",
+                                style: TextStyle(
+                                  color: Vx.gray400,
+                                  fontSize: 16.0,
+                                ),
+                              ),
+                              onPressed: () async {
+                                Get.back();
+                              },
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          SizedBox(
+                            width: 100,
+                            height: 45,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
                                 padding: const EdgeInsets.all(
                                   8.0,
                                 ),
@@ -220,7 +251,7 @@ class CreateChannelDialog extends GetView<ServerController> {
                                   return;
                                 }
 
-                                final bool result =
+                                final ChannelEntity result =
                                     await _channelRepository.create(
                                   ChannelEntity(
                                     name: _channelNameController.text.trim(),
@@ -231,7 +262,7 @@ class CreateChannelDialog extends GetView<ServerController> {
                                   ),
                                 );
 
-                                if (result) {
+                                if (result.id.isNotEmpty) {
                                   Get.back();
                                 }
                               },

@@ -1,24 +1,140 @@
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:starlight/auth/auth_controller.dart';
+import 'package:starlight/domain/entities/channel_entity.dart';
 import 'package:starlight/domain/entities/server_entity.dart';
 import 'package:starlight/domain/entities/user_entity.dart';
+import 'package:starlight/domain/repositories/channel_repository.dart';
 import 'package:starlight/domain/repositories/server_repository.dart';
 import 'package:starlight/domain/repositories/user_repository.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
 import 'package:velocity_x/velocity_x.dart';
 
-class CreateServerDialog extends StatelessWidget {
-  CreateServerDialog({
+class CreateServerDialog extends StatefulWidget {
+  const CreateServerDialog({
     Key? key,
   }) : super(key: key);
 
+  @override
+  State<CreateServerDialog> createState() => _CreateServerDialogState();
+}
+
+class _CreateServerDialogState extends State<CreateServerDialog> {
   final AuthController _authController = Get.find();
 
   final ServerRepository _serverRepository = ServerRepository();
+  final ChannelRepository _channelRepository = ChannelRepository();
   final UserRepository _userRepository = UserRepository();
 
   final TextEditingController _serverNameController = TextEditingController();
+
+  XFile? imageFile;
+  Rx<String> imagePath = ''.obs;
+  String? imageExtension;
+  String? imageUrl;
+
+  Future<void> _getFromGallery() async {
+    final XFile? pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+
+    imagePath(pickedFile!.path);
+    imageFile = XFile(pickedFile.path);
+    if (imageFile != null) {
+      _addGoodExtension(pickedFile.name);
+      _cropImage(pickedFile.path);
+    }
+  }
+
+  void _cropImage(String filePath) async {
+    final CroppedFile? croppedImage = await ImageCropper().cropImage(
+      sourcePath: filePath,
+      maxHeight: 2080,
+      maxWidth: 2080,
+      aspectRatioPresets: <CropAspectRatioPreset>[
+        CropAspectRatioPreset.square,
+        CropAspectRatioPreset.ratio3x2,
+        CropAspectRatioPreset.original,
+        CropAspectRatioPreset.ratio4x3,
+        CropAspectRatioPreset.ratio16x9
+      ],
+      uiSettings: <PlatformUiSettings>[
+        AndroidUiSettings(
+          toolbarTitle: 'Cropper',
+          toolbarColor: Colors.deepOrange,
+          toolbarWidgetColor: Colors.white,
+          initAspectRatio: CropAspectRatioPreset.original,
+          lockAspectRatio: false,
+        ),
+        IOSUiSettings(
+          title: 'Cropper',
+        ),
+        WebUiSettings(
+          context: context,
+        ),
+      ],
+    );
+
+    if (croppedImage != null) {
+      imageFile = XFile(croppedImage.path);
+      imagePath(croppedImage.path);
+    }
+  }
+
+  void _addGoodExtension(String name) {
+    imageExtension = name.split('.').last.toString();
+  }
+
+  ImageProvider<Object> _getImage() {
+    if (imagePath.value.isEmptyOrNull) {
+      return const AssetImage("server_icon_placeholder.png");
+    } else {
+      return NetworkImage(imagePath.value);
+    }
+  }
+
+  Future<void> createServer() async {
+    if (_serverNameController.text.isEmptyOrNull) {
+      return;
+    }
+
+    final ServerEntity server = await _serverRepository.create(
+      ServerEntity(
+        name: _serverNameController.text.trim(),
+        members: <UserEntity>[
+          _authController.currentUser.value,
+        ],
+      ),
+    );
+
+    final String serverIcon = await uploadImage(server.id);
+    final ChannelEntity defaultChannel = await _channelRepository.create(
+      ChannelEntity(
+        name: "general",
+        description: "The main channel of ${server.name}",
+        server: server,
+      ),
+    );
+
+    server.icon = serverIcon;
+    server.channels.add(defaultChannel);
+    await _serverRepository.update(server);
+
+    _authController.currentUser.value.servers.add(server);
+    _authController.currentUserServers(
+      _authController.currentUser.value.servers
+          .map((ServerEntity se) => se.id)
+          .toList(),
+    );
+
+    _authController.currentUser(
+      await _userRepository.update(_authController.currentUser.value),
+    );
+    Get.back();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,6 +196,35 @@ class CreateServerDialog extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 26.0),
+                              child: Center(
+                                child: SizedBox(
+                                  width: 100,
+                                  height: 100,
+                                  child: Obx(
+                                    () => ClipRRect(
+                                      borderRadius: imagePath.value.isEmpty
+                                          ? BorderRadius.circular(0.0)
+                                          : BorderRadius.circular(50.0),
+                                      child: Material(
+                                        color: Colors.transparent,
+                                        child: Ink.image(
+                                          image: _getImage(),
+                                          child: InkWell(
+                                            splashColor: Colors.transparent,
+                                            highlightColor: Colors.transparent,
+                                            onTap: () async {
+                                              await _getFromGallery();
+                                            },
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
                             const Padding(
                               padding: EdgeInsets.symmetric(
                                 vertical: 8.0,
@@ -102,7 +247,7 @@ class CreateServerDialog extends StatelessWidget {
                                 filled: true,
                                 fillColor: AppColors.black900,
                                 prefixIcon: Icon(
-                                  Icons.numbers_rounded,
+                                  Icons.star_rounded,
                                   color: Vx.gray300,
                                 ),
                                 focusColor: Vx.white,
@@ -154,6 +299,37 @@ class CreateServerDialog extends StatelessWidget {
                             height: 45,
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
+                                splashFactory: NoSplash.splashFactory,
+                                padding: const EdgeInsets.all(
+                                  8.0,
+                                ),
+                                backgroundColor: Colors.transparent,
+                                shadowColor: Colors.transparent,
+                                elevation: 0,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                    6.0,
+                                  ),
+                                ),
+                              ),
+                              child: const Text(
+                                "Cancel",
+                                style: TextStyle(
+                                  color: Vx.gray400,
+                                  fontSize: 16.0,
+                                ),
+                              ),
+                              onPressed: () async {
+                                Get.back();
+                              },
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          SizedBox(
+                            width: 100,
+                            height: 45,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
                                 padding: const EdgeInsets.all(
                                   8.0,
                                 ),
@@ -165,6 +341,7 @@ class CreateServerDialog extends StatelessWidget {
                                   ),
                                 ),
                               ),
+                              onPressed: createServer,
                               child: const Text(
                                 "Confirm",
                                 style: TextStyle(
@@ -172,27 +349,6 @@ class CreateServerDialog extends StatelessWidget {
                                   fontSize: 16.0,
                                 ),
                               ),
-                              onPressed: () async {
-                                if (_serverNameController.text.isEmptyOrNull) {
-                                  return;
-                                }
-
-                                final ServerEntity server =
-                                    await _serverRepository.create(
-                                  ServerEntity(
-                                    name: _serverNameController.text.trim(),
-                                    members: <UserEntity>[
-                                      _authController.currentUser.value,
-                                    ],
-                                  ),
-                                );
-
-                                _authController.currentUser.value.servers
-                                    .add(server);
-
-                                await _userRepository
-                                    .update(_authController.currentUser.value);
-                              },
                             ),
                           ),
                         ],
@@ -206,5 +362,31 @@ class CreateServerDialog extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<String> uploadImage(String serverId) async {
+    if (imageFile == null) {
+      await Fluttertoast.showToast(msg: "Please select an Image");
+      return '';
+    }
+
+    try {
+      final Reference ref =
+          FirebaseStorage.instance.ref().child('servers/').child(serverId);
+      final SettableMetadata newMetadata = SettableMetadata(
+        cacheControl: "public,max-age=300",
+        contentType: "image/$imageExtension",
+      );
+
+      await ref.putData(await imageFile!.readAsBytes(), newMetadata);
+      imageUrl = await ref.getDownloadURL();
+      imageFile = null;
+      imageExtension = null;
+      await Fluttertoast.showToast(msg: "Image uploaded");
+      return imageUrl!;
+    } catch (e) {
+      await Fluttertoast.showToast(msg: e.toString());
+      return '';
+    }
   }
 }

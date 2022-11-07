@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:starlight/auth/auth_controller.dart';
@@ -25,7 +24,7 @@ class SignUpScreen extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         body: Container(
-          color: Vx.gray800,
+          color: AppColors.black700,
           width: double.infinity,
           height: double.infinity,
           child: Form(
@@ -53,16 +52,13 @@ class SignUpScreen extends StatelessWidget {
                   ),
                 ),
                 SizedBox(
-                  width: 300,
-                  height: 400,
-                  child: SvgPicture.asset("assets/undraw_chatting.svg"),
-                ),
-                SizedBox(
                   width: 400,
                   child: TextFormField(
                     controller: emailController,
                     style: const TextStyle(color: AppColors.white),
                     decoration: const InputDecoration(
+                      filled: true,
+                      fillColor: AppColors.black900,
                       labelStyle: TextStyle(
                         color: Vx.gray300,
                         fontWeight: FontWeight.w300,
@@ -106,6 +102,8 @@ class SignUpScreen extends StatelessWidget {
                       obscureText: true,
                       style: const TextStyle(color: AppColors.white),
                       decoration: const InputDecoration(
+                        filled: true,
+                        fillColor: AppColors.black900,
                         labelStyle: TextStyle(
                           color: Vx.gray300,
                           fontWeight: FontWeight.w300,
@@ -147,6 +145,8 @@ class SignUpScreen extends StatelessWidget {
                       obscureText: true,
                       style: const TextStyle(color: AppColors.white),
                       decoration: const InputDecoration(
+                        filled: true,
+                        fillColor: AppColors.black900,
                         labelStyle: TextStyle(
                           color: Vx.gray300,
                           fontWeight: FontWeight.w300,

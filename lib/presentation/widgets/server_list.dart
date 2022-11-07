@@ -23,9 +23,9 @@ class ServerList extends StatelessWidget {
             .collection("Servers")
             .where(
               "Id",
-              whereIn: _authController.currentUser.value.servers
-                  .map((ServerEntity e) => e.id)
-                  .toList(),
+              whereIn: _authController.currentUserServers.isEmpty
+                  ? <String>['']
+                  : _authController.currentUserServers,
             )
             .snapshots(),
         builder: (
@@ -53,13 +53,6 @@ class ServerList extends StatelessWidget {
               e.data(),
         )
         .toList();
-
-    // messages.sort((
-    //   Map<String, dynamic> a,
-    //   Map<String, dynamic> b,
-    // ) {
-    //   return (b['Time'] as Timestamp).compareTo(a['Time'] as Timestamp);
-    // });
 
     return servers;
   }

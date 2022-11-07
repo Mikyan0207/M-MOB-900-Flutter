@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:starlight/presentation/left/server_panel.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
+import 'package:starlight/presentation/widgets/create_server_dialog.dart';
 import 'package:starlight/presentation/widgets/server_list.dart';
 import 'package:starlight/presentation/widgets/starlight_icon_button.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -41,8 +42,12 @@ class LeftPanel extends StatelessWidget {
                             iconHoverColor: Vx.white,
                             backgroundColor: AppColors.black700,
                             backgroundHoverColor: Vx.green400,
-                            onIconClicked: () {
-                              Get.dialog()
+                            onIconClicked: () async {
+                              await Get.dialog(
+                                const CreateServerDialog(),
+                                barrierDismissible: true,
+                                barrierColor: Vx.gray800.withOpacity(0.75),
+                              );
                             },
                           ),
                         )

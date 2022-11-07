@@ -12,31 +12,29 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
-  firebase_core: "^1.2.0"
-  firebase_auth: "^3.11.2"
-  firebase_crashlytics: "^2.0.4"
-  firebase_storage: "^10.3.11"
-  image_picker: "^0.8.6"
-  fluttertoast: ^8.1.1
-  intl: 0.17.0
-
   blackfoot_flutter_lint: ^1.0.6
-  cloud_firestore: ^3.5.1
+  camera: ^0.10.0
+  cloud_firestore: ^4.0.3
+  cross_file_image: ^1.0.0
   cupertino_icons: ^1.0.2
-  flutter_svg: ^1.1.5
+  firebase_auth: "^4.1.0"
+  firebase_core: "^2.1.1"
+  firebase_crashlytics: "^3.0.4"
+  firebase_storage: "^11.0.3"
+  flutter:
+    sdk: flutter
+  fluttertoast: ^8.1.1
   get: ^4.6.5
   google_fonts: ^3.0.1
-  velocity_x: ^3.5.1
-  flutter: 
-    sdk: flutter
-  overlapping_panels: ^0.0.3
-  adaptive_breakpoints: ^0.1.4
-  cross_file_image: ^1.0.0
   image_cropper: ^3.0.0
+  image_picker: "^0.8.6"
+  intl: 0.17.0
+  overlapping_panels: ^0.0.3
   timeago_flutter: ^1.2.0
+  velocity_x: ^3.5.1
+
 dev_dependencies: 
   flutter_lints: ^2.0.0
-  pubspec_dependency_sorter: ^0.0.1
   flutter_test: 
     sdk: flutter
 flutter: 

@@ -77,8 +77,9 @@ class _StarlightIconButtonState extends State<StarlightIconButton>
           });
 
     backgroundColorAnimation = ColorTween(
-            begin: widget.backgroundColor, end: widget.backgroundHoverColor)
-        .animate(iconColorController);
+      begin: widget.backgroundColor,
+      end: widget.backgroundHoverColor,
+    ).animate(iconColorController);
 
     super.initState();
   }

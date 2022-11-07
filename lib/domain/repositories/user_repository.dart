@@ -16,8 +16,9 @@ class UserRepository {
     return UserEntity.fromJson(data);
   }
 
-  Future<void> update(UserEntity ue) async {
-    await _firestore.collection("Users").doc(ue.id).set(ue.toJson());
+  Future<UserEntity> update(UserEntity ue) async {
+    await _firestore.collection("Users").doc(ue.idDocument).update(ue.toJson());
+    return ue;
   }
 
   Future<UserEntity> get(String id) async {
