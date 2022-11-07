@@ -139,6 +139,28 @@ class ServerPanel extends GetView<ServerController> {
                             ),
                           ),
                         ),
+                        PopupMenuItem<int>(
+                          value: 2,
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: Row(
+                              children: const <Widget>[
+                                Expanded(
+                                  child: Text(
+                                    "Delete Server",
+                                    style: TextStyle(color: Vx.red500),
+                                  ),
+                                ),
+                                SizedBox(width: 50),
+                                Icon(
+                                  Icons.delete_rounded,
+                                  color: Vx.red500,
+                                  size: 18,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ],

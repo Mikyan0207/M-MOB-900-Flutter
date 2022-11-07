@@ -30,6 +30,24 @@ class LeftPanel extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 12.0),
                     child: Column(
                       children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: StarlightIconButton(
+                            icon: Icons.star_rounded,
+                            iconColor: Vx.gray400,
+                            iconHoverColor: Vx.white,
+                            backgroundColor: AppColors.black700,
+                            backgroundHoverColor: AppColors.primaryColor,
+                            onIconClicked: () async {},
+                          ),
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 12.0),
+                          child: Divider(
+                            color: Vx.gray600,
+                            thickness: 0.5,
+                          ),
+                        ),
                         Expanded(child: ServerList()),
                         const SizedBox(
                           height: 10,

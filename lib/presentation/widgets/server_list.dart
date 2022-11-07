@@ -59,7 +59,7 @@ class ServerList extends StatelessWidget {
 
   ListView buildServerList(List<Map<String, dynamic>> servers) {
     return ListView.builder(
-      padding: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.symmetric(horizontal: 6.0),
       shrinkWrap: true,
       itemCount: servers.length,
       controller: ScrollController(),
@@ -67,7 +67,7 @@ class ServerList extends StatelessWidget {
         final ServerEntity se = ServerEntity.fromJson(servers[index]);
 
         return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12.0),
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: Center(
             child: ServerIcon(
               icon: se.icon.isNotEmpty ? se.icon : iconPlaceholder,
