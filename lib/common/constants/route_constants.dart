@@ -4,4 +4,5 @@ class RouteList {
   static const String signUp = "SignUp";
   static const String home = "Home";
   static const String userInfo = "UserInfo";
+  static const String takePicture = "TakePicture";
 }
