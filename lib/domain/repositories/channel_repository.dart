@@ -1,13 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:starlight/domain/entities/channel_entity.dart';
 
-class ChannelRespository {
-  Future<List<ChannelEntity>> getServerChannels(String serverId) async {
-    final FirebaseFirestore firestore = FirebaseFirestore.instance;
+class ChannelRepository {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-    final List<Map<String, dynamic>> data = (await firestore
+  Future<bool> create(ChannelEntity ce) async {
+    final DocumentReference<Map<String, dynamic>> document =
+        await _firestore.collection("Channels").add(ce.toJson());
+
+    ce.id = document.id;
+    await document.set(ce.toJson());
+
+    return true;
+  }
+
+  Future<List<ChannelEntity>> getServerChannels(String serverId) async {
+    final List<Map<String, dynamic>> data = (await _firestore
             .collection("Channels")
-            .where('ServerId', isEqualTo: serverId)
+            .where('Server.Id', isEqualTo: serverId)
             .get())
         .docs
         .map((QueryDocumentSnapshot<Map<String, dynamic>> e) {

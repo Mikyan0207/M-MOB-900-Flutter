@@ -1,11 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+import 'package:get/get.dart';
 import 'package:starlight/domain/entities/user_entity.dart';
 import 'package:starlight/domain/repositories/user_repository.dart';
+import 'package:starlight/presentation/sign_in/sign_in_screen.dart';
 
 class AuthController extends GetxController {
-  UserEntity? currentUser;
+  Rx<UserEntity> currentUser = UserEntity().obs;
 
   final UserRepository _userRepository = UserRepository();
 
@@ -22,9 +23,10 @@ class AuthController extends GetxController {
         return false;
       }
 
-      currentUser = await _userRepository.get(userCredential.user!.uid);
-      if (currentUser != null) {
+      currentUser(await _userRepository.get(userCredential.user!.uid));
+      if (currentUser.value.id == '') {
         await Fluttertoast.showToast(msg: "Current User is null");
+        await Get.to(() => SignInScreen());
       }
 
       return true;
@@ -51,11 +53,13 @@ class AuthController extends GetxController {
         return false;
       }
 
-      currentUser = await _userRepository.create(
-        UserEntity(
-          id: userCredential.user!.uid,
-          username: userCredential.user!.email?.split('@').first,
-          email: userCredential.user!.email,
+      currentUser(
+        await _userRepository.create(
+          UserEntity(
+            id: userCredential.user!.uid,
+            username: userCredential.user!.email!.split('@').first,
+            email: userCredential.user!.email!,
+          ),
         ),
       );
 

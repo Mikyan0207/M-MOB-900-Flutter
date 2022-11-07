@@ -162,9 +162,7 @@ class SignInScreen extends StatelessWidget {
                         emailController.text,
                         passwordController.text,
                       )) {
-                        await Get.to(const Home());
-                        // ignore: todo
-                        // TODO(florian): Error message.
+                        await Get.to(() => const Home());
                       }
                     },
                   ),
