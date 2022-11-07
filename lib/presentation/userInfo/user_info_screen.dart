@@ -1,12 +1,16 @@
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:starlight/auth/auth_controller.dart';
+import 'package:starlight/domain/controllers/camera_controller.dart';
+import 'package:starlight/presentation/picture/take_picture_screen.dart';
 import 'package:starlight/presentation/userInfo/alert_dialog_widget_change_info.dart';
 import 'package:starlight/presentation/userInfo/avatar_clipper.dart';
 import 'package:starlight/presentation/widgets/custom_button.dart';
@@ -35,6 +39,8 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
 
   String? extension;
 
+  //final AuthController auth = Get.put(AuthController());
+  final CameraXController camera = Get.put(CameraXController());
   final AuthController auth = Get.find();
 
   // todo create a widget
@@ -199,14 +205,21 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                               children: <Widget>[
                                 ProfileWidget(
                                   showEdit: true,
-                                  onClicked: () {
+                                  onClicked: () async {
                                     _showImageDialog(
                                       context,
                                       "Choose an option",
                                       <Widget>[
                                         InkWell(
-                                          onTap: () {
-                                            _getFromCamera();
+                                          onTap: () async {
+                                            if (kIsWeb) {
+                                              await camera.initCamera();
+                                              await Get.to(
+                                                const TakePictureScreen(),
+                                              );
+                                            } else {
+                                              _getFromCamera();
+                                            }
                                           },
                                           child: Row(
                                             children: const <Widget>[
@@ -255,15 +268,15 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                 const SizedBox(width: 20),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: const <Widget>[
+                                  children: <Widget>[
                                     Text(
-                                      "Username",
-                                      style: TextStyle(
+                                      auth.currentUser.value.username,
+                                      style: const TextStyle(
                                         fontSize: 32,
                                         color: Color(0xFFFFFFFF),
                                       ),
                                     ),
-                                    SizedBox(height: 50),
+                                    const SizedBox(height: 50),
                                   ],
                                 )
                               ],
