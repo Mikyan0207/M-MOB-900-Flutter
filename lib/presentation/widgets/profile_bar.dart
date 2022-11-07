@@ -15,16 +15,20 @@ class ProfileBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      child: Container(
-        decoration: const BoxDecoration(
-          color: AppColors.black400,
+    return Container(
+      decoration: const BoxDecoration(
+        color: AppColors.black800,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          vertical: 12.0,
+          horizontal: 10.0,
         ),
         child: Row(
           children: <Widget>[
             SizedBox(
-              height: 50,
-              width: 50,
+              height: 40,
+              width: 40,
               child: ProfileWidget(
                 onClicked: () {
                   Get.to(() => const UserInfoScreen());
@@ -32,14 +36,25 @@ class ProfileBar extends StatelessWidget {
                 showEdit: false,
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: 5,
-              ),
+            const SizedBox(
+              width: 10,
             ),
-            Text(
-              auth.currentUser?.username ?? "Username",
-              style: const TextStyle(color: Vx.gray100, fontSize: 14),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Obx(
+                  () => Text(
+                    auth.currentUser.value.username,
+                    style: const TextStyle(color: Vx.gray100, fontSize: 14),
+                  ),
+                ),
+                Obx(
+                  () => Text(
+                    auth.currentUser.value.discriminator,
+                    style: const TextStyle(color: Vx.gray400, fontSize: 10),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
