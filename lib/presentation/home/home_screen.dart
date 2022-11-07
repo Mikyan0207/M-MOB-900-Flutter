@@ -38,7 +38,7 @@ class _HomeState extends State<Home> {
           mobile: OverlappingPanels(
             left: Builder(
               builder: (BuildContext context) {
-                return LeftPanel();
+                return const LeftPanel();
               },
             ),
             main: Builder(
@@ -54,7 +54,7 @@ class _HomeState extends State<Home> {
           ),
           web: Row(
             children: <Widget>[
-              SizedBox(width: 350, child: LeftPanel()),
+              const SizedBox(width: 350, child: LeftPanel()),
               Expanded(child: Chat()),
               const SizedBox(width: 275, child: RightPanel()),
             ],
