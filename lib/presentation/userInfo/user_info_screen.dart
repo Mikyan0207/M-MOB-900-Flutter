@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:camera/camera.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
@@ -10,18 +9,13 @@ import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:starlight/auth/auth_controller.dart';
+import 'package:starlight/domain/controllers/camera_controller.dart';
+import 'package:starlight/presentation/picture/take_picture_screen.dart';
 import 'package:starlight/presentation/userInfo/alert_dialog_widget_change_info.dart';
 import 'package:starlight/presentation/userInfo/avatar_clipper.dart';
 import 'package:starlight/presentation/widgets/custom_button.dart';
 import 'package:starlight/presentation/widgets/profile_widget.dart';
 import 'package:velocity_x/velocity_x.dart';
-
-import '../../auth/auth_controller.dart';
-import '../../domain/controllers/camera_controller.dart';
-import '../picture/take_picture_screen.dart';
-import '../widgets/custom_button.dart';
-import '../widgets/profile_widget.dart';
-import 'avatar_clipper.dart';
 
 const Color darkColor = Color(0xFF49535C);
 
@@ -69,14 +63,13 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     );
   }
 
-  void _getFromCamera() async
-  {
+  void _getFromCamera() async {
     // todo try this code on mobile phone + hide this choice for web
-    final XFile? pickedFile = await ImagePicker().pickImage(source: ImageSource.camera);
+    final XFile? pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.camera);
 
     imageFile = XFile(pickedFile!.path);
-    if (imageFile != null)
-    {
+    if (imageFile != null) {
       _addGoodExtension(pickedFile.name);
       _cropImage(pickedFile.path);
     }
@@ -213,35 +206,37 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                 ProfileWidget(
                                   showEdit: true,
                                   onClicked: () async {
-                                    _showImageDialog(context, "Choose an option", <Widget>[
-                                      InkWell(
-                                        onTap: () async {
-                                          if (kIsWeb)
-                                          {
-                                            await camera.initCamera();
-                                            await Get.to(const TakePictureScreen());
-                                          }
-                                          else
-                                          {
-                                            _getFromCamera();
-                                          }
-                                        },
-                                        child: Row(
-                                          children: const <Widget> [
-                                            Padding(
-                                              padding: EdgeInsets.all(4.0),
-                                              child: Icon(
-                                                Icons.camera,
-                                                color: Colors.red,
+                                    _showImageDialog(
+                                      context,
+                                      "Choose an option",
+                                      <Widget>[
+                                        InkWell(
+                                          onTap: () async {
+                                            if (kIsWeb) {
+                                              await camera.initCamera();
+                                              await Get.to(
+                                                const TakePictureScreen(),
+                                              );
+                                            } else {
+                                              _getFromCamera();
+                                            }
+                                          },
+                                          child: Row(
+                                            children: const <Widget>[
+                                              Padding(
+                                                padding: EdgeInsets.all(4.0),
+                                                child: Icon(
+                                                  Icons.camera,
+                                                  color: Colors.red,
+                                                ),
                                               ),
-                                            ),
-                                            Text(
-                                              "Camera",
-                                              style: TextStyle(
-                                                color: Colors.red,
-                                              ),
-                                            )
-                                           ],
+                                              Text(
+                                                "Camera",
+                                                style: TextStyle(
+                                                  color: Colors.red,
+                                                ),
+                                              )
+                                            ],
                                           ),
                                         ),
                                         InkWell(
@@ -257,14 +252,17 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                                   color: Colors.red,
                                                 ),
                                               ),
-                                            Text(
-                                              "Image",
-                                              style: TextStyle(color: Colors.red),
-                                            )
-                                          ],
-                                        ),
-                                      )
-                                    ],);
+                                              Text(
+                                                "Image",
+                                                style: TextStyle(
+                                                  color: Colors.red,
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    );
                                   },
                                 ),
                                 const SizedBox(width: 20),
@@ -272,7 +270,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
                                     Text(
-                                      auth.currentUser?.username?? "Username",
+                                      auth.currentUser.value.username,
                                       style: const TextStyle(
                                         fontSize: 32,
                                         color: Color(0xFFFFFFFF),
