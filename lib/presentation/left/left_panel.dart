@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:starlight/presentation/left/server_panel.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
 import 'package:starlight/presentation/widgets/server_list.dart';
@@ -32,14 +33,17 @@ class LeftPanel extends StatelessWidget {
                         const SizedBox(
                           height: 10,
                         ),
-                        const Padding(
-                          padding: EdgeInsets.all(8.0),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
                           child: StarlightIconButton(
                             icon: Icons.add_circle,
                             iconColor: Vx.green600,
                             iconHoverColor: Vx.white,
                             backgroundColor: AppColors.black700,
                             backgroundHoverColor: Vx.green400,
+                            onIconClicked: () {
+                              Get.dialog()
+                            },
                           ),
                         )
                       ],
