@@ -32,10 +32,10 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        VxDevice(
-          mobile: OverlappingPanels(
+    return VxDevice(
+      mobile: Stack(
+        children: <Widget>[
+          OverlappingPanels(
             left: Builder(
               builder: (BuildContext context) {
                 return const LeftPanel();
@@ -52,15 +52,15 @@ class _HomeState extends State<Home> {
               },
             ),
           ),
-          web: Row(
-            children: <Widget>[
-              const SizedBox(width: 350, child: LeftPanel()),
-              Expanded(child: Chat()),
-              const SizedBox(width: 275, child: RightPanel()),
-            ],
-          ),
-        ),
-      ],
+        ],
+      ),
+      web: Row(
+        children: <Widget>[
+          const SizedBox(width: 350, child: LeftPanel()),
+          Expanded(flex: 2, child: Chat()),
+          const SizedBox(width: 275, child: RightPanel()),
+        ],
+      ),
     );
   }
 }

@@ -12,6 +12,7 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  any_link_preview: ^2.0.9
   blackfoot_flutter_lint: ^1.0.6
   camera: ^0.10.0
   cloud_firestore: ^4.0.3

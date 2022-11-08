@@ -37,7 +37,10 @@ class MessagesList extends StatelessWidget {
               ),
             );
           } else {
-            return buildMessageList(parseMessages(snapshot.data!.docs));
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: buildMessageList(parseMessages(snapshot.data!.docs)),
+            );
           }
         },
       ),
