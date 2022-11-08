@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:starlight/domain/entities/channel_entity.dart';
 import 'package:starlight/domain/entities/user_entity.dart';
 
@@ -9,6 +10,7 @@ class ServerEntity {
     this.icon = '',
     this.members = const <UserEntity>[],
     this.channels = const <ChannelEntity>[],
+    this.admin = const <UserEntity>[],
   });
 
   factory ServerEntity.fromJson(dynamic json) => ServerEntity(
@@ -22,6 +24,9 @@ class ServerEntity {
         channels: json['Channels'] != null
             ? ChannelEntity.fromJsonList(json['Channels'])
             : const <ChannelEntity>[],
+        admin: json['Admin'] != null
+            ? UserEntity.fromJsonList(json['Admin'])
+            : const <UserEntity>[],
       );
 
   static List<ServerEntity> fromJsonList(List<dynamic>? jsonList) {
@@ -57,6 +62,16 @@ class ServerEntity {
             },
           )
           .toList(),
+      'Admin': admin
+          .map(
+            (UserEntity ue) => <String, dynamic>{
+          'Id': ue.id,
+          'Username': ue.username,
+          'Avatar': ue.avatar,
+          'Discriminator': ue.discriminator,
+        },
+      )
+          .toList(),
     };
   }
 
@@ -66,4 +81,5 @@ class ServerEntity {
   String icon;
   List<UserEntity> members;
   List<ChannelEntity> channels;
+  List<UserEntity> admin;
 }
