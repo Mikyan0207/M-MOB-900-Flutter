@@ -30,6 +30,7 @@ dependencies:
   image_cropper: ^3.0.0
   image_picker: "^0.8.6"
   overlapping_panels: ^0.0.3
+  shared_preferences: ^2.0.15
   timeago_flutter: ^1.2.0
   velocity_x: ^3.5.1
 

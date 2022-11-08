@@ -3,11 +3,15 @@ import 'package:get/get.dart';
 import 'package:starlight/auth/auth_controller.dart';
 import 'package:starlight/common/constants/route_constants.dart';
 import 'package:starlight/domain/controllers/channel_controller.dart';
+import 'package:starlight/domain/controllers/friends_controller.dart';
+import 'package:starlight/domain/controllers/home_controller.dart';
+import 'package:starlight/domain/controllers/private_message_controller.dart';
 import 'package:starlight/domain/controllers/server_controller.dart';
 import 'package:starlight/presentation/home/home_screen.dart';
 import 'package:starlight/presentation/routes.dart';
 import 'package:starlight/presentation/sign_in/sign_in_screen.dart';
 import 'package:starlight/presentation/sign_up/sign_up_screen.dart';
+import 'package:starlight/presentation/splash/splash_screen.dart';
 import 'package:starlight/presentation/themes/theme_data.dart';
 
 class App extends StatelessWidget {
@@ -22,8 +26,15 @@ class App extends StatelessWidget {
         Get.lazyPut(() => AuthController()),
         Get.lazyPut(() => ServerController()),
         Get.lazyPut(() => ChannelController()),
+        Get.lazyPut(() => FriendsController()),
+        Get.lazyPut(() => HomeController()),
+        Get.lazyPut(() => PrivateMessageController()),
       },
       getPages: <GetPage<Widget>>[
+        GetPage<Widget>(
+          name: '/SplashScreen',
+          page: <Widget>() => const SplashScreen(),
+        ),
         GetPage<Widget>(
           name: '/Home',
           page: <Widget>() => const Home(),
@@ -39,7 +50,7 @@ class App extends StatelessWidget {
       ],
       debugShowCheckedModeBanner: false,
       routes: Routes.getAll(),
-      initialRoute: RouteList.signIn,
+      initialRoute: RouteList.splashScreen,
       theme: appTheme(context),
     );
   }

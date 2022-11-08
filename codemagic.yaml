@@ -89,6 +89,7 @@ workflows:
       - build/**/outputs/bundle/**/*.aab
       - build/**/outputs/**/mapping.txt
       - build/ios/ipa/*.ipa
+      - build/ios/**/*.app
       - build/macos/**/*.pkg
       - /tmp/xcodebuild_logs/*.log
       - build/web.zip

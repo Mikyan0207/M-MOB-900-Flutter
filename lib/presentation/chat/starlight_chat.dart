@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:starlight/domain/controllers/channel_controller.dart';
+import 'package:starlight/domain/controllers/private_message_controller.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
 import 'package:starlight/presentation/widgets/message_bar.dart';
-import 'package:starlight/presentation/widgets/messages_list.dart';
+import 'package:starlight/presentation/widgets/private_messages_list.dart';
 import 'package:velocity_x/velocity_x.dart';
 
-class Chat extends StatelessWidget {
-  Chat({super.key});
+class StarlightChat extends StatelessWidget {
+  StarlightChat({super.key});
 
-  final ChannelController _channelController = Get.find();
+  final PrivateMessageController _privateMessageController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -40,15 +40,14 @@ class Chat extends StatelessWidget {
                     const Padding(
                       padding: EdgeInsets.only(right: 3.0),
                       child: Icon(
-                        Icons.numbers_rounded,
+                        Icons.alternate_email_rounded,
                         color: Vx.gray400,
                         size: 26,
                       ),
                     ),
                     Obx(
                       () => Text(
-                        _channelController.currentChannel.value.name
-                            .toLowerCase(),
+                        _privateMessageController.currentGroup.value.name,
                         style: const TextStyle(
                           color: Vx.white,
                           fontSize: 16,
@@ -64,7 +63,7 @@ class Chat extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
-                  Expanded(child: MessagesList()),
+                  Expanded(child: PrivateMessagesList()),
                   const MessageBar(),
                 ],
               ),

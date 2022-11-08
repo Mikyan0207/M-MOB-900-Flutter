@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:starlight/presentation/left/server_panel.dart';
+import 'package:starlight/domain/controllers/home_controller.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
 import 'package:starlight/presentation/widgets/create_server_dialog.dart';
 import 'package:starlight/presentation/widgets/server_list.dart';
 import 'package:starlight/presentation/widgets/starlight_icon_button.dart';
 import 'package:velocity_x/velocity_x.dart';
 
-class LeftPanel extends StatelessWidget {
-  const LeftPanel({super.key});
+class LeftMenu extends StatelessWidget {
+  LeftMenu({super.key});
+
+  final HomeController _homeController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -16,6 +18,7 @@ class LeftPanel extends StatelessWidget {
       body: SafeArea(
         child: Container(
           width: double.infinity,
+          height: double.infinity,
           color: Vx.gray800,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -38,7 +41,9 @@ class LeftPanel extends StatelessWidget {
                             iconHoverColor: Vx.white,
                             backgroundColor: AppColors.black700,
                             backgroundHoverColor: AppColors.primaryColor,
-                            onIconClicked: () async {},
+                            onIconClicked: () async {
+                              _homeController.setSelectedTab(AppTab.friends);
+                            },
                           ),
                         ),
                         const Padding(
@@ -73,10 +78,6 @@ class LeftPanel extends StatelessWidget {
                     ),
                   ),
                 ),
-              ),
-              const Expanded(
-                flex: 3,
-                child: ServerPanel(),
               ),
             ],
           ),

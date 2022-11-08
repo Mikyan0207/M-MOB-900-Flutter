@@ -1,49 +1,35 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:starlight/domain/controllers/channel_controller.dart';
 import 'package:starlight/domain/entities/message_entity.dart';
-import 'package:starlight/presentation/themes/theme_colors.dart';
 import 'package:starlight/presentation/widgets/message_box.dart';
 
 class MessagesList extends StatelessWidget {
-  MessagesList({
+  const MessagesList({
     Key? key,
+    required this.firestoreStream,
+    required this.noDataWidget,
   }) : super(key: key);
 
-  final ChannelController _channelController = Get.find();
-  final ScrollController _scrollController = ScrollController();
+  final Stream<QuerySnapshot<Map<String, dynamic>>> firestoreStream;
+  final Widget noDataWidget;
 
   @override
   Widget build(BuildContext context) {
-    return Obx(
-      () => StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-        stream: FirebaseFirestore.instance
-            .collection("Messages")
-            .where(
-              "Channel.Id",
-              isEqualTo: _channelController.currentChannel.value.id,
-            )
-            .snapshots(),
-        builder: (
-          BuildContext context,
-          AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot,
-        ) {
-          if (!snapshot.hasData) {
-            return const Center(
-              child: Text(
-                "No Messages",
-                style: TextStyle(color: AppColors.white),
-              ),
-            );
-          } else {
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 12.0),
-              child: buildMessageList(parseMessages(snapshot.data!.docs)),
-            );
-          }
-        },
-      ),
+    return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+      stream: firestoreStream,
+      builder: (
+        BuildContext context,
+        AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot,
+      ) {
+        if (!snapshot.hasData) {
+          return noDataWidget;
+        } else {
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 12.0),
+            child: buildMessageList(parseMessages(snapshot.data!.docs)),
+          );
+        }
+      },
     );
   }
 
@@ -77,7 +63,7 @@ class MessagesList extends StatelessWidget {
       itemCount: messages.length,
       shrinkWrap: true,
       reverse: true,
-      controller: _scrollController,
+      controller: ScrollController(),
     );
   }
 
