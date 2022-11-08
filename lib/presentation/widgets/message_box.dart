@@ -1,12 +1,10 @@
 import 'package:any_link_preview/any_link_preview.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_link_previewer/flutter_link_previewer.dart';
 import 'package:flutter_parsed_text/flutter_parsed_text.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:starlight/domain/entities/message_entity.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
 import 'package:timeago_flutter/timeago_flutter.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class MessageBox extends StatelessWidget {
@@ -118,8 +116,6 @@ class MessageBox extends StatelessWidget {
             if (text == null) {
               return Container();
             }
-            print(content == text);
-
             return Padding(
               padding: content == text
                   ? EdgeInsets.zero

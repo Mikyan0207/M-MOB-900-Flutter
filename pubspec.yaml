@@ -13,31 +13,26 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   any_link_preview: ^2.0.9
-  blackfoot_flutter_lint: ^1.0.6
   camera: ^0.10.0
   cloud_firestore: ^4.0.3
-  cross_file_image: ^1.0.0
   cupertino_icons: ^1.0.2
   firebase_auth: "^4.1.0"
   firebase_core: "^2.1.1"
-  firebase_crashlytics: "^3.0.4"
   firebase_storage: "^11.0.3"
   flutter:
     sdk: flutter
-  flutter_link_previewer: ^3.2.0
   flutter_parsed_text: ^2.2.1
   fluttertoast: ^8.1.1
   get: ^4.6.5
   google_fonts: ^3.0.1
   image_cropper: ^3.0.0
   image_picker: "^0.8.6"
-  intl: 0.17.0
   overlapping_panels: ^0.0.3
   timeago_flutter: ^1.2.0
-  url_launcher: ^6.1.6
   velocity_x: ^3.5.1
 
-dev_dependencies: 
+dev_dependencies:
+  blackfoot_flutter_lint: ^1.0.6
   flutter_lints: ^2.0.0
   flutter_test: 
     sdk: flutter
