@@ -15,16 +15,20 @@ class SignInScreen extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
+  static final GlobalKey<FormState> _key = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Container(
+    return Scaffold(
+      body: SingleChildScrollView(
+        reverse: true,
+        controller: ScrollController(),
+        child: Container(
           decoration: const BoxDecoration(color: AppColors.black800),
-          width: double.infinity,
-          height: double.infinity,
+          width: context.screenWidth,
+          height: context.screenHeight,
           child: Form(
-            key: UniqueKey(),
+            key: _key,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[

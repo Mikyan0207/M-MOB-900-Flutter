@@ -23,6 +23,8 @@ dependencies:
   firebase_storage: "^11.0.3"
   flutter:
     sdk: flutter
+  flutter_link_previewer: ^3.2.0
+  flutter_parsed_text: ^2.2.1
   fluttertoast: ^8.1.1
   get: ^4.6.5
   google_fonts: ^3.0.1
@@ -31,13 +33,15 @@ dependencies:
   intl: 0.17.0
   overlapping_panels: ^0.0.3
   timeago_flutter: ^1.2.0
+  url_launcher: ^6.1.6
   velocity_x: ^3.5.1
 
 dev_dependencies: 
   flutter_lints: ^2.0.0
   flutter_test: 
     sdk: flutter
-flutter: 
-  assets: 
+flutter:
+  assets:
     - assets/
+    - assets/undraw_chatting.png
   uses-material-design: true
