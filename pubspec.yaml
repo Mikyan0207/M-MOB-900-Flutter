@@ -16,6 +16,7 @@ dependencies:
   camera: ^0.10.0
   cloud_firestore: ^4.0.3
   cupertino_icons: ^1.0.2
+  emojis: ^0.9.9
   firebase_auth: "^4.1.0"
   firebase_core: "^2.1.1"
   firebase_storage: "^11.0.3"

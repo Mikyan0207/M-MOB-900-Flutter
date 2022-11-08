@@ -54,17 +54,14 @@ class _MessageBarState extends State<MessageBar> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
-                      Flexible(
-                        child: IconButton(
-                          icon: const Icon(
-                            Icons.add_circle,
-                            color: Vx.gray400,
-                          ),
-                          onPressed: () {},
+                      IconButton(
+                        icon: const Icon(
+                          Icons.add_circle,
+                          color: Vx.gray400,
                         ),
+                        onPressed: () {},
                       ),
                       Expanded(
-                        flex: 9,
                         child: Form(
                           key: UniqueKey(),
                           child: ConstrainedBox(
@@ -124,64 +121,52 @@ class _MessageBarState extends State<MessageBar> {
                           ),
                         ),
                       ),
-                      Flexible(
-                        flex: 7,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: <Widget>[
-                            Flexible(
-                              child: IconButton(
-                                icon: const Icon(
-                                  Icons.sticky_note_2,
-                                  color: Vx.gray300,
-                                ),
-                                onPressed: () {},
-                              ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          IconButton(
+                            icon: const Icon(
+                              Icons.sticky_note_2,
+                              color: Vx.gray300,
                             ),
-                            Flexible(
-                              child: IconButton(
-                                icon: const Icon(
-                                  Icons.emoji_emotions,
-                                  color: Vx.gray300,
-                                ),
-                                onPressed: () {},
-                              ),
+                            onPressed: () {},
+                          ),
+                          IconButton(
+                            icon: const Icon(
+                              Icons.emoji_emotions,
+                              color: Vx.gray300,
                             ),
-                            Flexible(
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 10.0),
-                                child: VerticalDivider(
-                                  thickness: context.isMobile ? 1 : 0.5,
-                                  color: Vx.gray400,
-                                ),
-                              ),
+                            onPressed: () {},
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10.0),
+                            child: VerticalDivider(
+                              thickness: context.isMobile ? 1 : 0.5,
+                              color: Vx.gray400,
                             ),
-                            Flexible(
-                              child: IconButton(
-                                icon: const Icon(
-                                  Icons.send,
-                                  color: Vx.indigo300,
-                                ),
-                                onPressed: () async {
-                                  if (textarea.text.isEmptyOrNull) {
-                                    return;
-                                  }
+                          ),
+                          IconButton(
+                            icon: const Icon(
+                              Icons.send,
+                              color: Vx.indigo300,
+                            ),
+                            onPressed: () async {
+                              if (textarea.text.isEmptyOrNull) {
+                                return;
+                              }
 
-                                  await _messageRepository.create(
-                                    MessageEntity(
-                                      author: _authController.currentUser.value,
-                                      content: textarea.text,
-                                      channel: _channelController
-                                          .currentChannel.value,
-                                      time: Timestamp.now(),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
+                              await _messageRepository.create(
+                                MessageEntity(
+                                  author: _authController.currentUser.value,
+                                  content: textarea.text,
+                                  channel:
+                                      _channelController.currentChannel.value,
+                                  time: Timestamp.now(),
+                                ),
+                              );
+                            },
+                          ),
+                        ],
                       )
                     ],
                   ),

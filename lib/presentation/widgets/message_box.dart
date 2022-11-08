@@ -1,4 +1,6 @@
 import 'package:any_link_preview/any_link_preview.dart';
+import 'package:emojis/emoji.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parsed_text/flutter_parsed_text.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -7,7 +9,7 @@ import 'package:starlight/presentation/themes/theme_colors.dart';
 import 'package:timeago_flutter/timeago_flutter.dart';
 import 'package:velocity_x/velocity_x.dart';
 
-class MessageBox extends StatelessWidget {
+class MessageBox extends StatefulWidget {
   const MessageBox({
     super.key,
     required this.message,
@@ -22,80 +24,158 @@ class MessageBox extends StatelessWidget {
   final bool showAuthor;
 
   @override
+  State<MessageBox> createState() => _MessageBoxState();
+}
+
+class _MessageBoxState extends State<MessageBox> {
+  bool isHovered = false;
+  bool isMessageMenuHovered = false;
+  Color hoverBackground = AppColors.black800.withOpacity(0.25);
+
+  @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(right: 12.0),
-          child: showAvatar
-              ? SizedBox(
-                  height: 40,
-                  width: 40,
-                  child: ClipOval(
-                    child: Material(
-                      color: Colors.transparent,
-                      child: Ink.image(
-                        image: message.author.avatar.isNotEmptyAndNotNull
-                            ? NetworkImage(message.author.avatar)
-                            : const NetworkImage(
-                                "https://ddrg.farmasi.unej.ac.id/wp-content/uploads/sites/6/2017/10/unknown-person-icon-Image-from.png",
-                              ),
-                        fit: BoxFit.cover,
-                        width: 100,
-                        height: 100,
-                      ),
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(7.0),
+        color: isHovered ? hoverBackground : Colors.transparent,
+      ),
+      child: MouseRegion(
+        onEnter: (PointerEnterEvent event) {
+          setState(() {
+            isHovered = true;
+          });
+        },
+        onExit: (PointerExitEvent event) {
+          setState(() {
+            isHovered = false;
+          });
+        },
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: <Widget>[
+            if (isHovered || isMessageMenuHovered)
+              Positioned(
+                right: 10.0,
+                top: -15.0,
+                child: MouseRegion(
+                  onEnter: (PointerEnterEvent event) {
+                    setState(() {
+                      isMessageMenuHovered = true;
+                    });
+                  },
+                  onExit: (PointerExitEvent event) {
+                    setState(() {
+                      isMessageMenuHovered = false;
+                    });
+                  },
+                  child: Container(
+                    height: 32,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(4.0),
+                      border: Border.all(color: AppColors.black800),
+                      color: AppColors.black700,
                     ),
-                  ),
-                )
-              : const SizedBox(width: 40),
-        ),
-        Flexible(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Row(
-                children: <Widget>[
-                  if (showAuthor)
-                    Text(
-                      message.author.username,
-                      style: const TextStyle(
-                        color: Vx.red400,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    )
-                  else
-                    Container(),
-                  if (showTime)
-                    Padding(
-                      padding: const EdgeInsets.only(left: 16.0),
-                      child: Timeago(
-                        date: message.time.toDate(),
-                        builder: (BuildContext context, String value) => Text(
-                          value,
-                          style: const TextStyle(
-                            color: Vx.gray400,
-                            fontSize: 10,
-                            fontWeight: FontWeight.w200,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Tooltip(
+                          message: 'Delete message',
+                          child: IconButton(
+                            padding: EdgeInsets.zero,
+                            icon: const Icon(
+                              Icons.delete_rounded,
+                              color: Vx.red400,
+                              size: 16,
+                            ),
+                            onPressed: () {},
                           ),
                         ),
-                      ),
-                    )
-                  else
-                    Container(),
-                ],
-              ),
-              Padding(
-                padding: showTime
-                    ? const EdgeInsets.only(top: 4.0)
-                    : EdgeInsets.zero,
-                child: parseMessage(message.content),
+                      ],
+                    ),
+                  ),
+                ),
               )
-            ],
-          ),
-        )
-      ],
+            else
+              Container(),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(right: 12.0),
+                  child: widget.showAvatar
+                      ? SizedBox(
+                          height: 40,
+                          width: 40,
+                          child: ClipOval(
+                            child: Material(
+                              color: Colors.transparent,
+                              child: Ink.image(
+                                image: widget.message.author.avatar
+                                        .isNotEmptyAndNotNull
+                                    ? NetworkImage(widget.message.author.avatar)
+                                    : const NetworkImage(
+                                        "https://ddrg.farmasi.unej.ac.id/wp-content/uploads/sites/6/2017/10/unknown-person-icon-Image-from.png",
+                                      ),
+                                fit: BoxFit.cover,
+                                width: 100,
+                                height: 100,
+                              ),
+                            ),
+                          ),
+                        )
+                      : const SizedBox(width: 40),
+                ),
+                Flexible(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          if (widget.showAuthor)
+                            Text(
+                              widget.message.author.username,
+                              style: const TextStyle(
+                                color: Vx.red400,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            )
+                          else
+                            Container(),
+                          if (widget.showTime)
+                            Padding(
+                              padding: const EdgeInsets.only(left: 16.0),
+                              child: Timeago(
+                                date: widget.message.time.toDate(),
+                                builder: (BuildContext context, String value) =>
+                                    Text(
+                                  value,
+                                  style: const TextStyle(
+                                    color: Vx.gray400,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w200,
+                                  ),
+                                ),
+                              ),
+                            )
+                          else
+                            Container(),
+                        ],
+                      ),
+                      Padding(
+                        padding: widget.showTime
+                            ? const EdgeInsets.only(top: 4.0)
+                            : EdgeInsets.zero,
+                        child: parseMessage(widget.message.content),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -110,6 +190,22 @@ class MessageBox extends StatelessWidget {
       ),
       parse: <MatchText>[
         MatchText(
+          pattern: r"(<a?)?:\w+:(\d{18}>)?",
+          renderWidget: ({String? pattern, String? text}) {
+            if (text == null) {
+              return Container();
+            }
+
+            final String emoji =
+                Emoji.byShortName(text.replaceAll(":", "")).toString();
+
+            return Text(
+              emoji,
+              style: const TextStyle(fontSize: 20),
+            );
+          },
+        ),
+        MatchText(
           pattern:
               r"[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:._\+-~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:_\+.~#?&\/\/=]*)",
           renderWidget: ({String? pattern, String? text}) {
@@ -117,9 +213,7 @@ class MessageBox extends StatelessWidget {
               return Container();
             }
             return Padding(
-              padding: content == text
-                  ? EdgeInsets.zero
-                  : const EdgeInsets.only(top: 12.0),
+              padding: const EdgeInsets.only(top: 12.0),
               child: Row(
                 children: <Widget>[
                   ConstrainedBox(
@@ -138,7 +232,7 @@ class MessageBox extends StatelessWidget {
                       ),
                       proxyUrl: "https://cryptic-peak-99521.herokuapp.com/",
                       removeElevation: true,
-                      cache: const Duration(hours: 12),
+                      cache: const Duration(hours: 1),
                       borderRadius: 7.0,
                       errorWidget: const Center(
                         child: Text(
