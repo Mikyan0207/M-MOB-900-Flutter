@@ -38,7 +38,7 @@ class MessagesList extends StatelessWidget {
             );
           } else {
             return Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.only(bottom: 12.0),
               child: buildMessageList(parseMessages(snapshot.data!.docs)),
             );
           }
@@ -71,7 +71,6 @@ class MessagesList extends StatelessWidget {
 
   ListView buildMessageList(List<Map<String, dynamic>> messages) {
     return ListView.builder(
-      padding: const EdgeInsets.all(10.0),
       itemBuilder: (BuildContext context, int index) {
         return displayMessage(messages, index);
       },
@@ -108,6 +107,8 @@ class MessagesList extends StatelessWidget {
           showAuthor: false,
           showAvatar: false,
           showTime: false,
+          isMention:
+              RegExp(r"\[(@([^\]]+)):([^\]]+)\]").hasMatch(message.content),
         ),
       );
     }
@@ -119,6 +120,8 @@ class MessagesList extends StatelessWidget {
         showAuthor: true,
         showAvatar: true,
         showTime: true,
+        isMention:
+            RegExp(r"\[(@([^\]]+)):([^\]]+)\]").hasMatch(message.content),
       ),
     );
   }

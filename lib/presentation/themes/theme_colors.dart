@@ -11,4 +11,6 @@ class AppColors {
   static const Color black500 = Color(0xff36393f);
   static const Color black400 = Color(0xff40444b);
   static const Color gray200 = Color(0xff42464d);
+  static const Color mentionBackground = Color(0xff4e4d73);
+  static const Color highlightMessageBackground = Color(0xfffaa61a);
 }

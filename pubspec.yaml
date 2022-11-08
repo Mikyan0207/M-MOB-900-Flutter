@@ -23,6 +23,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_parsed_text: ^2.2.1
+  flutter_parsed_text_field: ^0.1.10
   fluttertoast: ^8.1.1
   get: ^4.6.5
   google_fonts: ^3.0.1
