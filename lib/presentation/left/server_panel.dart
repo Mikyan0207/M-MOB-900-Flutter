@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:starlight/domain/controllers/server_controller.dart';
-import 'package:starlight/domain/entities/channel_entity.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
 import 'package:starlight/presentation/widgets/channel_list.dart';
 import 'package:starlight/presentation/widgets/create_channel_dialog.dart';
@@ -49,32 +48,116 @@ class ServerPanel extends GetView<ServerController> {
                     ),
                     PopupMenuButton<int>(
                       color: AppColors.black900,
-                      offset: const Offset(-192, 52),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      offset: const Offset(-195, 55),
                       icon: const Icon(
                         Icons.arrow_drop_down_rounded,
                         size: 22,
                         color: Vx.gray400,
                       ),
-                      onSelected: (int value) {
+                      onSelected: (int value) async {
                         if (value != 1) {
                           return;
                         }
 
-                        Get.dialog<ChannelEntity>(
+                        await Get.dialog(
                           CreateChannelDialog(),
-                          barrierDismissible: false,
+                          barrierDismissible: true,
                           barrierColor: Vx.gray800.withOpacity(0.75),
                         );
                       },
                       itemBuilder: (BuildContext context) =>
                           <PopupMenuEntry<int>>[
-                        const PopupMenuItem<int>(
+                        PopupMenuItem<int>(
+                          value: 0,
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: Row(
+                              children: const <Widget>[
+                                Expanded(
+                                  child: Text(
+                                    "Invite People",
+                                    style: TextStyle(
+                                      color: AppColors.primaryColor,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: 50),
+                                Icon(
+                                  Icons.group_add_rounded,
+                                  color: AppColors.primaryColor,
+                                  size: 18,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        PopupMenuItem<int>(
                           value: 1,
                           child: SizedBox(
-                            width: 195,
-                            child: Text(
-                              "Create channel",
-                              style: TextStyle(color: Vx.gray200),
+                            width: double.infinity,
+                            child: Row(
+                              children: const <Widget>[
+                                Expanded(
+                                  child: Text(
+                                    "Create Channel",
+                                    style: TextStyle(color: Vx.gray200),
+                                  ),
+                                ),
+                                SizedBox(width: 50),
+                                Icon(
+                                  Icons.add_circle_rounded,
+                                  color: Vx.gray400,
+                                  size: 18,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        PopupMenuItem<int>(
+                          value: 2,
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: Row(
+                              children: const <Widget>[
+                                Expanded(
+                                  child: Text(
+                                    "Server Settings",
+                                    style: TextStyle(color: Vx.gray200),
+                                  ),
+                                ),
+                                SizedBox(width: 50),
+                                Icon(
+                                  Icons.settings_rounded,
+                                  color: Vx.gray400,
+                                  size: 18,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        PopupMenuItem<int>(
+                          value: 2,
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: Row(
+                              children: const <Widget>[
+                                Expanded(
+                                  child: Text(
+                                    "Delete Server",
+                                    style: TextStyle(color: Vx.red500),
+                                  ),
+                                ),
+                                SizedBox(width: 50),
+                                Icon(
+                                  Icons.delete_rounded,
+                                  color: Vx.red500,
+                                  size: 18,
+                                ),
+                              ],
                             ),
                           ),
                         ),

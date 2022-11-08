@@ -70,19 +70,53 @@ class MessagesList extends StatelessWidget {
     return ListView.builder(
       padding: const EdgeInsets.all(10.0),
       itemBuilder: (BuildContext context, int index) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12.0),
-          child: MessageBox(
-            message: MessageEntity.fromJson(
-              messages[index],
-            ),
-          ),
-        );
+        return displayMessage(messages, index);
       },
       itemCount: messages.length,
       shrinkWrap: true,
       reverse: true,
       controller: _scrollController,
+    );
+  }
+
+  bool isSameAuthorWithSimilarTimestamp(
+    MessageEntity previousMessage,
+    MessageEntity currentMessage,
+  ) {
+    return previousMessage.author.id == currentMessage.author.id &&
+        currentMessage.time.toDate().millisecondsSinceEpoch <=
+            previousMessage.time
+                .toDate()
+                .add(const Duration(minutes: 15))
+                .millisecondsSinceEpoch;
+  }
+
+  Widget displayMessage(List<Map<String, dynamic>> messages, int index) {
+    final MessageEntity message = MessageEntity.fromJson(messages[index]);
+    if (index + 1 < messages.length &&
+        isSameAuthorWithSimilarTimestamp(
+          MessageEntity.fromJson(messages[index + 1]),
+          message,
+        )) {
+      return Padding(
+        padding: const EdgeInsets.only(top: 5.0),
+        child: MessageBox(
+          message: message,
+          showAuthor: false,
+          showAvatar: false,
+          showTime: false,
+        ),
+      );
+    }
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 24.0),
+      child: MessageBox(
+        message: message,
+        showAuthor: true,
+        showAvatar: true,
+        showTime: true,
+      ),
     );
   }
 }

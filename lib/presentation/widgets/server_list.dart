@@ -23,9 +23,9 @@ class ServerList extends StatelessWidget {
             .collection("Servers")
             .where(
               "Id",
-              whereIn: _authController.currentUser.value.servers
-                  .map((ServerEntity e) => e.id)
-                  .toList(),
+              whereIn: _authController.currentUserServers.isEmpty
+                  ? <String>['']
+                  : _authController.currentUserServers,
             )
             .snapshots(),
         builder: (
@@ -54,19 +54,12 @@ class ServerList extends StatelessWidget {
         )
         .toList();
 
-    // messages.sort((
-    //   Map<String, dynamic> a,
-    //   Map<String, dynamic> b,
-    // ) {
-    //   return (b['Time'] as Timestamp).compareTo(a['Time'] as Timestamp);
-    // });
-
     return servers;
   }
 
   ListView buildServerList(List<Map<String, dynamic>> servers) {
     return ListView.builder(
-      padding: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.symmetric(horizontal: 6.0),
       shrinkWrap: true,
       itemCount: servers.length,
       controller: ScrollController(),
@@ -74,7 +67,7 @@ class ServerList extends StatelessWidget {
         final ServerEntity se = ServerEntity.fromJson(servers[index]);
 
         return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12.0),
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: Center(
             child: ServerIcon(
               icon: se.icon.isNotEmpty ? se.icon : iconPlaceholder,

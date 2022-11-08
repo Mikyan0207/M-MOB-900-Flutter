@@ -1,18 +1,16 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:starlight/auth/auth_controller.dart';
 import 'package:starlight/presentation/home/home_screen.dart';
 import 'package:starlight/presentation/sign_up/sign_up_screen.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
 import 'package:velocity_x/velocity_x.dart';
 
-import '../../auth/auth_controller.dart';
-
 class SignInScreen extends StatelessWidget {
   SignInScreen({super.key});
 
-  final AuthController auth = Get.put(AuthController());
+  final AuthController auth = Get.find();
 
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -22,7 +20,7 @@ class SignInScreen extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         body: Container(
-          color: Vx.gray800,
+          decoration: const BoxDecoration(color: AppColors.black800),
           width: double.infinity,
           height: double.infinity,
           child: Form(
@@ -52,7 +50,7 @@ class SignInScreen extends StatelessWidget {
                 SizedBox(
                   width: 300,
                   height: 400,
-                  child: SvgPicture.asset("assets/undraw_chatting.svg"),
+                  child: Image.asset("undraw_chatting.png"),
                 ),
                 SizedBox(
                   width: 400,
@@ -60,6 +58,8 @@ class SignInScreen extends StatelessWidget {
                     controller: emailController,
                     style: const TextStyle(color: AppColors.white),
                     decoration: const InputDecoration(
+                      filled: true,
+                      fillColor: AppColors.black900,
                       labelStyle: TextStyle(
                         color: Vx.gray300,
                         fontWeight: FontWeight.w300,
@@ -103,6 +103,8 @@ class SignInScreen extends StatelessWidget {
                       style: const TextStyle(color: AppColors.white),
                       obscureText: true,
                       decoration: const InputDecoration(
+                        filled: true,
+                        fillColor: AppColors.black900,
                         labelStyle: TextStyle(
                           color: Vx.gray300,
                           fontWeight: FontWeight.w300,

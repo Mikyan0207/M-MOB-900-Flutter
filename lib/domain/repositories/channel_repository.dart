@@ -4,14 +4,14 @@ import 'package:starlight/domain/entities/channel_entity.dart';
 class ChannelRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<bool> create(ChannelEntity ce) async {
+  Future<ChannelEntity> create(ChannelEntity ce) async {
     final DocumentReference<Map<String, dynamic>> document =
         await _firestore.collection("Channels").add(ce.toJson());
 
     ce.id = document.id;
     await document.set(ce.toJson());
 
-    return true;
+    return ce;
   }
 
   Future<List<ChannelEntity>> getServerChannels(String serverId) async {

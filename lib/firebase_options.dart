@@ -67,7 +67,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '23479163395',
     projectId: 'mob-900-flutter',
     storageBucket: 'mob-900-flutter.appspot.com',
-    iosClientId: '23479163395-k9i2ts2ld0n60oio9msoq197jhvcghbv.apps.googleusercontent.com',
+    iosClientId:
+        '23479163395-k9i2ts2ld0n60oio9msoq197jhvcghbv.apps.googleusercontent.com',
     iosBundleId: 'com.example.starlight',
   );
 
@@ -77,7 +78,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '23479163395',
     projectId: 'mob-900-flutter',
     storageBucket: 'mob-900-flutter.appspot.com',
-    iosClientId: '23479163395-k9i2ts2ld0n60oio9msoq197jhvcghbv.apps.googleusercontent.com',
+    iosClientId:
+        '23479163395-k9i2ts2ld0n60oio9msoq197jhvcghbv.apps.googleusercontent.com',
     iosBundleId: 'com.example.starlight',
   );
 

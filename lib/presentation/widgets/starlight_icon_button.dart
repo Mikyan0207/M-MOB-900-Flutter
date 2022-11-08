@@ -24,7 +24,7 @@ class StarlightIconButton extends StatefulWidget {
   final double? iconRadius;
   final Function()? onIconHoverEnter;
   final Function()? onIconHoverExit;
-  final Function()? onIconClicked;
+  final Future<void> Function()? onIconClicked;
 
   @override
   State<StarlightIconButton> createState() => _StarlightIconButtonState();
@@ -56,8 +56,8 @@ class _StarlightIconButtonState extends State<StarlightIconButton>
         // Marks the widget tree as dirty
         setState(() {});
       });
-    iconAnimation =
-        Tween<double>(begin: _radius, end: _radius - 10.0).animate(iconController);
+    iconAnimation = Tween<double>(begin: _radius, end: _radius - 10.0)
+        .animate(iconController);
 
     iconColorController = AnimationController(vsync: this, duration: _duration)
       ..addListener(() {
@@ -69,15 +69,17 @@ class _StarlightIconButtonState extends State<StarlightIconButton>
         ColorTween(begin: widget.iconColor, end: widget.iconHoverColor)
             .animate(iconColorController);
 
-    backgroundColorController = AnimationController(vsync: this, duration: _duration)
-      ..addListener(() {
-        // Marks the widget tree as dirty
-        setState(() {});
-      });
+    backgroundColorController =
+        AnimationController(vsync: this, duration: _duration)
+          ..addListener(() {
+            // Marks the widget tree as dirty
+            setState(() {});
+          });
 
-    backgroundColorAnimation =
-        ColorTween(begin: widget.backgroundColor, end: widget.backgroundHoverColor)
-            .animate(iconColorController);
+    backgroundColorAnimation = ColorTween(
+      begin: widget.backgroundColor,
+      end: widget.backgroundHoverColor,
+    ).animate(iconColorController);
 
     super.initState();
   }
@@ -107,7 +109,9 @@ class _StarlightIconButtonState extends State<StarlightIconButton>
           child: Material(
             color: backgroundColorAnimation.value,
             child: IconButton(
-              onPressed: () {},
+              onPressed: () async {
+                await widget.onIconClicked?.call();
+              },
               splashColor: Colors.transparent,
               highlightColor: Colors.transparent,
               icon: Icon(
