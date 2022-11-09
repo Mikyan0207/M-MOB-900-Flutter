@@ -25,7 +25,7 @@ class AuthController extends GetxController {
     }
 
     if (currentUser.value.groups.isNotEmpty) {
-      currentUserServers(
+      currentUserGroups(
         currentUser.value.groups.map((GroupEntity ge) => ge.id).toList(),
       );
     }
@@ -44,7 +44,7 @@ class AuthController extends GetxController {
         return false;
       }
 
-      currentUser(await _userRepository.get(userCredential.user!.uid));
+      currentUser(await _userRepository.getByAuthId(userCredential.user!.uid));
       if (currentUser.value.id == '') {
         await Fluttertoast.showToast(msg: "Current User is null");
         await Get.to(() => SignInScreen());
@@ -60,7 +60,7 @@ class AuthController extends GetxController {
       }
 
       if (currentUser.value.groups.isNotEmpty) {
-        currentUserServers(
+        currentUserGroups(
           currentUser.value.groups.map((GroupEntity ge) => ge.id).toList(),
         );
       }
@@ -92,7 +92,7 @@ class AuthController extends GetxController {
       currentUser(
         await _userRepository.create(
           UserEntity(
-            id: userCredential.user!.uid,
+            authId: userCredential.user!.uid,
             username: userCredential.user!.email!.split('@').first,
             email: userCredential.user!.email!,
           ),

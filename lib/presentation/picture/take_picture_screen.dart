@@ -158,7 +158,7 @@ class DisplayPictureScreen extends StatelessWidget {
     final String imageUrl = await ref.getDownloadURL();
     await FirebaseFirestore.instance
         .collection('Users')
-        .doc(auth.currentUser.value.idDocument)
+        .doc(auth.currentUser.value.id)
         .update(<String, Object?>{
       'Avatar': imageUrl,
     });

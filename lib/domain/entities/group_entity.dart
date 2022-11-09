@@ -28,8 +28,21 @@ class GroupEntity {
     return <String, dynamic>{
       'Id': id,
       'Name': name,
-      'Members': members,
-      'Messages': messages,
+      'Members': members
+          .map(
+            (UserEntity ue) => <String, dynamic>{
+              'Id': ue.id,
+              'Username': ue.username,
+              'Discriminator': ue.discriminator,
+              'Avatar': ue.avatar,
+            },
+          )
+          .toList(),
+      'Messages': messages
+          .map(
+            (MessageEntity me) => me.toJson(),
+          )
+          .toList(),
     };
   }
 

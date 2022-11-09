@@ -1,113 +1,30 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:starlight/auth/auth_controller.dart';
+import 'package:starlight/domain/entities/friend_request_entity.dart';
 import 'package:starlight/domain/entities/user_entity.dart';
+import 'package:starlight/domain/repositories/friend_request_repository.dart';
 import 'package:starlight/domain/repositories/user_repository.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
 import 'package:velocity_x/velocity_x.dart';
 
-class CreateGroupDialog extends StatefulWidget {
-  const CreateGroupDialog({
+class InviteFriendToServerDialog extends StatefulWidget {
+  const InviteFriendToServerDialog({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<CreateGroupDialog> createState() => _CreateGroupDialogState();
+  State<InviteFriendToServerDialog> createState() =>
+      _InviteFriendToServerDialogState();
 }
 
-class _CreateGroupDialogState extends State<CreateGroupDialog> {
+class _InviteFriendToServerDialogState
+    extends State<InviteFriendToServerDialog> {
   final AuthController _authController = Get.find();
+  final FriendRequestRepository _friendRequestRepository =
+      FriendRequestRepository();
   final UserRepository _userRepository = UserRepository();
-
-  List<bool> _isChecked = <bool>[];
-
-  @override
-  void initState() {
-    super.initState();
-    _isChecked = List<bool>.filled(
-      10,
-      false,
-    );
-    Future<void>.delayed(Duration.zero, () async {
-      _isChecked = List<bool>.filled(
-        await _userRepository.getUsersCount() - 1,
-        false,
-      );
-    });
-  }
-
-  List<dynamic> _parseUsers(
-    List<QueryDocumentSnapshot<Map<String, dynamic>>> docs,
-  ) {
-    final List<dynamic> users = docs
-        .map(
-          (
-            QueryDocumentSnapshot<Map<String, dynamic>> e,
-          ) =>
-              e.data()['Friends'] ?? <dynamic>[],
-        )
-        .toList();
-
-    return users.expand((dynamic element) => element).toList();
-  }
-
-  ListView _buildUsersList(List<dynamic> users) {
-    return ListView.builder(
-      padding: const EdgeInsets.symmetric(horizontal: 6.0),
-      shrinkWrap: true,
-      itemCount: users.length,
-      controller: ScrollController(),
-      itemBuilder: (BuildContext context, int index) {
-        final UserEntity ue = UserEntity.fromJson(users[index]);
-
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 4.0),
-          child: Container(
-            decoration: BoxDecoration(
-              color: AppColors.black800,
-              borderRadius: BorderRadius.circular(7.0),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Theme(
-                data: ThemeData(unselectedWidgetColor: Vx.gray400),
-                child: CheckboxListTile(
-                  activeColor: AppColors.primaryColor,
-                  checkColor: Vx.white,
-                  title: Text(
-                    ue.username,
-                    style: const TextStyle(
-                      color: Vx.white,
-                    ),
-                  ),
-                  secondary: CircleAvatar(
-                    backgroundColor: Colors.transparent,
-                    child: SizedBox(
-                      width: 60,
-                      height: 60,
-                      child: ClipOval(
-                        child: Image.network(
-                          ue.avatar,
-                        ),
-                      ),
-                    ),
-                  ),
-                  tileColor: Vx.gray300,
-                  value: _isChecked[index],
-                  onChanged: (bool? value) {
-                    setState(() {
-                      _isChecked[index] = value!;
-                    });
-                  },
-                ),
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
+  final TextEditingController _textFieldController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -130,12 +47,12 @@ class _CreateGroupDialogState extends State<CreateGroupDialog> {
                 children: <Widget>[
                   const Padding(
                     padding: EdgeInsets.only(
-                      left: 16.0,
-                      top: 16.0,
+                      left: 12.0,
+                      top: 12.0,
                       bottom: 6.0,
                     ),
                     child: Text(
-                      "Add Friend",
+                      "Invite People",
                       style: TextStyle(
                         color: Vx.white,
                         fontSize: 23,
@@ -143,41 +60,75 @@ class _CreateGroupDialogState extends State<CreateGroupDialog> {
                       ),
                     ),
                   ),
+                  const Padding(
+                    padding: EdgeInsets.only(
+                      left: 12.0,
+                      bottom: 20.0,
+                    ),
+                    child: Text(
+                      "You can add a person with their Starlight tag.",
+                      style: TextStyle(
+                        color: Vx.gray300,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
                   const SizedBox(
                     height: 25,
                   ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12.0,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12.0,
+                    ),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: AppColors.black800,
+                        border: Border.all(color: AppColors.black900),
+                        borderRadius: BorderRadius.circular(6.0),
                       ),
-                      child: Obx(
-                        () =>
-                            StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                          stream: FirebaseFirestore.instance
-                              .collection("Users")
-                              .where(
-                                "Id",
-                                isEqualTo: _authController.currentUser.value.id,
-                              )
-                              .snapshots(),
-                          builder: (
-                            BuildContext context,
-                            AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
-                                snapshot,
-                          ) {
-                            if (!snapshot.hasData) {
-                              return Container();
-                            } else {
-                              return _buildUsersList(
-                                _parseUsers(snapshot.data!.docs),
-                              );
+                      child: Form(
+                        child: TextFormField(
+                          controller: _textFieldController,
+                          validator: (String? value) {
+                            if (value.isEmptyOrNull) {
+                              return null;
                             }
+
+                            final List<String> parts = value!.split("#");
+
+                            if (parts.length != 2) {
+                              return 'Invalid Starlight username.';
+                            }
+
+                            return null;
                           },
+                          style: const TextStyle(color: AppColors.white),
+                          decoration: const InputDecoration(
+                            filled: true,
+                            fillColor: AppColors.black900,
+                            labelStyle: TextStyle(
+                              color: Vx.gray300,
+                              fontWeight: FontWeight.w300,
+                            ),
+                            hintText: "Enter a Username#0000",
+                            hintStyle: TextStyle(
+                              color: Vx.gray400,
+                              fontSize: 12,
+                            ),
+                            prefixIcon: Icon(
+                              Icons.alternate_email_rounded,
+                              color: Vx.gray400,
+                            ),
+                            focusedBorder: InputBorder.none,
+                            enabledBorder: InputBorder.none,
+                            errorBorder: InputBorder.none,
+                          ),
                         ),
                       ),
                     ),
                   ),
+                  const Spacer(),
                   Container(
                     decoration: const BoxDecoration(
                       borderRadius: BorderRadius.only(
@@ -230,7 +181,7 @@ class _CreateGroupDialogState extends State<CreateGroupDialog> {
                           ),
                           const SizedBox(width: 10),
                           SizedBox(
-                            width: 100,
+                            width: 175,
                             height: 45,
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
@@ -246,13 +197,38 @@ class _CreateGroupDialogState extends State<CreateGroupDialog> {
                                 ),
                               ),
                               child: const Text(
-                                "Confirm",
+                                "Invite",
                                 style: TextStyle(
                                   color: Vx.gray100,
                                   fontSize: 16.0,
                                 ),
                               ),
                               onPressed: () async {
+                                final String username =
+                                    _textFieldController.text.trim();
+                                final List<String> parts = username.split("#");
+
+                                if (parts.length != 2) {
+                                  return;
+                                }
+
+                                final UserEntity? toUser = await _userRepository
+                                    .getUserFromUsernameAndDiscriminator(
+                                  parts[0],
+                                  parts[1],
+                                );
+
+                                if (toUser == null) {
+                                  Get.back();
+                                }
+
+                                await _friendRequestRepository.create(
+                                  FriendRequestEntity(
+                                    fromUser: _authController.currentUser.value,
+                                    toUser: toUser!,
+                                  ),
+                                );
+
                                 Get.back();
                               },
                             ),

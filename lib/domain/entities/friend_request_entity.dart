@@ -23,13 +23,13 @@ class FriendRequestEntity {
     return <String, dynamic>{
       'Id': id,
       'FromUser': <String, dynamic>{
-        'Id': fromUser.idDocument,
+        'Id': fromUser.id,
         'Username': fromUser.username,
         'Discriminator': fromUser.discriminator,
         'Avatar': fromUser.avatar,
       },
       'ToUser': <String, dynamic>{
-        'Id': toUser.idDocument,
+        'Id': toUser.id,
         'Username': toUser.username,
         'Discriminator': toUser.discriminator,
         'Avatar': toUser.avatar,

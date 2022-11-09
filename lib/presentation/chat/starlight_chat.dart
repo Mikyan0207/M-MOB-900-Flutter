@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:starlight/auth/auth_controller.dart';
 import 'package:starlight/domain/controllers/private_message_controller.dart';
 import 'package:starlight/domain/entities/message_entity.dart';
+import 'package:starlight/domain/entities/user_entity.dart';
 import 'package:starlight/domain/repositories/message_repository.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
 import 'package:starlight/presentation/widgets/message_bar.dart';
@@ -54,7 +55,16 @@ class StarlightChat extends StatelessWidget {
                     ),
                     Obx(
                       () => Text(
-                        _pmController.currentGroup.value.name,
+                        _pmController
+                                .currentGroup.value.name.isNotEmptyAndNotNull
+                            ? _pmController.currentGroup.value.name
+                            : _pmController.currentGroup.value.members
+                                .firstWhere(
+                                  (UserEntity element) =>
+                                      element.id !=
+                                      _authController.currentUser.value.id,
+                                )
+                                .username,
                         style: const TextStyle(
                           color: Vx.white,
                           fontSize: 16,

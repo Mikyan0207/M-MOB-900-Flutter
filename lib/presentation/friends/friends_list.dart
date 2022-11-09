@@ -2,14 +2,22 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:starlight/auth/auth_controller.dart';
+import 'package:starlight/domain/controllers/group_controller.dart';
+import 'package:starlight/domain/entities/group_entity.dart';
 import 'package:starlight/domain/entities/user_entity.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
 import 'package:velocity_x/velocity_x.dart';
 
-class FriendList extends StatelessWidget {
-  FriendList({super.key});
+class FriendList extends StatefulWidget {
+  const FriendList({super.key});
 
+  @override
+  State<FriendList> createState() => _FriendListState();
+}
+
+class _FriendListState extends State<FriendList> {
   final AuthController _authController = Get.find();
+  final GroupController _groupController = Get.find();
 
   Widget _buildFriendCard(UserEntity ue) {
     return Padding(
@@ -65,7 +73,16 @@ class FriendList extends StatelessWidget {
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all<Color>(Vx.red500),
                 ),
-                onPressed: () async {},
+                onPressed: () async {
+                  await _groupController.create(
+                    GroupEntity(
+                      members: <UserEntity>[
+                        ue,
+                        _authController.currentUser.value,
+                      ],
+                    ),
+                  );
+                },
                 icon: const Icon(
                   Icons.chat_bubble_outline_rounded,
                   color: Vx.white,
@@ -118,7 +135,7 @@ class FriendList extends StatelessWidget {
             .collection("Users")
             .where(
               "Id",
-              isEqualTo: _authController.currentUser.value.idDocument,
+              isEqualTo: _authController.currentUser.value.id,
             )
             .snapshots(),
         builder: (

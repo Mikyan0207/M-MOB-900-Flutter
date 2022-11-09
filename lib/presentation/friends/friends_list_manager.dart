@@ -16,7 +16,7 @@ class FriendsListManager extends StatelessWidget {
   Widget _getMainView(FriendTabState currentFriendTab) {
     switch (currentFriendTab) {
       case FriendTabState.home:
-        return FriendList();
+        return const FriendList();
       case FriendTabState.pending:
         return PendingFriendRequestList();
       case FriendTabState.requests:

@@ -106,7 +106,7 @@ class _MessageBarState extends State<MessageBar> {
 
                                       if (match != null) {
                                         return UserEntity(
-                                          idDocument: match.group(3)!,
+                                          id: match.group(3)!,
                                           username: match.group(2)!,
                                         );
                                       }

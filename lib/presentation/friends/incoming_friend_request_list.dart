@@ -113,7 +113,7 @@ class IncomingFriendRequestList extends StatelessWidget {
             .collection("FriendRequests")
             .where(
               "ToUser.Id",
-              isEqualTo: _authController.currentUser.value.idDocument,
+              isEqualTo: _authController.currentUser.value.id,
             )
             .snapshots(),
         requestCardBuilder: _buildRequestCard,

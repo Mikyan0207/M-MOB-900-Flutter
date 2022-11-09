@@ -4,6 +4,7 @@ import 'package:starlight/domain/entities/server_entity.dart';
 class UserEntity {
   UserEntity({
     this.id = '',
+    this.authId = '',
     this.username = '',
     this.avatar = '',
     this.discriminator = '',
@@ -11,12 +12,11 @@ class UserEntity {
     this.servers = const <ServerEntity>[],
     this.groups = const <GroupEntity>[],
     this.friends = const <UserEntity>[],
-    this.idDocument = '',
   });
 
   factory UserEntity.fromJson(dynamic json) => UserEntity(
         id: json['Id'] ?? '',
-        idDocument: json['IdDocument'] ?? '',
+        authId: json['AuthId'] ?? '',
         username: json['Username'] ?? '',
         avatar: json['Avatar'] ?? '',
         discriminator: json['Discriminator'] ?? '#0000',
@@ -38,7 +38,7 @@ class UserEntity {
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'Id': id,
-      'IdDocument': idDocument,
+      'AuthId': authId,
       'Username': username,
       'Avatar': avatar,
       'Discriminator': discriminator,
@@ -53,16 +53,18 @@ class UserEntity {
             },
           )
           .toList(),
-      'Groups': groups.map(
-        (GroupEntity ge) => <String, dynamic>{
-          'Id': ge.id,
-          'Name': ge.name,
-          'Icon': ge.icon,
-        },
-      ),
+      'Groups': groups
+          .map(
+            (GroupEntity ge) => <String, dynamic>{
+              'Id': ge.id,
+              'Name': ge.name,
+              'Icon': ge.icon,
+            },
+          )
+          .toList(),
       'Friends': friends.map(
         (UserEntity ue) => <String, dynamic>{
-          'Id': ue.idDocument,
+          'Id': ue.id,
           'Username': ue.username,
           'Avatar': ue.avatar,
         },
@@ -71,7 +73,7 @@ class UserEntity {
   }
 
   String id;
-  String idDocument;
+  String authId;
   String username;
   String avatar;
   String discriminator;

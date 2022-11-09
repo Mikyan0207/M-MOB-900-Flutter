@@ -88,7 +88,7 @@ class MessagesList extends StatelessWidget {
         RegExp(r"\[(@([^\]]+)):([^\]]+)\]").allMatches(message);
 
     for (final RegExpMatch match in matches) {
-      if (match.group(3) == _authController.currentUser.value.idDocument) {
+      if (match.group(3) == _authController.currentUser.value.id) {
         return true;
       }
     }

@@ -94,7 +94,7 @@ class PendingFriendRequestList extends StatelessWidget {
             .collection("FriendRequests")
             .where(
               "FromUser.Id",
-              isEqualTo: _authController.currentUser.value.idDocument,
+              isEqualTo: _authController.currentUser.value.id,
             )
             .snapshots(),
         requestCardBuilder: _buildRequestCard,

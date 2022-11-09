@@ -4,6 +4,7 @@ import 'package:starlight/auth/auth_controller.dart';
 import 'package:starlight/common/constants/route_constants.dart';
 import 'package:starlight/domain/controllers/channel_controller.dart';
 import 'package:starlight/domain/controllers/friends_controller.dart';
+import 'package:starlight/domain/controllers/group_controller.dart';
 import 'package:starlight/domain/controllers/home_controller.dart';
 import 'package:starlight/domain/controllers/private_message_controller.dart';
 import 'package:starlight/domain/controllers/server_controller.dart';
@@ -29,6 +30,7 @@ class App extends StatelessWidget {
         Get.lazyPut(() => FriendsController()),
         Get.lazyPut(() => HomeController()),
         Get.lazyPut(() => PrivateMessageController()),
+        Get.lazyPut(() => GroupController()),
       },
       getPages: <GetPage<Widget>>[
         GetPage<Widget>(

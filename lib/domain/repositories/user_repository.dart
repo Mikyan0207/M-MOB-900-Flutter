@@ -7,17 +7,14 @@ class UserRepository {
   Future<UserEntity>? create(UserEntity e) async {
     final DocumentReference<Map<String, dynamic>> document =
         await _firestore.collection("Users").add(e.toJson());
-    e.idDocument = document.id;
+    e.id = document.id;
     await document.set(e.toJson());
 
-    final Map<String, dynamic>? data =
-        (await document.snapshots().first).data();
-
-    return UserEntity.fromJson(data);
+    return e;
   }
 
   Future<UserEntity> update(UserEntity ue) async {
-    await _firestore.collection("Users").doc(ue.idDocument).update(ue.toJson());
+    await _firestore.collection("Users").doc(ue.id).update(ue.toJson());
     return ue;
   }
 
@@ -47,9 +44,16 @@ class UserRepository {
   }
 
   Future<UserEntity> get(String id) async {
+    final Map<String, dynamic>? data =
+        (await _firestore.collection("Users").doc(id).get()).data();
+
+    return UserEntity.fromJson(data);
+  }
+
+  Future<UserEntity> getByAuthId(String id) async {
     final Map<String, dynamic> data = (await _firestore
             .collection("Users")
-            .where('Id', isEqualTo: id)
+            .where('AuthId', isEqualTo: id)
             .snapshots()
             .first)
         .docs
