@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:starlight/auth/auth_controller.dart';
+import 'package:starlight/domain/controllers/home_controller.dart';
 import 'package:starlight/domain/controllers/server_controller.dart';
 import 'package:starlight/domain/entities/server_entity.dart';
 import 'package:starlight/presentation/widgets/server_icon.dart';
@@ -14,6 +15,7 @@ class ServerList extends StatelessWidget {
 
   final AuthController _authController = Get.find();
   final ServerController _serverController = Get.find();
+  final HomeController _homeController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -74,6 +76,7 @@ class ServerList extends StatelessWidget {
               iconSize: 50,
               iconRadius: 25,
               onIconClicked: () async {
+                _homeController.setSelectedTab(AppTab.servers);
                 await _serverController.setCurrentServer(se);
               },
             ),

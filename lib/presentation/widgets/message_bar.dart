@@ -69,6 +69,28 @@ class _MessageBarState extends State<MessageBar> {
                             ),
                             child: Obx(
                               () => FlutterParsedTextField(
+                                onSubmitted: (String? value) async {
+                                  if (flutterParsedTextFieldController
+                                      .text.isEmptyOrNull) {
+                                    return;
+                                  }
+
+                                  final String msg =
+                                      flutterParsedTextFieldController
+                                          .stringify()
+                                          .trim();
+                                  flutterParsedTextFieldController.clear();
+
+                                  await _messageRepository.create(
+                                    MessageEntity(
+                                      author: _authController.currentUser.value,
+                                      content: msg,
+                                      channel: _channelController
+                                          .currentChannel.value,
+                                      time: Timestamp.now(),
+                                    ),
+                                  );
+                                },
                                 suggestionPosition: SuggestionPosition.above,
                                 matchers: <Matcher<dynamic>>[
                                   Matcher<UserEntity>(

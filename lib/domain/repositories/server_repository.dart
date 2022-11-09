@@ -27,6 +27,10 @@ class ServerRepository {
     return se;
   }
 
+  Future<void> delete(ServerEntity se) async {
+    await _firestore.collection("Servers").doc(se.id).delete();
+  }
+
   Future<ServerEntity> update(ServerEntity server) async {
     await _firestore
         .collection("Servers")
