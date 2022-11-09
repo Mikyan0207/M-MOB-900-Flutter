@@ -97,6 +97,16 @@ class RoleList extends StatelessWidget {
 
   bool iAmCreator()
   {
+    for (int i = 0; i< controller.currentServer.value.members.length; i++)
+    {
+      if (auth.currentUser.value.idDocument == controller.currentServer.value.members[i].id)
+      {
+        if (controller.currentServer.value.members[i].role == "creator")
+        {
+          return true;
+        }
+      }
+    }
     return false;
   }
 
@@ -117,35 +127,96 @@ class RoleList extends StatelessWidget {
 
   void promoteAdmin(UserEntity user, int index) async
   {
-/*
-    Query<Map<String, dynamic>> doc = FirebaseFirestore.instance
-        .collection("Servers")
-        .where(
-      "Id",
-      isEqualTo: controller.currentServer.value.id,
-    );
-
-    print(doc.get());
-*/
     try
     {
+      final List<dynamic> newMembers = controller.currentServer.value.members.map((UserEntity e) =>
+        e.id == user.id && e.role == "member" ? e.toJsonSimplifiedWithRole("admin") : e.toJsonSimplifiedWithRole(e.role),
+      ).toList();
 
-    final List<dynamic> newMembers = controller.currentServer.value.members.map((UserEntity e) =>
-        e.id == auth.currentUser.value.idDocument ? e.toJsonSimplifiedWithRole("admin") : e.toJsonSimplifiedWithRole(e.role),
-    ).toList();
-
-    await FirebaseFirestore.instance
+      await FirebaseFirestore.instance
         .collection('Servers')
         .doc(controller.currentServer.value.id)
-        .set(
+        .update(
           <String, dynamic>{
-            'Members': FieldValue.arrayUnion(<dynamic>[json.encode(newMembers.expand((element) => element))])
+            'Members': newMembers
           },
-      SetOptions(merge: true),);
-      await Fluttertoast.showToast(msg: "Members updated");
+        );
     } catch (e)
     {
       await Fluttertoast.showToast(msg: e.toString());
+    }
+  }
+
+  void delegateMember(UserEntity user, int index) async
+  {
+    try
+    {
+      final List<dynamic> newMembers = controller.currentServer.value.members.map((UserEntity e) =>
+      e.id == user.id && e.role == "admin" ? e.toJsonSimplifiedWithRole("member") : e.toJsonSimplifiedWithRole(e.role),
+      ).toList();
+
+      await FirebaseFirestore.instance
+          .collection('Servers')
+          .doc(controller.currentServer.value.id)
+          .update(
+        <String, dynamic>{
+          'Members': newMembers
+        },
+      );
+    } catch (e)
+    {
+      await Fluttertoast.showToast(msg: e.toString());
+    }
+  }
+
+  List<ContextMenuButtonConfig> getContextMenu(List<dynamic> admins, int index)
+  {
+    if (iAmCreator())
+    {
+      return <ContextMenuButtonConfig>[
+        ContextMenuButtonConfig(
+          "Promote admin",
+          onPressed: () => {
+            promoteAdmin(UserEntity.fromJson(admins[index]), index),
+          },
+        ),
+        ContextMenuButtonConfig(
+          "Delegate member",
+          onPressed: () => {
+            promoteAdmin(UserEntity.fromJson(admins[index]), index),
+          },
+        ), ContextMenuButtonConfig(
+            "Return",
+            onPressed: () => <void> {
+            },
+          ),
+      ];
+    }
+    else if(iAmAdmin())
+    {
+      return <ContextMenuButtonConfig>[
+        ContextMenuButtonConfig(
+          "Promote admin",
+          onPressed: () => {
+            promoteAdmin(UserEntity.fromJson(admins[index]), index),
+          },
+        ),
+        ContextMenuButtonConfig(
+          "Return",
+          onPressed: () => <void> {
+          },
+        ),
+      ];
+    }
+    else
+    {
+      return <ContextMenuButtonConfig>[
+        ContextMenuButtonConfig(
+          "Return",
+          onPressed: () => <void> {
+          },
+        ),
+      ];
     }
   }
 
@@ -168,18 +239,7 @@ class RoleList extends StatelessWidget {
               child:
               ContextMenuRegion(
                 contextMenu: GenericContextMenu(
-                  buttonConfigs: <ContextMenuButtonConfig> [
-                    if (iAmAdmin()) ContextMenuButtonConfig(
-                      "Promote admin",
-                      onPressed: () => {
-                        promoteAdmin(UserEntity.fromJson(admins[index]), index),
-                      },
-                    ) else ContextMenuButtonConfig(
-                      "",
-                      onPressed: () => <void> {
-                      },
-                    ),
-                  ],
+                  buttonConfigs: getContextMenu(admins, index),
                 ),
                 child: AdminBox(
                   adminUser: UserEntity.fromJson(admins[index]),

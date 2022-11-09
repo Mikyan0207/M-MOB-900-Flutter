@@ -23,14 +23,17 @@ class CreateChannelDialog extends GetView<ServerController> {
 
   bool isAdmin()
   {
-    final Iterable<bool> result = controller.currentServer.value.admin.map((UserEntity e) => e.id == auth.currentUser.value.idDocument);
-    if (result.contains(true))
+    for (int i = 0; i< controller.currentServer.value.members.length; i++)
     {
-      return true;
+      if (auth.currentUser.value.idDocument == controller.currentServer.value.members[i].id)
+      {
+        if (controller.currentServer.value.members[i].role == "admin")
+        {
+          return true;
+        }
+      }
     }
-    else {
-      return false;
-    }
+    return false;
   }
 
   @override
@@ -85,7 +88,7 @@ class CreateChannelDialog extends GetView<ServerController> {
                     height: 25,
                   ),
                   Text(
-                    isAdmin() ? "" : "Ths functionality is only for admin",
+                    isAdmin() ? "" : "This functionality is only for admin",
                     style: const TextStyle(
                       color: Vx.red700,
                       fontSize: 23,
