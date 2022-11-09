@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:context_menus/context_menus.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:starlight/presentation/right/admin_box.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
@@ -91,6 +95,60 @@ class RoleList extends StatelessWidget {
     return roleUsers;
   }
 
+  bool iAmCreator()
+  {
+    return false;
+  }
+
+  bool iAmAdmin()
+  {
+    for (int i = 0; i< controller.currentServer.value.members.length; i++)
+    {
+      if (auth.currentUser.value.idDocument == controller.currentServer.value.members[i].id)
+      {
+        if (controller.currentServer.value.members[i].role == "admin")
+        {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  void promoteAdmin(UserEntity user, int index) async
+  {
+/*
+    Query<Map<String, dynamic>> doc = FirebaseFirestore.instance
+        .collection("Servers")
+        .where(
+      "Id",
+      isEqualTo: controller.currentServer.value.id,
+    );
+
+    print(doc.get());
+*/
+    try
+    {
+
+    final List<dynamic> newMembers = controller.currentServer.value.members.map((UserEntity e) =>
+        e.id == auth.currentUser.value.idDocument ? e.toJsonSimplifiedWithRole("admin") : e.toJsonSimplifiedWithRole(e.role),
+    ).toList();
+
+    await FirebaseFirestore.instance
+        .collection('Servers')
+        .doc(controller.currentServer.value.id)
+        .set(
+          <String, dynamic>{
+            'Members': FieldValue.arrayUnion(<dynamic>[json.encode(newMembers.expand((element) => element))])
+          },
+      SetOptions(merge: true),);
+      await Fluttertoast.showToast(msg: "Members updated");
+    } catch (e)
+    {
+      await Fluttertoast.showToast(msg: e.toString());
+    }
+  }
+
   Expanded buildRoleList(List<dynamic> admins) {
     return admins.isEmpty ? Expanded(child: ListView.builder(
       padding: const EdgeInsets.all(10.0),
@@ -108,14 +166,28 @@ class RoleList extends StatelessWidget {
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 12.0),
               child:
-              Column(
-                children: <Widget>[
-                    AdminBox(
-                    adminUser: UserEntity.fromJson(admins[index]),
-                  ),
+              ContextMenuRegion(
+                contextMenu: GenericContextMenu(
+                  buttonConfigs: <ContextMenuButtonConfig> [
+                    if (iAmAdmin()) ContextMenuButtonConfig(
+                      "Promote admin",
+                      onPressed: () => {
+                        promoteAdmin(UserEntity.fromJson(admins[index]), index),
+                      },
+                    ) else ContextMenuButtonConfig(
+                      "",
+                      onPressed: () => <void> {
+                      },
+                    ),
+                  ],
+                ),
+                child: AdminBox(
+                  adminUser: UserEntity.fromJson(admins[index]),
 
-                ],
-              )
+                ),
+              ),
+
+
             );
           },
           itemCount: admins.length,

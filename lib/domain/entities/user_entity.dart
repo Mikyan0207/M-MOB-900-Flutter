@@ -9,6 +9,7 @@ class UserEntity {
     this.email = '',
     this.servers = const <ServerEntity>[],
     this.idDocument = '',
+    this.role = '',
   });
 
   factory UserEntity.fromJson(dynamic json) => UserEntity(
@@ -21,6 +22,7 @@ class UserEntity {
         servers: json['Servers'] != null
             ? ServerEntity.fromJsonList(json['Servers'])
             : const <ServerEntity>[],
+        role: json['Role'] ?? '',
       );
 
   static List<UserEntity> fromJsonList(List<dynamic> jsonList) =>
@@ -46,6 +48,15 @@ class UserEntity {
           .toList(),
     };
   }
+  Map<String, dynamic> toJsonSimplifiedWithRole(String role) {
+    return <String, dynamic>{
+      'Id': id,
+      'Username': username,
+      'Avatar': avatar,
+      'Discriminator': discriminator,
+      'Role': role,
+    };
+  }
 
   String id;
   String idDocument;
@@ -54,4 +65,5 @@ class UserEntity {
   String discriminator;
   String email;
   List<ServerEntity> servers;
+  String role;
 }

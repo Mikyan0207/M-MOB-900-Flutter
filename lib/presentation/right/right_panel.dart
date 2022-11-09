@@ -1,4 +1,5 @@
 
+import 'package:context_menus/context_menus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
@@ -13,23 +14,25 @@ class RightPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: AppColors.black700,
-      child: Material(
-        color: Colors.transparent,
+    return ContextMenuOverlay(
         child:
-          Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              RoleList(roleToShow: "creator"),
-              RoleList(roleToShow: "admin"),
-              RoleList(roleToShow: "member"),
-            ],
+          Container(
+          color: AppColors.black700,
+          child: Material(
+            color: Colors.transparent,
+            child:
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  RoleList(roleToShow: "creator"),
+                  RoleList(roleToShow: "admin"),
+                  RoleList(roleToShow: "member"),
+                ],
+
+              ),
 
           ),
-
-      ),
-
+        ),
     );
   }
 

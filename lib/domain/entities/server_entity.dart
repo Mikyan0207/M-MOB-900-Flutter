@@ -49,6 +49,7 @@ class ServerEntity {
               'Username': ue.username,
               'Avatar': ue.avatar,
               'Discriminator': ue.discriminator,
+              'Role': 'member',
             },
           )
           .toList(),
