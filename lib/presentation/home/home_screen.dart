@@ -77,7 +77,7 @@ class _HomeState extends State<Home> {
             ),
             right: Builder(
               builder: (BuildContext context) {
-                return const RightPanel();
+                return RightPanel();
               },
             ),
           ),
@@ -107,7 +107,7 @@ class _HomeState extends State<Home> {
               () =>
                   _displayCorrespondingView(_homeController.tabSelected.value),
             ),
-            const SizedBox(width: 275, child: RightPanel()),
+            SizedBox(width: 275, child: RightPanel()),
           ],
         ),
       ),

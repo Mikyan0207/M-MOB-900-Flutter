@@ -43,8 +43,9 @@ class AdminBox extends StatelessWidget {
           children: <Widget>[
             Row(
               children: <Widget>[
-                //Material(
-                  //child:
+                Material(
+                  color: Colors.transparent,
+                  child:
                   Text(
                     adminUser.username,
                     style: const TextStyle(
@@ -53,7 +54,7 @@ class AdminBox extends StatelessWidget {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                //)
+                )
               ],
             ),
           ],
