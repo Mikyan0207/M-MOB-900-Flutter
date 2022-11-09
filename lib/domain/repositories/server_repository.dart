@@ -17,17 +17,18 @@ class ServerRepository {
     );
   }
 
-  Future<ServerEntity> create(ServerEntity server) async {
+  Future<ServerEntity> create(ServerEntity se) async {
     final DocumentReference<Map<String, dynamic>> document =
-        await _firestore.collection("Servers").add(server.toJson());
-    final Map<String, dynamic>? data =
-        (await document.snapshots().first).data();
-    ServerEntity firestoreServer = ServerEntity.fromJson(data);
+        await _firestore.collection("Servers").add(se.toJson());
 
-    firestoreServer.id = document.id;
-    firestoreServer = await update(firestoreServer);
+    se.id = document.id;
+    await document.set(se.toJson());
 
-    return firestoreServer;
+    return se;
+  }
+
+  Future<void> delete(ServerEntity se) async {
+    await _firestore.collection("Servers").doc(se.id).delete();
   }
 
   Future<ServerEntity> update(ServerEntity server) async {

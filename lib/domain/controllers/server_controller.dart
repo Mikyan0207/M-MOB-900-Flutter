@@ -3,13 +3,19 @@ import 'package:starlight/domain/controllers/channel_controller.dart';
 import 'package:starlight/domain/entities/channel_entity.dart';
 import 'package:starlight/domain/entities/server_entity.dart';
 import 'package:starlight/domain/repositories/channel_repository.dart';
+import 'package:starlight/domain/repositories/server_repository.dart';
 
 class ServerController extends GetxController {
   Rx<ServerEntity> currentServer = ServerEntity().obs;
   RxList<ChannelEntity> channels = <ChannelEntity>[].obs;
 
+  final ServerRepository _serverRepository = ServerRepository();
   final ChannelRepository _channelRepository = ChannelRepository();
   final ChannelController _channelController = Get.find();
+
+  Future<void> deleteCurrentServer() async {
+    await _serverRepository.delete(currentServer.value);
+  }
 
   Future<void> getChannelsForCurrentServer() async {
     if (currentServer.value.id.isEmpty) {

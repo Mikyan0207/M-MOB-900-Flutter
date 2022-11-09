@@ -45,7 +45,7 @@ class ServerEntity {
       'Members': members
           .map(
             (UserEntity ue) => <String, dynamic>{
-              'Id': ue.id,
+              'Id': ue.idDocument,
               'Username': ue.username,
               'Avatar': ue.avatar,
               'Discriminator': ue.discriminator,

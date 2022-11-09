@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:starlight/auth/auth_controller.dart';
+import 'package:starlight/domain/controllers/home_controller.dart';
 import 'package:starlight/domain/controllers/server_controller.dart';
 import 'package:starlight/domain/entities/server_entity.dart';
 import 'package:starlight/presentation/widgets/server_icon.dart';
@@ -14,6 +15,7 @@ class ServerList extends StatelessWidget {
 
   final AuthController _authController = Get.find();
   final ServerController _serverController = Get.find();
+  final HomeController _homeController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -23,9 +25,9 @@ class ServerList extends StatelessWidget {
             .collection("Servers")
             .where(
               "Id",
-              whereIn: _authController.currentUser.value.servers
-                  .map((ServerEntity e) => e.id)
-                  .toList(),
+              whereIn: _authController.currentUserServers.isEmpty
+                  ? <String>['']
+                  : _authController.currentUserServers,
             )
             .snapshots(),
         builder: (
@@ -54,19 +56,12 @@ class ServerList extends StatelessWidget {
         )
         .toList();
 
-    // messages.sort((
-    //   Map<String, dynamic> a,
-    //   Map<String, dynamic> b,
-    // ) {
-    //   return (b['Time'] as Timestamp).compareTo(a['Time'] as Timestamp);
-    // });
-
     return servers;
   }
 
   ListView buildServerList(List<Map<String, dynamic>> servers) {
     return ListView.builder(
-      padding: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.symmetric(horizontal: 6.0),
       shrinkWrap: true,
       itemCount: servers.length,
       controller: ScrollController(),
@@ -74,13 +69,14 @@ class ServerList extends StatelessWidget {
         final ServerEntity se = ServerEntity.fromJson(servers[index]);
 
         return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12.0),
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: Center(
             child: ServerIcon(
               icon: se.icon.isNotEmpty ? se.icon : iconPlaceholder,
               iconSize: 50,
               iconRadius: 25,
               onIconClicked: () async {
+                _homeController.setSelectedTab(AppTab.servers);
                 await _serverController.setCurrentServer(se);
               },
             ),

@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_parsed_text_field/flutter_parsed_text_field.dart';
 import 'package:get/get.dart';
 import 'package:starlight/auth/auth_controller.dart';
 import 'package:starlight/domain/controllers/channel_controller.dart';
+import 'package:starlight/domain/controllers/server_controller.dart';
 import 'package:starlight/domain/entities/message_entity.dart';
+import 'package:starlight/domain/entities/user_entity.dart';
 import 'package:starlight/domain/repositories/message_repository.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -17,17 +19,14 @@ class MessageBar extends StatefulWidget {
 }
 
 class _MessageBarState extends State<MessageBar> {
-  final TextEditingController textarea = TextEditingController();
+  final FlutterParsedTextFieldController flutterParsedTextFieldController =
+      FlutterParsedTextFieldController();
 
   final ChannelController _channelController = Get.find();
-
-  final MessageRepository _messageRepository = MessageRepository();
-
+  final ServerController _serverController = Get.find();
   final AuthController _authController = Get.find();
 
-  final FocusNode _focusNode = FocusNode();
-
-  bool wasShiftPressed = false;
+  final MessageRepository _messageRepository = MessageRepository();
 
   @override
   Widget build(BuildContext context) {
@@ -54,17 +53,14 @@ class _MessageBarState extends State<MessageBar> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
-                      Flexible(
-                        child: IconButton(
-                          icon: const Icon(
-                            Icons.add_circle,
-                            color: Vx.gray400,
-                          ),
-                          onPressed: () {},
+                      IconButton(
+                        icon: const Icon(
+                          Icons.add_circle,
+                          color: Vx.gray400,
                         ),
+                        onPressed: () {},
                       ),
                       Expanded(
-                        flex: 9,
                         child: Form(
                           key: UniqueKey(),
                           child: ConstrainedBox(
@@ -72,116 +68,145 @@ class _MessageBarState extends State<MessageBar> {
                               maxHeight: 150,
                             ),
                             child: Obx(
-                              () => RawKeyboardListener(
-                                focusNode: _focusNode,
-                                onKey: (RawKeyEvent value) async {
-                                  if (!value.isShiftPressed &&
-                                      value.isKeyPressed(
-                                        LogicalKeyboardKey.enter,
-                                      )) {
-                                    await _messageRepository.create(
-                                      MessageEntity(
-                                        author:
-                                            _authController.currentUser.value,
-                                        content: textarea.text.trim(),
-                                        channel: _channelController
-                                            .currentChannel.value,
-                                        time: Timestamp.now(),
-                                      ),
-                                    );
-
-                                    textarea.text = '';
-                                  }
-                                },
-                                child: TextFormField(
-                                  textInputAction: TextInputAction.none,
-                                  controller: textarea,
-                                  maxLines: null,
-                                  keyboardType: TextInputType.multiline,
-                                  style: const TextStyle(
-                                    color: Vx.gray100,
-                                  ),
-                                  cursorColor: Vx.gray400,
-                                  decoration: InputDecoration(
-                                    border: InputBorder.none,
-                                    focusedBorder: InputBorder.none,
-                                    enabledBorder: InputBorder.none,
-                                    errorBorder: InputBorder.none,
-                                    disabledBorder: InputBorder.none,
-                                    hintStyle: TextStyle(
-                                      color: Vx.gray500,
-                                      fontSize: Theme.of(context)
-                                          .textTheme
-                                          .subtitle2!
-                                          .fontSize,
-                                    ),
-                                    hintText:
-                                        'Message #${_channelController.currentChannel.value.name.toLowerCase()}',
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Flexible(
-                        flex: 7,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: <Widget>[
-                            Flexible(
-                              child: IconButton(
-                                icon: const Icon(
-                                  Icons.sticky_note_2,
-                                  color: Vx.gray300,
-                                ),
-                                onPressed: () {},
-                              ),
-                            ),
-                            Flexible(
-                              child: IconButton(
-                                icon: const Icon(
-                                  Icons.emoji_emotions,
-                                  color: Vx.gray300,
-                                ),
-                                onPressed: () {},
-                              ),
-                            ),
-                            Flexible(
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 10.0),
-                                child: VerticalDivider(
-                                  thickness: context.isMobile ? 1 : 0.5,
-                                  color: Vx.gray400,
-                                ),
-                              ),
-                            ),
-                            Flexible(
-                              child: IconButton(
-                                icon: const Icon(
-                                  Icons.send,
-                                  color: Vx.indigo300,
-                                ),
-                                onPressed: () async {
-                                  if (textarea.text.isEmptyOrNull) {
+                              () => FlutterParsedTextField(
+                                onSubmitted: (String? value) async {
+                                  if (flutterParsedTextFieldController
+                                      .text.isEmptyOrNull) {
                                     return;
                                   }
+
+                                  final String msg =
+                                      flutterParsedTextFieldController
+                                          .stringify()
+                                          .trim();
+                                  flutterParsedTextFieldController.clear();
 
                                   await _messageRepository.create(
                                     MessageEntity(
                                       author: _authController.currentUser.value,
-                                      content: textarea.text,
+                                      content: msg,
                                       channel: _channelController
                                           .currentChannel.value,
                                       time: Timestamp.now(),
                                     ),
                                   );
                                 },
+                                suggestionPosition: SuggestionPosition.above,
+                                matchers: <Matcher<dynamic>>[
+                                  Matcher<UserEntity>(
+                                    trigger: "@",
+                                    style: const TextStyle(
+                                      color: AppColors.primaryColor,
+                                    ),
+                                    suggestions: _serverController
+                                        .currentServer.value.members,
+                                    idProp: (dynamic suggestion) =>
+                                        suggestion.id,
+                                    displayProp: (dynamic suggestion) =>
+                                        suggestion.username,
+                                    stringify:
+                                        (String trigger, dynamic suggestion) {
+                                      return '[$trigger${suggestion.username}:${suggestion.id}]';
+                                    },
+                                    parse: (RegExp regex, String suggestion) {
+                                      final RegExpMatch? match =
+                                          regex.firstMatch(suggestion);
+
+                                      if (match != null) {
+                                        return UserEntity(
+                                          idDocument: match.group(3)!,
+                                          username: match.group(2)!,
+                                        );
+                                      }
+
+                                      return UserEntity();
+                                    },
+                                    parseRegExp:
+                                        RegExp(r"\[(@([^\]]+)):([^\]]+)\]"),
+                                  ),
+                                ],
+                                textInputAction: TextInputAction.send,
+                                controller: flutterParsedTextFieldController,
+                                maxLines: null,
+                                keyboardType: TextInputType.multiline,
+                                style: const TextStyle(
+                                  color: Vx.gray100,
+                                ),
+                                cursorColor: Vx.gray400,
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  focusedBorder: InputBorder.none,
+                                  enabledBorder: InputBorder.none,
+                                  errorBorder: InputBorder.none,
+                                  disabledBorder: InputBorder.none,
+                                  hintStyle: TextStyle(
+                                    color: Vx.gray500,
+                                    fontSize: Theme.of(context)
+                                        .textTheme
+                                        .subtitle2!
+                                        .fontSize,
+                                  ),
+                                  hintText:
+                                      'Message #${_channelController.currentChannel.value.name.toLowerCase()}',
+                                ),
                               ),
                             ),
-                          ],
+                          ),
                         ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          IconButton(
+                            icon: const Icon(
+                              Icons.sticky_note_2,
+                              color: Vx.gray300,
+                            ),
+                            onPressed: () {},
+                          ),
+                          IconButton(
+                            icon: const Icon(
+                              Icons.emoji_emotions,
+                              color: Vx.gray300,
+                            ),
+                            onPressed: () {},
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10.0),
+                            child: VerticalDivider(
+                              thickness: context.isMobile ? 1 : 0.5,
+                              color: Vx.gray400,
+                            ),
+                          ),
+                          IconButton(
+                            icon: const Icon(
+                              Icons.send,
+                              color: Vx.indigo300,
+                            ),
+                            onPressed: () async {
+                              if (flutterParsedTextFieldController
+                                  .text.isEmptyOrNull) {
+                                return;
+                              }
+
+                              final String msg =
+                                  flutterParsedTextFieldController
+                                      .stringify()
+                                      .trim();
+                              flutterParsedTextFieldController.clear();
+
+                              await _messageRepository.create(
+                                MessageEntity(
+                                  author: _authController.currentUser.value,
+                                  content: msg,
+                                  channel:
+                                      _channelController.currentChannel.value,
+                                  time: Timestamp.now(),
+                                ),
+                              );
+                            },
+                          ),
+                        ],
                       )
                     ],
                   ),
