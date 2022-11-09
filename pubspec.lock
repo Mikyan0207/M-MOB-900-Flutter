@@ -8,6 +8,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.7"
+  adaptive_breakpoints:
+    dependency: "direct main"
+    description:
+      name: adaptive_breakpoints
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.4"
   any_link_preview:
     dependency: "direct main"
     description:
@@ -30,7 +37,7 @@ packages:
     source: hosted
     version: "3.0.0"
   blackfoot_flutter_lint:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: blackfoot_flutter_lint
       url: "https://pub.dartlang.org"
@@ -127,6 +134,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.3.3+2"
+  cross_file_image:
+    dependency: "direct main"
+    description:
+      name: cross_file_image
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
   crypto:
     dependency: transitive
     description:
@@ -388,7 +402,7 @@ packages:
     source: hosted
     version: "2.6.2"
   intl:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: intl
       url: "https://pub.dartlang.org"
