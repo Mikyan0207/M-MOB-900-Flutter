@@ -262,35 +262,25 @@ class _MessageBoxState extends State<MessageBox> {
               return Container();
             }
 
-            if (_authController.currentUser.value.idDocument ==
-                userTagParts[1]) {
-              return Container(
-                decoration: BoxDecoration(
-                  color: AppColors.mentionBackground.withOpacity(0.95),
-                  borderRadius: BorderRadius.circular(3.0),
+            return Container(
+              decoration: BoxDecoration(
+                color: AppColors.mentionBackground.withOpacity(0.95),
+                borderRadius: BorderRadius.circular(3.0),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 3.0,
+                  horizontal: 6.0,
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 3.0,
-                    horizontal: 6.0,
-                  ),
-                  child: Text(
-                    userTagParts[0],
-                    style: const TextStyle(
-                      color: Vx.white,
-                      fontWeight: FontWeight.w600,
-                    ),
+                child: Text(
+                  userTagParts[0],
+                  style: const TextStyle(
+                    color: Vx.white,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
-              );
-            } else {
-              return Text(
-                userTagParts[0],
-                style: const TextStyle(
-                  color: Vx.white,
-                ),
-              );
-            }
+              ),
+            );
           },
         ),
         // Emotes
@@ -301,12 +291,16 @@ class _MessageBoxState extends State<MessageBox> {
               return Container();
             }
 
-            final String emoji =
-                Emoji.byShortName(text.replaceAll(":", "")).toString();
+            final Emoji? emoji = Emoji.byShortName(text.replaceAll(":", ""));
 
             return Text(
-              emoji,
-              style: const TextStyle(fontSize: 24),
+              emoji != null ? emoji.toString() : text,
+              style: emoji != null
+                  ? const TextStyle(fontSize: 24)
+                  : const TextStyle(
+                      fontSize: 16,
+                      color: Vx.white,
+                    ),
             );
           },
         ),

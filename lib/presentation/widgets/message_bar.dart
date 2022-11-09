@@ -1,18 +1,23 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parsed_text_field/flutter_parsed_text_field.dart';
 import 'package:get/get.dart';
-import 'package:starlight/auth/auth_controller.dart';
 import 'package:starlight/domain/controllers/channel_controller.dart';
-import 'package:starlight/domain/controllers/server_controller.dart';
-import 'package:starlight/domain/entities/message_entity.dart';
 import 'package:starlight/domain/entities/user_entity.dart';
-import 'package:starlight/domain/repositories/message_repository.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class MessageBar extends StatefulWidget {
-  const MessageBar({super.key});
+  const MessageBar({
+    super.key,
+    required this.onSendMessage,
+    required this.members,
+  });
+
+  final Future<void> Function(
+    String value,
+  ) onSendMessage;
+
+  final List<UserEntity> members;
 
   @override
   State<MessageBar> createState() => _MessageBarState();
@@ -23,10 +28,7 @@ class _MessageBarState extends State<MessageBar> {
       FlutterParsedTextFieldController();
 
   final ChannelController _channelController = Get.find();
-  final ServerController _serverController = Get.find();
-  final AuthController _authController = Get.find();
-
-  final MessageRepository _messageRepository = MessageRepository();
+  final FocusNode _textFieldNode = FocusNode();
 
   @override
   Widget build(BuildContext context) {
@@ -69,27 +71,18 @@ class _MessageBarState extends State<MessageBar> {
                             ),
                             child: Obx(
                               () => FlutterParsedTextField(
+                                focusNode: _textFieldNode,
+                                autofocus: true,
                                 onSubmitted: (String? value) async {
-                                  if (flutterParsedTextFieldController
-                                      .text.isEmptyOrNull) {
-                                    return;
-                                  }
-
-                                  final String msg =
+                                  final String content =
                                       flutterParsedTextFieldController
                                           .stringify()
                                           .trim();
-                                  flutterParsedTextFieldController.clear();
 
-                                  await _messageRepository.create(
-                                    MessageEntity(
-                                      author: _authController.currentUser.value,
-                                      content: msg,
-                                      channel: _channelController
-                                          .currentChannel.value,
-                                      time: Timestamp.now(),
-                                    ),
-                                  );
+                                  flutterParsedTextFieldController.clear();
+                                  await widget.onSendMessage.call(content);
+                                  _textFieldNode.unfocus();
+                                  _textFieldNode.requestFocus();
                                 },
                                 suggestionPosition: SuggestionPosition.above,
                                 matchers: <Matcher<dynamic>>[
@@ -98,8 +91,7 @@ class _MessageBarState extends State<MessageBar> {
                                     style: const TextStyle(
                                       color: AppColors.primaryColor,
                                     ),
-                                    suggestions: _serverController
-                                        .currentServer.value.members,
+                                    suggestions: widget.members,
                                     idProp: (dynamic suggestion) =>
                                         suggestion.id,
                                     displayProp: (dynamic suggestion) =>
@@ -184,26 +176,13 @@ class _MessageBarState extends State<MessageBar> {
                               color: Vx.indigo300,
                             ),
                             onPressed: () async {
-                              if (flutterParsedTextFieldController
-                                  .text.isEmptyOrNull) {
-                                return;
-                              }
-
-                              final String msg =
+                              final String content =
                                   flutterParsedTextFieldController
                                       .stringify()
                                       .trim();
-                              flutterParsedTextFieldController.clear();
 
-                              await _messageRepository.create(
-                                MessageEntity(
-                                  author: _authController.currentUser.value,
-                                  content: msg,
-                                  channel:
-                                      _channelController.currentChannel.value,
-                                  time: Timestamp.now(),
-                                ),
-                              );
+                              flutterParsedTextFieldController.clear();
+                              await widget.onSendMessage.call(content);
                             },
                           ),
                         ],

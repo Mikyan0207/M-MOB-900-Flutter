@@ -5,6 +5,7 @@ class GroupEntity {
   GroupEntity({
     this.id = '',
     this.name = '',
+    this.icon = '',
     this.members = const <UserEntity>[],
     this.messages = const <MessageEntity>[],
   });
@@ -34,6 +35,7 @@ class GroupEntity {
 
   String id;
   String name;
+  String icon;
   List<UserEntity> members;
   List<MessageEntity> messages;
 }

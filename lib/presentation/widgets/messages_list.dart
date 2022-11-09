@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:starlight/auth/auth_controller.dart';
 import 'package:starlight/domain/entities/message_entity.dart';
 import 'package:starlight/presentation/widgets/message_box.dart';
 
 class MessagesList extends StatelessWidget {
-  const MessagesList({
+  MessagesList({
     Key? key,
     required this.firestoreStream,
     required this.noDataWidget,
@@ -12,6 +14,8 @@ class MessagesList extends StatelessWidget {
 
   final Stream<QuerySnapshot<Map<String, dynamic>>> firestoreStream;
   final Widget noDataWidget;
+
+  final AuthController _authController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -79,6 +83,19 @@ class MessagesList extends StatelessWidget {
                 .millisecondsSinceEpoch;
   }
 
+  bool isMentionForCurrentUser(String message) {
+    final Iterable<RegExpMatch> matches =
+        RegExp(r"\[(@([^\]]+)):([^\]]+)\]").allMatches(message);
+
+    for (final RegExpMatch match in matches) {
+      if (match.group(3) == _authController.currentUser.value.idDocument) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   Widget displayMessage(List<Map<String, dynamic>> messages, int index) {
     final MessageEntity message = MessageEntity.fromJson(messages[index]);
     if (index + 1 < messages.length &&
@@ -106,8 +123,7 @@ class MessagesList extends StatelessWidget {
         showAuthor: true,
         showAvatar: true,
         showTime: true,
-        isMention:
-            RegExp(r"\[(@([^\]]+)):([^\]]+)\]").hasMatch(message.content),
+        isMention: isMentionForCurrentUser(message.content),
       ),
     );
   }

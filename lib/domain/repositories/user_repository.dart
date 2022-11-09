@@ -21,6 +21,31 @@ class UserRepository {
     return ue;
   }
 
+  Future<int> getUsersCount() async {
+    return (await _firestore.collection("Users").count().get()).count;
+  }
+
+  Future<UserEntity?> getUserFromUsernameAndDiscriminator(
+    String username,
+    String discriminator,
+  ) async {
+    final Map<String, dynamic> data = (await _firestore
+            .collection("Users")
+            .where('Username', isEqualTo: username)
+            .where('Discriminator', isEqualTo: '#$discriminator')
+            .snapshots()
+            .first)
+        .docs
+        .first
+        .data();
+
+    if (data['Id'] == null) {
+      return null;
+    }
+
+    return UserEntity.fromJson(data);
+  }
+
   Future<UserEntity> get(String id) async {
     final Map<String, dynamic> data = (await _firestore
             .collection("Users")

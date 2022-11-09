@@ -1,3 +1,4 @@
+import 'package:starlight/domain/entities/group_entity.dart';
 import 'package:starlight/domain/entities/server_entity.dart';
 
 class UserEntity {
@@ -8,6 +9,8 @@ class UserEntity {
     this.discriminator = '',
     this.email = '',
     this.servers = const <ServerEntity>[],
+    this.groups = const <GroupEntity>[],
+    this.friends = const <UserEntity>[],
     this.idDocument = '',
   });
 
@@ -21,6 +24,12 @@ class UserEntity {
         servers: json['Servers'] != null
             ? ServerEntity.fromJsonList(json['Servers'])
             : const <ServerEntity>[],
+        groups: json['Groups'] != null
+            ? GroupEntity.fromJsonList(json['Groups'])
+            : const <GroupEntity>[],
+        friends: json['Friends'] != null
+            ? UserEntity.fromJsonList(json['Friends'])
+            : const <UserEntity>[],
       );
 
   static List<UserEntity> fromJsonList(List<dynamic> jsonList) =>
@@ -44,6 +53,20 @@ class UserEntity {
             },
           )
           .toList(),
+      'Groups': groups.map(
+        (GroupEntity ge) => <String, dynamic>{
+          'Id': ge.id,
+          'Name': ge.name,
+          'Icon': ge.icon,
+        },
+      ),
+      'Friends': friends.map(
+        (UserEntity ue) => <String, dynamic>{
+          'Id': ue.idDocument,
+          'Username': ue.username,
+          'Avatar': ue.avatar,
+        },
+      ),
     };
   }
 
@@ -54,4 +77,6 @@ class UserEntity {
   String discriminator;
   String email;
   List<ServerEntity> servers;
+  List<GroupEntity> groups;
+  List<UserEntity> friends;
 }

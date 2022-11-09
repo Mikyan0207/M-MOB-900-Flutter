@@ -1,0 +1,104 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:starlight/auth/auth_controller.dart';
+import 'package:starlight/domain/controllers/friends_controller.dart';
+import 'package:starlight/domain/entities/friend_request_entity.dart';
+import 'package:starlight/presentation/themes/theme_colors.dart';
+import 'package:starlight/presentation/widgets/friend_request_list.dart';
+import 'package:velocity_x/velocity_x.dart';
+
+class PendingFriendRequestList extends StatelessWidget {
+  PendingFriendRequestList({super.key});
+
+  final AuthController _authController = Get.find();
+  final FriendsController _friendsController = Get.find();
+
+  Widget _buildRequestCard(FriendRequestEntity fre) {
+    return Padding(
+      padding: const EdgeInsets.all(4.0),
+      child: Container(
+        decoration: BoxDecoration(
+          color: AppColors.black800,
+          borderRadius: BorderRadius.circular(7.0),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(right: 12.0),
+                child: CircleAvatar(
+                  backgroundColor: Colors.transparent,
+                  child: SizedBox(
+                    width: 60,
+                    height: 60,
+                    child: ClipOval(
+                      child: Image.network(
+                        fre.toUser.avatar,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      fre.toUser.username,
+                      style: const TextStyle(
+                        color: Vx.white,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
+                      ),
+                    ),
+                    Text(
+                      fre.toUser.discriminator,
+                      style: const TextStyle(
+                        color: Vx.gray300,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              TextButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(Vx.red500),
+                ),
+                onPressed: () async {
+                  await _friendsController.declineOrCancelFriendRequest(fre);
+                },
+                child: const Text(
+                  "Cancel",
+                  style: TextStyle(
+                    color: Vx.white,
+                    fontSize: 12,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Obx(
+      () => FriendRequestList(
+        requestStream: FirebaseFirestore.instance
+            .collection("FriendRequests")
+            .where(
+              "FromUser.Id",
+              isEqualTo: _authController.currentUser.value.idDocument,
+            )
+            .snapshots(),
+        requestCardBuilder: _buildRequestCard,
+      ),
+    );
+  }
+}
