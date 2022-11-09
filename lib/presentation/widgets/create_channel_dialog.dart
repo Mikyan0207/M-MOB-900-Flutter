@@ -13,15 +13,14 @@ class CreateChannelDialog extends GetView<ServerController> {
     Key? key,
   }) : super(key: key);
 
-
   final AuthController auth = Get.find();
 
   final ChannelRepository _channelRepository = ChannelRepository();
 
   final TextEditingController _channelNameController = TextEditingController();
   final TextEditingController _channelDescriptionController =
-      TextEditingController();
-  
+  TextEditingController();
+
   bool isAdmin()
   {
     final Iterable<bool> result = controller.currentServer.value.admin.map((UserEntity e) => e.id == auth.currentUser.value.idDocument);
@@ -37,233 +36,161 @@ class CreateChannelDialog extends GetView<ServerController> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-        child: Scaffold(
-          backgroundColor: Colors.transparent,
-          body: Center(
-            child: SizedBox(
-              width: 600,
-              height: 400,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: AppColors.black500,
-                  borderRadius: BorderRadius.circular(
-                    12.0,
-                  ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Center(
+          child: SizedBox(
+            width: 600,
+            height: 400,
+            child: Container(
+              decoration: BoxDecoration(
+                color: AppColors.black500,
+                borderRadius: BorderRadius.circular(
+                  12.0,
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    const Padding(
-                      padding: EdgeInsets.only(
-                        left: 12.0,
-                        top: 12.0,
-                        bottom: 6.0,
-                      ),
-                      child: Text(
-                        "Create Channel",
-                        style: TextStyle(
-                          color: Vx.white,
-                          fontSize: 23,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  const Padding(
+                    padding: EdgeInsets.only(
+                      left: 12.0,
+                      top: 12.0,
+                      bottom: 6.0,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        left: 12.0,
-                        bottom: 20.0,
-                      ),
-                      child: Text(
-                        "in ${controller.currentServer.value.name.toUpperCase()}",
-                        style: const TextStyle(
-                          color: Vx.gray300,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 25,
-                    ),
-                    //todo oui
-                    //getWidgetWithUserRole(context)
-                    Text(
-                      isAdmin() ? "" : "Ths functionality is only for admin",
-                      style: const TextStyle(
-                        color: Vx.red700,
+                    child: Text(
+                      "Create Channel",
+                      style: TextStyle(
+                        color: Vx.white,
                         fontSize: 23,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12.0,
-                        ),
-                        child: Form(
-                          key: UniqueKey(),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              const Padding(
-                                padding: EdgeInsets.symmetric(
-                                  vertical: 8.0,
-                                ),
-                                child: Text(
-                                  "CHANNEL NAME",
-                                  style: TextStyle(
-                                    color: Vx.white,
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ),
-                              TextFormField(
-                                readOnly: !isAdmin(),
-                                controller: _channelNameController,
-                                style: const TextStyle(
-                                  color: AppColors.white,
-                                ),
-                                decoration: const InputDecoration(
-                                  filled: true,
-                                  fillColor: AppColors.black900,
-                                  prefixIcon: Icon(
-                                    Icons.numbers_rounded,
-                                    color: Vx.gray300,
-                                  ),
-                                  focusColor: Vx.white,
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: AppColors.black900,
-                                    ),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: AppColors.black900,
-                                    ),
-                                  ),
-                                  errorBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Vx.red400,
-                                      width: 2,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              const Padding(
-                                padding: EdgeInsets.only(
-                                  top: 24.0,
-                                  bottom: 8.0,
-                                ),
-                                child: Text(
-                                  "CHANNEL DESCRIPTION",
-                                  style: TextStyle(
-                                    color: Vx.white,
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ),
-                              TextFormField(
-                                readOnly: !isAdmin(),
-                                controller: _channelDescriptionController,
-                                style: const TextStyle(
-                                  color: AppColors.white,
-                                ),
-                                decoration: const InputDecoration(
-                                  filled: true,
-                                  fillColor: AppColors.black900,
-                                  prefixIcon: Icon(
-                                    Icons.info_rounded,
-                                    color: Vx.gray300,
-                                  ),
-                                  focusColor: Vx.white,
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: AppColors.black900,
-                                    ),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: AppColors.black900,
-                                    ),
-                                  ),
-                                  errorBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Vx.red400,
-                                      width: 2,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      left: 12.0,
+                      bottom: 20.0,
+                    ),
+                    child: Text(
+                      "in ${controller.currentServer.value.name.toUpperCase()}",
+                      style: const TextStyle(
+                        color: Vx.gray300,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
-                    Container(
-                      decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(
-                            12.0,
-                          ),
-                          bottomRight: Radius.circular(
-                            12.0,
-                          ),
-                        ),
-                        color: AppColors.black700,
+                  ),
+                  const SizedBox(
+                    height: 25,
+                  ),
+                  Text(
+                    isAdmin() ? "" : "Ths functionality is only for admin",
+                    style: const TextStyle(
+                      color: Vx.red700,
+                      fontSize: 23,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12.0,
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 18.0,
-                          vertical: 12.0,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
+                      child: Form(
+                        key: UniqueKey(),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            SizedBox(
-                              width: 100,
-                              height: 45,
-                              child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  padding: const EdgeInsets.all(
-                                    8.0,
-                                  ),
-                                  backgroundColor: isAdmin() ? AppColors.primaryColor : Colors.transparent,
-                                  elevation: 0,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(
-                                      6.0,
-                                    ),
+                            const Padding(
+                              padding: EdgeInsets.symmetric(
+                                vertical: 8.0,
+                              ),
+                              child: Text(
+                                "CHANNEL NAME",
+                                style: TextStyle(
+                                  color: Vx.white,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                            TextFormField(
+                              readOnly: !isAdmin(),
+                              controller: _channelNameController,
+                              style: const TextStyle(
+                                color: AppColors.white,
+                              ),
+                              decoration: const InputDecoration(
+                                filled: true,
+                                fillColor: AppColors.black900,
+                                prefixIcon: Icon(
+                                  Icons.numbers_rounded,
+                                  color: Vx.gray300,
+                                ),
+                                focusColor: Vx.white,
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: AppColors.black900,
                                   ),
                                 ),
-                                child: const Text(
-                                  "Confirm",
-                                  style: TextStyle(
-                                    color: Vx.gray100,
-                                    fontSize: 16.0,
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: AppColors.black900,
                                   ),
                                 ),
-                                onPressed: () async {
-                                  if (_channelNameController.text.isEmptyOrNull || !isAdmin()) {
-                                    return;
-                                  }
-
-                                  final bool result =
-                                  await _channelRepository.create(
-                                    ChannelEntity(
-                                      name: _channelNameController.text.trim(),
-                                      description: _channelDescriptionController
-                                          .text
-                                          .trim(),
-                                      server: controller.currentServer.value,
-                                    ),
-                                  );
-
-                                  if (result) {
-                                    Get.back();
-                                  }
-                                },
+                                errorBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Vx.red400,
+                                    width: 2,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.only(
+                                top: 24.0,
+                                bottom: 8.0,
+                              ),
+                              child: Text(
+                                "CHANNEL DESCRIPTION",
+                                style: TextStyle(
+                                  color: Vx.white,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                            TextFormField(
+                              readOnly: !isAdmin(),
+                              controller: _channelDescriptionController,
+                              style: const TextStyle(
+                                color: AppColors.white,
+                              ),
+                              decoration: const InputDecoration(
+                                filled: true,
+                                fillColor: AppColors.black900,
+                                prefixIcon: Icon(
+                                  Icons.info_rounded,
+                                  color: Vx.gray300,
+                                ),
+                                focusColor: Vx.white,
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: AppColors.black900,
+                                  ),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: AppColors.black900,
+                                  ),
+                                ),
+                                errorBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Vx.red400,
+                                    width: 2,
+                                  ),
+                                ),
                               ),
                             ),
                           ],
@@ -300,7 +227,7 @@ class CreateChannelDialog extends GetView<ServerController> {
                                 padding: const EdgeInsets.all(
                                   8.0,
                                 ),
-                                backgroundColor: Colors.transparent,
+                                backgroundColor: isAdmin() ? AppColors.primaryColor : Colors.transparent,
                                 shadowColor: Colors.transparent,
                                 elevation: 0,
                                 shape: RoundedRectangleBorder(
@@ -346,12 +273,12 @@ class CreateChannelDialog extends GetView<ServerController> {
                                 ),
                               ),
                               onPressed: () async {
-                                if (_channelNameController.text.isEmptyOrNull) {
+                                if (_channelNameController.text.isEmptyOrNull || !isAdmin()) {
                                   return;
                                 }
 
                                 final ChannelEntity result =
-                                    await _channelRepository.create(
+                                await _channelRepository.create(
                                   ChannelEntity(
                                     name: _channelNameController.text.trim(),
                                     description: _channelDescriptionController
@@ -376,6 +303,7 @@ class CreateChannelDialog extends GetView<ServerController> {
             ),
           ),
         ),
-      );
-    }
+      ),
+    );
+  }
 }
