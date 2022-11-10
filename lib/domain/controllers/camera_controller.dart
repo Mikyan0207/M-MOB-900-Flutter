@@ -2,7 +2,6 @@ import 'package:camera/camera.dart';
 import 'package:get/get.dart';
 
 class CameraXController extends GetxController {
-
   late List<CameraDescription> cameras;
   late CameraDescription firstCamera;
   late CameraDescription camera;
@@ -13,7 +12,7 @@ class CameraXController extends GetxController {
     camera = firstCamera;
   }
 
-  CameraDescription getCamera()  {
+  CameraDescription getCamera() {
     return camera;
   }
 }

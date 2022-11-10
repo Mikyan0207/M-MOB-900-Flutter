@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:starlight/presentation/sign_up/sign_up_screen.dart';
 
