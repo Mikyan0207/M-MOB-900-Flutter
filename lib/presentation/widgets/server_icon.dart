@@ -67,7 +67,9 @@ class _ServerIconState extends State<ServerIcon>
               child: InkWell(
                 splashColor: Colors.transparent,
                 highlightColor: Colors.transparent,
-                onTap: widget.onIconClicked!,
+                onTap: () async {
+                  await widget.onIconClicked?.call();
+                },
               ),
             ),
           ),

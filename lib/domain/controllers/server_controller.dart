@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:starlight/domain/controllers/channel_controller.dart';
 import 'package:starlight/domain/entities/channel_entity.dart';
 import 'package:starlight/domain/entities/server_entity.dart';
@@ -35,8 +36,18 @@ class ServerController extends GetxController {
     await _serverRepository.joinServer(currentServer.value, newUser);
   }
 
+  Future<ServerEntity> getFromId(String id) async {
+    return _serverRepository.getServer(id);
+  }
+
   Future<void> setCurrentServer(ServerEntity e) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    await prefs.remove("LastChannelId");
+    await prefs.setString("LastServerId", e.id);
+
     currentServer(e);
+
     await getChannelsForCurrentServer();
   }
 }

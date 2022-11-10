@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -120,19 +121,37 @@ class _CreateServerDialogState extends State<CreateServerDialog> {
     );
 
     server.icon = serverIcon;
-    server.channels.add(defaultChannel);
     await _serverRepository.update(server);
-
-    _authController.currentUser.value.servers.add(server);
-    _authController.currentUserServers(
-      _authController.currentUser.value.servers
-          .map((ServerEntity se) => se.id)
-          .toList(),
+    await _serverRepository.updateField(
+      server,
+      <String, dynamic>{
+        'Channels': FieldValue.arrayUnion(<dynamic>[
+          <String, dynamic>{
+            'Id': defaultChannel.id,
+            'Name': defaultChannel.name,
+            'Description': defaultChannel.description,
+          }
+        ])
+      },
+      merge: true,
     );
 
-    _authController.currentUser(
-      await _userRepository.update(_authController.currentUser.value),
+    await _userRepository.updateField(
+      _authController.currentUser.value,
+      <String, dynamic>{
+        'Servers': FieldValue.arrayUnion(<dynamic>[
+          <String, dynamic>{
+            'Id': server.id,
+            'Icon': server.icon,
+            'Name': server.name,
+          }
+        ])
+      },
+      merge: true,
     );
+
+    await _authController
+        .retrieveUserFromId(_authController.currentUser.value.id);
     Get.back();
   }
 

@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:starlight/domain/controllers/home_controller.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
 import 'package:starlight/presentation/widgets/create_server_dialog.dart';
+import 'package:starlight/presentation/widgets/friends_icon_button.dart';
 import 'package:starlight/presentation/widgets/server_list.dart';
 import 'package:starlight/presentation/widgets/starlight_icon_button.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class LeftMenu extends StatelessWidget {
-  LeftMenu({super.key});
-
-  final HomeController _homeController = Get.find();
+  const LeftMenu({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -33,17 +31,16 @@ class LeftMenu extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 12.0),
                     child: Column(
                       children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: StarlightIconButton(
+                        const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: FriendsIconButton(
                             icon: Icons.star_rounded,
                             iconColor: Vx.gray400,
                             iconHoverColor: Vx.white,
                             backgroundColor: AppColors.black700,
                             backgroundHoverColor: AppColors.primaryColor,
-                            onIconClicked: () async {
-                              _homeController.setSelectedTab(AppTab.friends);
-                            },
+                            iconRadius: 25,
+                            iconSize: 50,
                           ),
                         ),
                         const Padding(
@@ -65,6 +62,9 @@ class LeftMenu extends StatelessWidget {
                             iconHoverColor: Vx.white,
                             backgroundColor: AppColors.black700,
                             backgroundHoverColor: Vx.green400,
+                            iconRadius: 25,
+                            iconSize: 50,
+                            isSelected: false,
                             onIconClicked: () async {
                               await Get.dialog(
                                 const CreateServerDialog(),
