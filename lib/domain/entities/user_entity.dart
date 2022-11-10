@@ -13,6 +13,7 @@ class UserEntity {
     this.role = '',
     this.groups = const <GroupEntity>[],
     this.friends = const <UserEntity>[],
+    this.status = '',
   });
 
   factory UserEntity.fromJson(dynamic json) => UserEntity(
@@ -32,6 +33,7 @@ class UserEntity {
         friends: json['Friends'] != null
             ? UserEntity.fromJsonList(json['Friends'])
             : const <UserEntity>[],
+        status: json['Status'] ?? '',
       );
 
   static List<UserEntity> fromJsonList(List<dynamic> jsonList) =>
@@ -71,6 +73,18 @@ class UserEntity {
           'Avatar': ue.avatar,
         },
       ),
+      'Status': status,
+    };
+  }
+
+  Map<String, dynamic> toJsonSimplified() {
+    return <String, dynamic>{
+      'Id': id,
+      'Username': username,
+      'Avatar': avatar,
+      'Discriminator': discriminator,
+      'Role': role,
+      'Status': status,
     };
   }
 
@@ -81,6 +95,18 @@ class UserEntity {
       'Avatar': avatar,
       'Discriminator': discriminator,
       'Role': role,
+      'Status': status,
+    };
+  }
+
+  Map<String, dynamic> toJsonSimplifiedWithStatus(String newStatus) {
+    return <String, dynamic>{
+      'Id': id,
+      'Username': username,
+      'Avatar': avatar,
+      'Discriminator': discriminator,
+      'Role': role,
+      'Status': newStatus,
     };
   }
 
@@ -94,4 +120,5 @@ class UserEntity {
   String role;
   List<GroupEntity> groups;
   List<UserEntity> friends;
+  String status;
 }

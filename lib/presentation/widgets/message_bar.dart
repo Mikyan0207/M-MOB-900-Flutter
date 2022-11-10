@@ -74,7 +74,9 @@ class _MessageBarState extends State<MessageBar> {
                           Icons.add_circle,
                           color: Vx.gray400,
                         ),
-                        onPressed: () {},
+                        onPressed: () async {
+                          await controller1.pickFiles(mime: <String>['image/jpeg', 'image/png']);
+                        },
                       ),
                       Expanded(
                           child: Stack(

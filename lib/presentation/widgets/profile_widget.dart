@@ -8,11 +8,15 @@ class ProfileWidget extends StatelessWidget {
     this.imagePath,
     required this.onClicked,
     required this.showEdit,
+    required this.showStatus,
+    required this.status,
   }) : super(key: key);
 
   final String? imagePath;
   final VoidCallback onClicked;
   final bool showEdit;
+  final bool showStatus;
+  final String status;
 
   final AuthController auth = Get.find();
 
@@ -30,7 +34,7 @@ class ProfileWidget extends StatelessWidget {
     final Color color = Theme.of(context).colorScheme.primary;
 
     if (showEdit == true) {
-      return Center(
+      return Obx(() => Center(
         child: Stack(
           children: <Widget>[
             buildImage(),
@@ -41,15 +45,29 @@ class ProfileWidget extends StatelessWidget {
             ),
           ],
         ),
-      );
-    } else {
-      return Center(
+      ), );
+    } else if (showStatus == true) {
+      return Obx(() => Center(
+        child: Stack(
+          children: <Widget>[
+            buildImage(),
+            Positioned(
+              bottom: 0,
+              right: 4,
+              child: buildStatus(),
+            ),
+          ],
+        ),
+      ),);
+    }
+    else {
+      return Obx(() => Center(
         child: Stack(
           children: <Widget>[
             buildImage(),
           ],
         ),
-      );
+      ),);
     }
   }
 
@@ -69,6 +87,20 @@ class ProfileWidget extends StatelessWidget {
       ),
     );
   }
+
+  Widget buildStatus() => buildCircle(
+    color: status == "online" ? Colors.green : Colors.white10,
+    all: 2,
+    child: buildCircle(
+      color: status == "online" ? Colors.green : Colors.white10,
+      all: 2,
+      child: const Icon(
+        Icons.add_circle,
+        color: Colors.transparent,
+        size: 3,
+      ),
+    ),
+  );
 
   Widget buildEditIcon(Color color) => buildCircle(
         color: Colors.white,
