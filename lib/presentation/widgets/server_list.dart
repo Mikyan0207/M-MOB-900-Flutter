@@ -76,8 +76,8 @@ class ServerList extends StatelessWidget {
               iconSize: 50,
               iconRadius: 25,
               onIconClicked: () async {
-                _homeController.setSelectedTab(AppTab.servers);
                 await _serverController.setCurrentServer(se);
+                _homeController.setSelectedTab(AppTab.servers);
               },
             ),
           ),

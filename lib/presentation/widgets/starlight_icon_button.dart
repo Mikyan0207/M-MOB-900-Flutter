@@ -8,11 +8,12 @@ class StarlightIconButton extends StatefulWidget {
     required this.iconHoverColor,
     required this.backgroundColor,
     required this.backgroundHoverColor,
+    required this.isSelected,
     this.onIconHoverEnter,
     this.onIconHoverExit,
     this.onIconClicked,
-    this.iconSize,
-    this.iconRadius,
+    required this.iconSize,
+    required this.iconRadius,
   });
 
   final IconData icon;
@@ -20,8 +21,9 @@ class StarlightIconButton extends StatefulWidget {
   final Color iconHoverColor;
   final Color backgroundColor;
   final Color backgroundHoverColor;
-  final double? iconSize;
-  final double? iconRadius;
+  final double iconSize;
+  final double iconRadius;
+  final bool isSelected;
   final Function()? onIconHoverEnter;
   final Function()? onIconHoverExit;
   final Future<void> Function()? onIconClicked;
@@ -32,9 +34,6 @@ class StarlightIconButton extends StatefulWidget {
 
 class _StarlightIconButtonState extends State<StarlightIconButton>
     with TickerProviderStateMixin {
-  double _radius = 25;
-  double _size = 50;
-
   static const Duration _duration = Duration(milliseconds: 125);
 
   late final AnimationController iconController;
@@ -48,16 +47,14 @@ class _StarlightIconButtonState extends State<StarlightIconButton>
 
   @override
   void initState() {
-    _radius = widget.iconRadius ?? 25;
-    _size = widget.iconSize ?? 50;
-
     iconController = AnimationController(vsync: this, duration: _duration)
       ..addListener(() {
         // Marks the widget tree as dirty
         setState(() {});
       });
-    iconAnimation = Tween<double>(begin: _radius, end: _radius - 10.0)
-        .animate(iconController);
+    iconAnimation =
+        Tween<double>(begin: widget.iconRadius, end: widget.iconRadius - 10.0)
+            .animate(iconController);
 
     iconColorController = AnimationController(vsync: this, duration: _duration)
       ..addListener(() {
@@ -87,22 +84,29 @@ class _StarlightIconButtonState extends State<StarlightIconButton>
   @override
   void dispose() {
     iconController.dispose();
+    iconColorController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: _size,
-      height: _size,
+      width: widget.iconSize,
+      height: widget.iconSize,
       child: MouseRegion(
-        onEnter: (PointerEvent d) => <void>{
-          iconController.forward(),
-          iconColorController.forward(),
+        onEnter: (PointerEvent d) {
+          if (widget.isSelected) {
+            return;
+          }
+          iconController.forward();
+          iconColorController.forward();
         },
-        onExit: (PointerEvent d) => <void>{
-          iconController.reverse(),
-          iconColorController.reverse(),
+        onExit: (PointerEvent d) {
+          if (widget.isSelected) {
+            return;
+          }
+          iconController.reverse();
+          iconColorController.reverse();
         },
         child: ClipRRect(
           borderRadius: BorderRadius.circular(iconAnimation.value),

@@ -14,6 +14,13 @@ class ChannelRepository {
     return ce;
   }
 
+  Future<ChannelEntity> get(String id) async {
+    final Map<String, dynamic>? data =
+        (await _firestore.collection("Channels").doc(id).get()).data();
+
+    return ChannelEntity.fromJson(data);
+  }
+
   Future<List<ChannelEntity>> getServerChannels(String serverId) async {
     final List<Map<String, dynamic>> data = (await _firestore
             .collection("Channels")

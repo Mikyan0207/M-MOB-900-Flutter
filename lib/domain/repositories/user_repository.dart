@@ -18,6 +18,18 @@ class UserRepository {
     return ue;
   }
 
+  Future<UserEntity> updateField(
+    UserEntity ue,
+    Map<String, dynamic> values, {
+    bool merge = false,
+  }) async {
+    await _firestore
+        .collection("Users")
+        .doc(ue.id)
+        .set(values, SetOptions(merge: merge));
+    return ue;
+  }
+
   Future<int> getUsersCount() async {
     return (await _firestore.collection("Users").count().get()).count;
   }
