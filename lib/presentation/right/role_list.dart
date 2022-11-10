@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:context_menus/context_menus.dart';
 import 'package:flutter/material.dart';
@@ -29,61 +27,73 @@ class RoleList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Obx(
-          () =>
-          StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-            stream: FirebaseFirestore.instance
-                .collection("Servers")
-                .where(
+      () => StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+        stream: FirebaseFirestore.instance
+            .collection("Servers")
+            .where(
               "Id",
               isEqualTo: controller.currentServer.value.id,
             )
-                .snapshots(),
-            builder: (BuildContext context,
-                AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot,) {
-              if (!snapshot.hasData) {
-                return const Center(
-                  child: Text(
-                    "",
-                    style: TextStyle(color: AppColors.white),
-                  ),
-                );
-              } else {
-                return controller.currentServer.value.id.isEmptyOrNull ? Expanded(child: ListView.builder(
-                  padding: const EdgeInsets.all(10.0),
-                  itemBuilder: (BuildContext context, int index) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 12.0),
-                      child: Column(),
-                    );
-                  },
-                ),) : Expanded(
+            .snapshots(),
+        builder: (
+          BuildContext context,
+          AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot,
+        ) {
+          if (!snapshot.hasData) {
+            return const Center(
+              child: Text(
+                "",
+                style: TextStyle(color: AppColors.white),
+              ),
+            );
+          } else {
+            return controller.currentServer.value.id.isEmptyOrNull
+                ? Expanded(
+                    child: ListView.builder(
+                      padding: const EdgeInsets.all(10.0),
+                      itemBuilder: (BuildContext context, int index) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 12.0),
+                          child: Column(),
+                        );
+                      },
+                    ),
+                  )
+                : Expanded(
                     child: Column(
                       children: <Widget>[
                         Text(
                           roleToShow.upperCamelCase,
                           style: const TextStyle(
-                                color: Vx.red400,
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600,
+                            color: Vx.red400,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
-                        buildRoleList(parseRole(snapshot.data!.docs, roleToShow))
+                        buildRoleList(
+                            parseRole(snapshot.data!.docs, roleToShow),
+                        )
                       ],
                     ),
-                );
-              }
-            },
-          ),
+                  );
+          }
+        },
+      ),
     );
   }
 
-
   List<dynamic> parseRole(
-      List<QueryDocumentSnapshot<Map<String, dynamic>>> docs, String roleToShow) {
-    final List<dynamic> roleUsers = docs.map((
-        QueryDocumentSnapshot<Map<String, dynamic>> e,) =>
-    e.data()["Members"],
-    ).expand((dynamic element) => element).toList();
+      List<QueryDocumentSnapshot<Map<String, dynamic>>> docs,
+      String roleToShow,) {
+    final List<dynamic> roleUsers = docs
+        .map(
+          (
+            QueryDocumentSnapshot<Map<String, dynamic>> e,
+          ) =>
+              e.data()["Members"],
+        )
+        .expand((dynamic element) => element)
+        .toList();
 
     for (int i = 0; i < roleUsers.length; i++) {
       if (roleUsers[i]["Role"] != roleToShow.toString()) {
@@ -95,14 +105,11 @@ class RoleList extends StatelessWidget {
     return roleUsers;
   }
 
-  bool iAmCreator()
-  {
-    for (int i = 0; i< controller.currentServer.value.members.length; i++)
-    {
-      if (auth.currentUser.value.idDocument == controller.currentServer.value.members[i].id)
-      {
-        if (controller.currentServer.value.members[i].role == "creator")
-        {
+  bool iAmCreator() {
+    for (int i = 0; i < controller.currentServer.value.members.length; i++) {
+      if (auth.currentUser.value.idDocument ==
+          controller.currentServer.value.members[i].id) {
+        if (controller.currentServer.value.members[i].role == "creator") {
           return true;
         }
       }
@@ -110,14 +117,11 @@ class RoleList extends StatelessWidget {
     return false;
   }
 
-  bool iAmAdmin()
-  {
-    for (int i = 0; i< controller.currentServer.value.members.length; i++)
-    {
-      if (auth.currentUser.value.idDocument == controller.currentServer.value.members[i].id)
-      {
-        if (controller.currentServer.value.members[i].role == "admin")
-        {
+  bool iAmAdmin() {
+    for (int i = 0; i < controller.currentServer.value.members.length; i++) {
+      if (auth.currentUser.value.idDocument ==
+          controller.currentServer.value.members[i].id) {
+        if (controller.currentServer.value.members[i].role == "admin") {
           return true;
         }
       }
@@ -125,75 +129,70 @@ class RoleList extends StatelessWidget {
     return false;
   }
 
-  void promoteAdmin(UserEntity user, int index) async
-  {
-    try
-    {
-      final List<dynamic> newMembers = controller.currentServer.value.members.map((UserEntity e) =>
-        e.id == user.id && e.role == "member" ? e.toJsonSimplifiedWithRole("admin") : e.toJsonSimplifiedWithRole(e.role),
-      ).toList();
-
-      await FirebaseFirestore.instance
-        .collection('Servers')
-        .doc(controller.currentServer.value.id)
-        .update(
-          <String, dynamic>{
-            'Members': newMembers
-          },
-        );
-    } catch (e)
-    {
-      await Fluttertoast.showToast(msg: e.toString());
-    }
-  }
-
-  void delegateMember(UserEntity user, int index) async
-  {
-    try
-    {
-      final List<dynamic> newMembers = controller.currentServer.value.members.map((UserEntity e) =>
-      e.id == user.id && e.role == "admin" ? e.toJsonSimplifiedWithRole("member") : e.toJsonSimplifiedWithRole(e.role),
-      ).toList();
+  void promoteAdmin(UserEntity user, int index) async {
+    try {
+      final List<dynamic> newMembers = controller.currentServer.value.members
+          .map(
+            (UserEntity e) => e.id == user.id && e.role == "member"
+                ? e.toJsonSimplifiedWithRole("admin")
+                : e.toJsonSimplifiedWithRole(e.role),
+          )
+          .toList();
 
       await FirebaseFirestore.instance
           .collection('Servers')
           .doc(controller.currentServer.value.id)
           .update(
-        <String, dynamic>{
-          'Members': newMembers
-        },
+        <String, dynamic>{'Members': newMembers},
       );
-    } catch (e)
-    {
+    } catch (e) {
       await Fluttertoast.showToast(msg: e.toString());
     }
   }
 
-  List<ContextMenuButtonConfig> getContextMenu(List<dynamic> admins, int index)
-  {
-    if (iAmCreator())
-    {
+  void delegateMember(UserEntity user, int index) async {
+    try {
+      final List<dynamic> newMembers = controller.currentServer.value.members
+          .map(
+            (UserEntity e) => e.id == user.id && e.role == "admin"
+                ? e.toJsonSimplifiedWithRole("member")
+                : e.toJsonSimplifiedWithRole(e.role),
+          )
+          .toList();
+
+      await FirebaseFirestore.instance
+          .collection('Servers')
+          .doc(controller.currentServer.value.id)
+          .update(
+        <String, dynamic>{'Members': newMembers},
+      );
+    } catch (e) {
+      await Fluttertoast.showToast(msg: e.toString());
+    }
+  }
+
+  List<ContextMenuButtonConfig> getContextMenu(
+      List<dynamic> admins, int index,) {
+    if (iAmCreator()) {
       return <ContextMenuButtonConfig>[
         ContextMenuButtonConfig(
           "Promote admin",
-          onPressed: () => {
+          onPressed: () => <void> {
             promoteAdmin(UserEntity.fromJson(admins[index]), index),
           },
         ),
         ContextMenuButtonConfig(
           "Delegate member",
-          onPressed: () => {
+          onPressed: () => <void>{
             promoteAdmin(UserEntity.fromJson(admins[index]), index),
           },
         ),
       ];
-    }
-    else
-    {
+    } else {
       return <ContextMenuButtonConfig>[
         ContextMenuButtonConfig(
           "Promote admin",
-          onPressed: () => {
+          onPressed: () => <void> {
             promoteAdmin(UserEntity.fromJson(admins[index]), index),
           },
         ),
@@ -202,42 +201,41 @@ class RoleList extends StatelessWidget {
   }
 
   Expanded buildRoleList(List<dynamic> admins) {
-    return admins.isEmpty ? Expanded(child: ListView.builder(
-      padding: const EdgeInsets.all(10.0),
-      itemBuilder: (BuildContext context, int index) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12.0),
-          child: Column(),
-        );
-      },
-    ),) :
-    Expanded(
-        child: ListView.builder(
-          padding: const EdgeInsets.all(10.0),
-          itemBuilder: (BuildContext context, int index) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 12.0),
-              child:
-                  iAmAdmin() || iAmCreator() ?
-              ContextMenuRegion(
-                contextMenu: GenericContextMenu(
-                  buttonConfigs: getContextMenu(admins, index),
-                ),
-                child: AdminBox(
-                  adminUser: UserEntity.fromJson(admins[index]),
-
-                ),
-              ) : AdminBox(
-                    adminUser: UserEntity.fromJson(admins[index]),
-
-                  ),
-
-            );
-          },
-          itemCount: admins.length,
-          controller: _scrollController,
-        ),
-    );
-
+    return admins.isEmpty
+        ? Expanded(
+            child: ListView.builder(
+              padding: const EdgeInsets.all(10.0),
+              itemBuilder: (BuildContext context, int index) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 12.0),
+                  child: Column(),
+                );
+              },
+            ),
+          )
+        : Expanded(
+            child: ListView.builder(
+              padding: const EdgeInsets.all(10.0),
+              itemBuilder: (BuildContext context, int index) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 12.0),
+                  child: iAmAdmin() || iAmCreator()
+                      ? ContextMenuRegion(
+                          contextMenu: GenericContextMenu(
+                            buttonConfigs: getContextMenu(admins, index),
+                          ),
+                          child: AdminBox(
+                            adminUser: UserEntity.fromJson(admins[index]),
+                          ),
+                        )
+                      : AdminBox(
+                          adminUser: UserEntity.fromJson(admins[index]),
+                        ),
+                );
+              },
+              itemCount: admins.length,
+              controller: _scrollController,
+            ),
+          );
   }
 }

@@ -1,11 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import 'dropped_file.dart';
 
 class DroppedFileWidget extends StatelessWidget {
-
   const DroppedFileWidget({
     required Key key,
     required this.file,
@@ -16,42 +14,37 @@ class DroppedFileWidget extends StatelessWidget {
   Widget build(BuildContext context) => buildImage();
 
   Widget buildImage() {
-    print("HERE");
-    print(file.name);
 
-    if (file.name.isEmptyOrNull)
-    {
+    if (file.name.isEmptyOrNull) {
       return buildEmptyFile('No File');
     }
-    print("file not null in network image");
-    print(file.url);
-    return
-      Container(
+
+    return Container(
+      width: 120,
+      height: 120,
+      color: Colors.blue.shade300,
+      child: Center(
+        child: Image.network(
+          file.url,
+          width: 120,
+          height: 120,
+          fit: BoxFit.cover,
+          errorBuilder: (BuildContext context, Object error, _) =>
+              buildEmptyFile('No Preview'),
+        ),
+      ),
+    );
+  }
+
+  Widget buildEmptyFile(String text) => Container(
         width: 120,
         height: 120,
         color: Colors.blue.shade300,
         child: Center(
-          child: Image.network(
-            file.url,
-            width: 120,
-            height: 120,
-            fit: BoxFit.cover,
-            errorBuilder: (BuildContext context, Object error, _) => buildEmptyFile('No Preview'),
+          child: Text(
+            text,
+            style: const TextStyle(color: Colors.white),
           ),
         ),
       );
-  }
-
-  Widget buildEmptyFile(String text) => Container(
-    width: 120,
-    height: 120,
-    color: Colors.blue.shade300,
-    child: Center(
-      child: Text(
-        text,
-        style: const TextStyle(color: Colors.white),
-      ),
-    ),
-  );
-
 }

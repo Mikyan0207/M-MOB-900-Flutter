@@ -3,8 +3,7 @@ import 'package:velocity_x/velocity_x.dart';
 
 import '../themes/theme_colors.dart';
 
-class CustomButton extends StatelessWidget
-{
+class CustomButton extends StatelessWidget {
   const CustomButton({
     Key? key,
     required this.customText,
@@ -20,10 +19,8 @@ class CustomButton extends StatelessWidget
   final VoidCallback onClicked;
   final double customBorderRadius;
 
-
   @override
   Widget build(BuildContext context) {
-
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         padding: const EdgeInsets.symmetric(
@@ -43,6 +40,4 @@ class CustomButton extends StatelessWidget
       ),
     );
   }
-
-
 }

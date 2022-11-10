@@ -65,12 +65,12 @@ class ServerEntity {
       'Admin': admin
           .map(
             (UserEntity ue) => <String, dynamic>{
-          'Id': ue.id,
-          'Username': ue.username,
-          'Avatar': ue.avatar,
-          'Discriminator': ue.discriminator,
-        },
-      )
+              'Id': ue.id,
+              'Username': ue.username,
+              'Avatar': ue.avatar,
+              'Discriminator': ue.discriminator,
+            },
+          )
           .toList(),
     };
   }

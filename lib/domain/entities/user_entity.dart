@@ -48,6 +48,7 @@ class UserEntity {
           .toList(),
     };
   }
+
   Map<String, dynamic> toJsonSimplifiedWithRole(String role) {
     return <String, dynamic>{
       'Id': id,

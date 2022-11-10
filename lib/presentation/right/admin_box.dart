@@ -28,8 +28,8 @@ class AdminBox extends StatelessWidget {
                   image: adminUser.avatar.isNotEmptyAndNotNull
                       ? NetworkImage(adminUser.avatar)
                       : const NetworkImage(
-                    "https://ddrg.farmasi.unej.ac.id/wp-content/uploads/sites/6/2017/10/unknown-person-icon-Image-from.png",
-                  ),
+                          "https://ddrg.farmasi.unej.ac.id/wp-content/uploads/sites/6/2017/10/unknown-person-icon-Image-from.png",
+                        ),
                   fit: BoxFit.cover,
                   width: 100,
                   height: 100,
@@ -45,8 +45,7 @@ class AdminBox extends StatelessWidget {
               children: <Widget>[
                 Material(
                   color: Colors.transparent,
-                  child:
-                  Text(
+                  child: Text(
                     adminUser.username,
                     style: const TextStyle(
                       color: Vx.red400,

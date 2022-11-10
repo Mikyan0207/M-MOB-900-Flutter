@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:starlight/auth/auth_controller.dart';
 import 'package:starlight/domain/controllers/server_controller.dart';
 import 'package:starlight/domain/entities/channel_entity.dart';
-import 'package:starlight/domain/entities/user_entity.dart';
 import 'package:starlight/domain/repositories/channel_repository.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -19,16 +18,13 @@ class CreateChannelDialog extends GetView<ServerController> {
 
   final TextEditingController _channelNameController = TextEditingController();
   final TextEditingController _channelDescriptionController =
-  TextEditingController();
+      TextEditingController();
 
-  bool isAdmin()
-  {
-    for (int i = 0; i< controller.currentServer.value.members.length; i++)
-    {
-      if (auth.currentUser.value.idDocument == controller.currentServer.value.members[i].id)
-      {
-        if (controller.currentServer.value.members[i].role == "admin")
-        {
+  bool isAdmin() {
+    for (int i = 0; i < controller.currentServer.value.members.length; i++) {
+      if (auth.currentUser.value.idDocument ==
+          controller.currentServer.value.members[i].id) {
+        if (controller.currentServer.value.members[i].role == "admin") {
           return true;
         }
       }
@@ -230,7 +226,9 @@ class CreateChannelDialog extends GetView<ServerController> {
                                 padding: const EdgeInsets.all(
                                   8.0,
                                 ),
-                                backgroundColor: isAdmin() ? AppColors.primaryColor : Colors.transparent,
+                                backgroundColor: isAdmin()
+                                    ? AppColors.primaryColor
+                                    : Colors.transparent,
                                 shadowColor: Colors.transparent,
                                 elevation: 0,
                                 shape: RoundedRectangleBorder(
@@ -276,12 +274,13 @@ class CreateChannelDialog extends GetView<ServerController> {
                                 ),
                               ),
                               onPressed: () async {
-                                if (_channelNameController.text.isEmptyOrNull || !isAdmin()) {
+                                if (_channelNameController.text.isEmptyOrNull ||
+                                    !isAdmin()) {
                                   return;
                                 }
 
                                 final ChannelEntity result =
-                                await _channelRepository.create(
+                                    await _channelRepository.create(
                                   ChannelEntity(
                                     name: _channelNameController.text.trim(),
                                     description: _channelDescriptionController
