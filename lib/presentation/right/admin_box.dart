@@ -43,15 +43,16 @@ class AdminBox extends StatelessWidget {
           children: <Widget>[
             Row(
               children: <Widget>[
-                Material(
-                  color: Colors.transparent,
-                  child: Text(
-                    adminUser.username,
-                    style: const TextStyle(
-                      color: Vx.red400,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                    ),
+                Text(
+                  adminUser.username.length > 13
+                      ? '${adminUser.username.substring(0, 10)}...'
+                      : adminUser.username,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: Vx.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 )
               ],

@@ -3,13 +3,11 @@ import 'package:context_menus/context_menus.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:starlight/auth/auth_controller.dart';
+import 'package:starlight/domain/controllers/server_controller.dart';
+import 'package:starlight/domain/entities/user_entity.dart';
 import 'package:starlight/presentation/right/admin_box.dart';
-import 'package:starlight/presentation/themes/theme_colors.dart';
 import 'package:velocity_x/velocity_x.dart';
-
-import '../../auth/auth_controller.dart';
-import '../../domain/controllers/server_controller.dart';
-import '../../domain/entities/user_entity.dart';
 
 class RoleList extends StatelessWidget {
   RoleList({
@@ -40,42 +38,15 @@ class RoleList extends StatelessWidget {
           AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot,
         ) {
           if (!snapshot.hasData) {
-            return const Center(
-              child: Text(
-                "",
-                style: TextStyle(color: AppColors.white),
-              ),
-            );
+            return Container();
           } else {
-            return controller.currentServer.value.id.isEmptyOrNull
-                ? Expanded(
-                    child: ListView.builder(
-                      padding: const EdgeInsets.all(10.0),
-                      itemBuilder: (BuildContext context, int index) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 12.0),
-                          child: Column(),
-                        );
-                      },
-                    ),
-                  )
-                : Expanded(
-                    child: Column(
-                      children: <Widget>[
-                        Text(
-                          roleToShow.upperCamelCase,
-                          style: const TextStyle(
-                            color: Vx.red400,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        buildRoleList(
-                            parseRole(snapshot.data!.docs, roleToShow),
-                        )
-                      ],
-                    ),
-                  );
+            if (controller.currentServer.value.id.isEmptyOrNull) {
+              return Container();
+            } else {
+              return buildRoleList(
+                parseRole(snapshot.data!.docs, roleToShow),
+              );
+            }
           }
         },
       ),
@@ -83,8 +54,9 @@ class RoleList extends StatelessWidget {
   }
 
   List<dynamic> parseRole(
-      List<QueryDocumentSnapshot<Map<String, dynamic>>> docs,
-      String roleToShow,) {
+    List<QueryDocumentSnapshot<Map<String, dynamic>>> docs,
+    String roleToShow,
+  ) {
     final List<dynamic> roleUsers = docs
         .map(
           (
@@ -172,12 +144,14 @@ class RoleList extends StatelessWidget {
   }
 
   List<ContextMenuButtonConfig> getContextMenu(
-      List<dynamic> admins, int index,) {
+    List<dynamic> admins,
+    int index,
+  ) {
     if (iAmCreator()) {
       return <ContextMenuButtonConfig>[
         ContextMenuButtonConfig(
           "Promote admin",
-          onPressed: () => <void> {
+          onPressed: () => <void>{
             promoteAdmin(UserEntity.fromJson(admins[index]), index),
           },
         ),
@@ -192,7 +166,7 @@ class RoleList extends StatelessWidget {
       return <ContextMenuButtonConfig>[
         ContextMenuButtonConfig(
           "Promote admin",
-          onPressed: () => <void> {
+          onPressed: () => <void>{
             promoteAdmin(UserEntity.fromJson(admins[index]), index),
           },
         ),
@@ -200,42 +174,52 @@ class RoleList extends StatelessWidget {
     }
   }
 
-  Expanded buildRoleList(List<dynamic> admins) {
-    return admins.isEmpty
-        ? Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.all(10.0),
-              itemBuilder: (BuildContext context, int index) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 12.0),
-                  child: Column(),
-                );
-              },
-            ),
-          )
-        : Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.all(10.0),
-              itemBuilder: (BuildContext context, int index) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 12.0),
-                  child: iAmAdmin() || iAmCreator()
-                      ? ContextMenuRegion(
-                          contextMenu: GenericContextMenu(
-                            buttonConfigs: getContextMenu(admins, index),
-                          ),
-                          child: AdminBox(
-                            adminUser: UserEntity.fromJson(admins[index]),
-                          ),
-                        )
-                      : AdminBox(
+  Widget buildRoleList(List<dynamic> admins) {
+    if (admins.isEmpty) {
+      return Container();
+    } else {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          if (admins.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(top: 16.0),
+              child: Text(
+                "${roleToShow}S".toUpperCase(),
+                style: const TextStyle(
+                  color: Vx.gray200,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+            )
+          else
+            Container(),
+          ListView.builder(
+            padding: const EdgeInsets.all(10.0),
+            itemBuilder: (BuildContext context, int index) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 12.0),
+                child: iAmAdmin() || iAmCreator()
+                    ? ContextMenuRegion(
+                        contextMenu: GenericContextMenu(
+                          buttonConfigs: getContextMenu(admins, index),
+                        ),
+                        child: AdminBox(
                           adminUser: UserEntity.fromJson(admins[index]),
                         ),
-                );
-              },
-              itemCount: admins.length,
-              controller: _scrollController,
-            ),
-          );
+                      )
+                    : AdminBox(
+                        adminUser: UserEntity.fromJson(admins[index]),
+                      ),
+              );
+            },
+            itemCount: admins.length,
+            shrinkWrap: true,
+            controller: _scrollController,
+          ),
+        ],
+      );
+    }
   }
 }
