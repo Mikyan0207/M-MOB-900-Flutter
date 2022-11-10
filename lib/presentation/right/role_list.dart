@@ -185,26 +185,6 @@ class RoleList extends StatelessWidget {
           onPressed: () => {
             promoteAdmin(UserEntity.fromJson(admins[index]), index),
           },
-        ), ContextMenuButtonConfig(
-            "Return",
-            onPressed: () => <void> {
-            },
-          ),
-      ];
-    }
-    else if(iAmAdmin())
-    {
-      return <ContextMenuButtonConfig>[
-        ContextMenuButtonConfig(
-          "Promote admin",
-          onPressed: () => {
-            promoteAdmin(UserEntity.fromJson(admins[index]), index),
-          },
-        ),
-        ContextMenuButtonConfig(
-          "Return",
-          onPressed: () => <void> {
-          },
         ),
       ];
     }
@@ -212,8 +192,9 @@ class RoleList extends StatelessWidget {
     {
       return <ContextMenuButtonConfig>[
         ContextMenuButtonConfig(
-          "Return",
-          onPressed: () => <void> {
+          "Promote admin",
+          onPressed: () => {
+            promoteAdmin(UserEntity.fromJson(admins[index]), index),
           },
         ),
       ];
@@ -237,6 +218,7 @@ class RoleList extends StatelessWidget {
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 12.0),
               child:
+                  iAmAdmin() || iAmCreator() ?
               ContextMenuRegion(
                 contextMenu: GenericContextMenu(
                   buttonConfigs: getContextMenu(admins, index),
@@ -245,8 +227,10 @@ class RoleList extends StatelessWidget {
                   adminUser: UserEntity.fromJson(admins[index]),
 
                 ),
-              ),
+              ) : AdminBox(
+                    adminUser: UserEntity.fromJson(admins[index]),
 
+                  ),
 
             );
           },

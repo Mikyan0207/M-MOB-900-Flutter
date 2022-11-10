@@ -17,6 +17,9 @@ import 'package:starlight/domain/repositories/message_repository.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
 import 'package:velocity_x/velocity_x.dart';
 
+import 'dropped_file.dart';
+import 'dropped_file_widget.dart';
+
 class MessageBar extends StatefulWidget {
   const MessageBar({super.key});
 
@@ -40,6 +43,7 @@ class _MessageBarState extends State<MessageBar> {
   bool highlighted1 = false;
   dynamic image;
   late String url;
+  DroppedFile file = const DroppedFile(url: "", name: "", mime: "", bytes: 0);
 
   @override
   Widget build(BuildContext context) {
@@ -73,14 +77,16 @@ class _MessageBarState extends State<MessageBar> {
                                     Icons.add_circle,
                                     color: Vx.gray400,
                                   ),
-                                  onPressed: () {},
+                                  onPressed: () async {
+                                    await controller1.pickFiles(mime: <String>['image/jpeg', 'image/png']);
+                                  },
                                 ),
                                 Expanded(
                                     child:
                                     Stack(
                                       children: [
-
                                         buildZone1(context),
+                                        if (file.name.isEmptyOrNull) const Text("") else DroppedFileWidget(key: UniqueKey(), file: file),
 
                                         Form(
                                           key: UniqueKey(),
@@ -94,6 +100,38 @@ class _MessageBarState extends State<MessageBar> {
                                                   if (flutterParsedTextFieldController
                                                       .text.isEmptyOrNull) {
                                                     return;
+                                                  }
+
+                                                  if (!file.name.isEmptyOrNull)
+                                                  {
+
+                                                    try {
+                                                      final String extension = file.name.split('.').last.toString();
+                                                      final Reference ref = FirebaseStorage.instance
+                                                          .ref()
+                                                          .child('ImageMessage/')
+                                                          .child(DateTime.now().toString());
+                                                      final SettableMetadata newMetadata = SettableMetadata(
+                                                        cacheControl: "public,max-age=300",
+                                                        contentType: "image/$extension",
+                                                      );
+
+                                                      await ref.putData(await controller1.getFileData(image), newMetadata);
+
+                                                      await Fluttertoast.showToast(msg: "Image uploaded");
+                                                      url = await ref.getDownloadURL();
+                                                      flutterParsedTextFieldController.text = url;
+
+                                                      setState(() {
+                                                        highlighted1 = false;
+                                                        url = "";
+                                                        file = const DroppedFile(url: "", name: "", mime: "", bytes: 0);
+                                                      });
+
+
+                                                    } catch (e) {
+                                                      await Fluttertoast.showToast(msg: e.toString());
+                                                    }
                                                   }
 
                                                   final String msg =
@@ -217,6 +255,38 @@ class _MessageBarState extends State<MessageBar> {
                                           return;
                                         }
 
+                                        if (!file.name.isEmptyOrNull)
+                                        {
+
+                                          try {
+                                            final String extension = file.name.split('.').last.toString();
+                                            final Reference ref = FirebaseStorage.instance
+                                                .ref()
+                                                .child('ImageMessage/')
+                                                .child(DateTime.now().toString());
+                                            final SettableMetadata newMetadata = SettableMetadata(
+                                              cacheControl: "public,max-age=300",
+                                              contentType: "image/$extension",
+                                            );
+
+                                            await ref.putData(await controller1.getFileData(image), newMetadata);
+
+                                            await Fluttertoast.showToast(msg: "Image uploaded");
+                                            url = await ref.getDownloadURL();
+                                            flutterParsedTextFieldController.text = url;
+
+                                            setState(() {
+                                              highlighted1 = false;
+                                              url = "";
+                                              file = const DroppedFile(url: "", name: "", mime: "", bytes: 0);
+                                            });
+
+
+                                          } catch (e) {
+                                            await Fluttertoast.showToast(msg: e.toString());
+                                          }
+                                        }
+
                                         final String msg =
                                         flutterParsedTextFieldController
                                             .stringify()
@@ -232,6 +302,11 @@ class _MessageBarState extends State<MessageBar> {
                                             time: Timestamp.now(),
                                           ),
                                         );
+                                        setState(() {
+                                          highlighted1 = false;
+                                          url = "";
+                                          file = const DroppedFile(url: "", name: "", mime: "", bytes: 0);
+                                        });
                                       },
                                     ),
                                   ],
@@ -267,44 +342,26 @@ class _MessageBarState extends State<MessageBar> {
       operation: DragOperation.copy,
       cursor: CursorType.grab,
       onCreated: (DropzoneViewController ctrl) => controller1 = ctrl,
-      onLoaded: () => print('Zone 1 loaded'),
-      onError: (String? ev) => print('Zone 1 error: $ev'),
       onHover: () {
         setState(() => highlighted1 = true);
-        print('Zone 1 hovered');
       },
       onLeave: () {
         setState(() => highlighted1 = false);
-        print('Zone 1 left');
       },
       onDrop: (dynamic ev) async {
-        print('Zone 1 drop: ${ev.name}');
         final String tempUrl = await controller1.createFileUrl(ev);
+        final String tempMime = await controller1.getFileMIME(ev);
+        final int tempSize = await controller1.getFileSize(ev);
+        final DroppedFile droppedFile = DroppedFile(url: tempUrl, name: ev.name, mime: tempMime, bytes: tempSize);
         setState(() {
           message1 = '${ev.name} dropped';
           highlighted1 = false;
           url = tempUrl.toString();
+          file = droppedFile;
+          image = ev;
+
         });
-        final String extension = ev.name.split('.').last.toString();
-
-        try {
-          final Reference ref = FirebaseStorage.instance
-              .ref()
-              .child('ImageMessage/')
-              .child(DateTime.now().toString());
-          final SettableMetadata newMetadata = SettableMetadata(
-            cacheControl: "public,max-age=300",
-            contentType: "image/$extension",
-          );
-
-          await ref.putData(await controller1.getFileData(ev), newMetadata);
-
-          await Fluttertoast.showToast(msg: "Image uploaded");
-        } catch (e) {
-          await Fluttertoast.showToast(msg: e.toString());
-        }
-
-        //  final Uint8List bytes = await controller1.getFileData(ev);
+        flutterParsedTextFieldController.text = "[Image]";
       },
     ),
     ),
