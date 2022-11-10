@@ -4,7 +4,9 @@ import 'package:get/get.dart';
 import 'package:overlapping_panels/overlapping_panels.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:starlight/auth/auth_controller.dart';
+import 'package:starlight/domain/controllers/channel_controller.dart';
 import 'package:starlight/domain/controllers/home_controller.dart';
+import 'package:starlight/domain/controllers/server_controller.dart';
 import 'package:starlight/presentation/chat/server_chat.dart';
 import 'package:starlight/presentation/chat/starlight_chat.dart';
 import 'package:starlight/presentation/friends/friends_list_manager.dart';
@@ -25,6 +27,8 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final AuthController _authController = Get.find();
   final HomeController _homeController = Get.find();
+  final ServerController _serverController = Get.find();
+  final ChannelController _channelController = Get.find();
 
   @override
   void initState() {
@@ -40,11 +44,32 @@ class _HomeState extends State<Home> {
       } else {
         await _authController.retrieveUserFromId(userId!);
       }
+
+      final String? lastServerId = prefs.getString("LastServerId");
+
+      if (lastServerId != null) {
+        await _serverController.setCurrentServer(
+          await _serverController.getFromId(lastServerId),
+        );
+
+        _homeController.setSelectedTab(AppTab.servers);
+
+        final String? lastChannelId = prefs.getString("LastChannelId");
+
+        if (lastChannelId != null) {
+          _channelController.setCurrentChannel(
+            await _channelController.getFromId(lastChannelId),
+          );
+        }
+        _homeController.setSelectedTab(AppTab.servers);
+      }
     });
   }
 
   Widget _displayCorrespondingView(AppTab currentTab) {
     switch (currentTab) {
+      case AppTab.none:
+        return Container();
       case AppTab.servers:
         return Expanded(child: ServerChat());
       case AppTab.friends:
@@ -63,9 +88,9 @@ class _HomeState extends State<Home> {
             left: Builder(
               builder: (BuildContext context) {
                 return Row(
-                  children: <Widget>[
+                  children: const <Widget>[
                     SizedBox(width: 75, child: LeftMenu()),
-                    const Expanded(flex: 3, child: ServerPanel()),
+                    Expanded(flex: 3, child: ServerPanel()),
                   ],
                 );
               },
@@ -94,7 +119,7 @@ class _HomeState extends State<Home> {
               child: Obx(
                 () => Row(
                   children: <Widget>[
-                    SizedBox(width: 75, child: LeftMenu()),
+                    const SizedBox(width: 75, child: LeftMenu()),
                     if (_homeController.tabSelected.value != AppTab.servers)
                       const Expanded(child: StarlightFriendsList())
                     else

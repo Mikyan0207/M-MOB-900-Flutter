@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:starlight/domain/controllers/channel_controller.dart';
 import 'package:starlight/domain/entities/channel_entity.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
@@ -17,11 +18,14 @@ class ChannelCard extends GetView<ChannelController> {
   Widget build(BuildContext context) {
     return Obx(
       () => InkWell(
-        onTap: () {
+        onTap: () async {
           if (controller.currentChannel.value.id == channel.id) {
             return;
           }
           controller.setCurrentChannel(channel);
+
+          final SharedPreferences prefs = await SharedPreferences.getInstance();
+          await prefs.setString("LastChannelId", channel.id);
         },
         child: Padding(
           padding: const EdgeInsets.symmetric(

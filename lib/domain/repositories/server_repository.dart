@@ -40,6 +40,18 @@ class ServerRepository {
     return server;
   }
 
+  Future<ServerEntity> updateField(
+    ServerEntity se,
+    Map<String, dynamic> values, {
+    bool merge = false,
+  }) async {
+    await _firestore
+        .collection("Users")
+        .doc(se.id)
+        .set(values, SetOptions(merge: merge));
+    return se;
+  }
+
   Future<ServerEntity> joinServer(ServerEntity server, UserEntity user) async {
     await _firestore.collection("Users").doc(user.id).set(
       <String, dynamic>{
