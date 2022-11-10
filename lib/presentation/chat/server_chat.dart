@@ -1,6 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:starlight/auth/auth_controller.dart';
 import 'package:starlight/domain/controllers/channel_controller.dart';
+import 'package:starlight/domain/controllers/server_controller.dart';
+import 'package:starlight/domain/entities/message_entity.dart';
+import 'package:starlight/domain/repositories/message_repository.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
 import 'package:starlight/presentation/widgets/message_bar.dart';
 import 'package:starlight/presentation/widgets/server_messages_list.dart';
@@ -9,8 +14,11 @@ import 'package:velocity_x/velocity_x.dart';
 class ServerChat extends StatelessWidget {
   ServerChat({super.key});
 
+  final ServerController _serverController = Get.find();
   final ChannelController _channelController = Get.find();
+  final AuthController _authController = Get.find();
 
+  final MessageRepository _messageRepository = MessageRepository();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,7 +73,22 @@ class ServerChat extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   Expanded(child: ServerMessagesList()),
-                  const MessageBar(),
+                  MessageBar(
+                    members: _serverController.currentServer.value.members,
+                    onSendMessage: (String value) async {
+                      if (value.isEmptyOrNull) {
+                        return;
+                      }
+                      await _messageRepository.create(
+                        MessageEntity(
+                          author: _authController.currentUser.value,
+                          content: value,
+                          channel: _channelController.currentChannel.value,
+                          time: Timestamp.now(),
+                        ),
+                      );
+                    },
+                  ),
                 ],
               ),
             ),

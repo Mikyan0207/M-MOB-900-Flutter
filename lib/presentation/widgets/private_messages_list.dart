@@ -17,9 +17,9 @@ class PrivateMessagesList extends StatelessWidget {
     return Obx(
       () => MessagesList(
         firestoreStream: FirebaseFirestore.instance
-            .collection("Groups")
+            .collection("Messages")
             .where(
-              "Id",
+              "Group.Id",
               isEqualTo: _pmController.currentGroup.value.id,
             )
             .snapshots(),

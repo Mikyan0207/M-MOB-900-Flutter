@@ -18,7 +18,6 @@ workflows:
         CODE_COVERAGE_TARGET: 10 # <-- Expected code coverage rate
     triggering:
       events:
-        - push
         - pull_request
       branch_patterns:
         - pattern: "*"

@@ -4,6 +4,7 @@ import 'package:starlight/domain/controllers/server_controller.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
 import 'package:starlight/presentation/widgets/channel_list.dart';
 import 'package:starlight/presentation/widgets/create_channel_dialog.dart';
+import 'package:starlight/presentation/widgets/invite_friend_to_server_dialog.dart';
 import 'package:starlight/presentation/widgets/profile_bar.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -68,7 +69,14 @@ class ServerPanel extends GetView<ServerController> {
                                     color: Vx.gray400,
                                   ),
                                   onSelected: (int value) async {
-                                    if (value == 1) {
+                                    if (value == 0) {
+                                      await Get.dialog(
+                                        const InviteFriendToServerDialog(),
+                                        barrierDismissible: true,
+                                        barrierColor:
+                                            Vx.gray800.withOpacity(0.75),
+                                      );
+                                    } else if (value == 1) {
                                       await Get.dialog(
                                         CreateChannelDialog(),
                                         barrierDismissible: true,

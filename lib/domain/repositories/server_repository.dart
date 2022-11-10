@@ -41,11 +41,29 @@ class ServerRepository {
   }
 
   Future<ServerEntity> joinServer(ServerEntity server, UserEntity user) async {
-    await _firestore.collection("Users").doc(user.id).update(user.toJson());
-    await _firestore
-        .collection("Servers")
-        .doc(server.id)
-        .update(server.toJson());
+    await _firestore.collection("Users").doc(user.id).set(
+      <String, dynamic>{
+        'Servers': FieldValue.arrayUnion(<dynamic>[
+          <String, dynamic>{
+            'Id': server.id,
+          }
+        ])
+      },
+      SetOptions(merge: true),
+    );
+    await _firestore.collection("Servers").doc(server.id).set(
+      <String, dynamic>{
+        'Members': FieldValue.arrayUnion(<dynamic>[
+          <String, dynamic>{
+            'Id': user.id,
+            'Username': user.username,
+            'Discriminator': user.discriminator,
+            'Avatar': user.avatar,
+          }
+        ])
+      },
+      SetOptions(merge: true),
+    );
 
     return server;
   }

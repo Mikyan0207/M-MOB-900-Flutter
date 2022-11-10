@@ -247,6 +247,26 @@ class _MessageBoxState extends State<MessageBox> {
         fontFamily: GoogleFonts.quicksand().fontFamily,
       ),
       parse: <MatchText>[
+        // Uploaded images
+        MatchText(
+          pattern:
+              r"(https://firebasestorage.googleapis.com/v0/b/mob-900-flutter.appspot.com/o/)(.*)(\?.*)",
+          renderWidget: ({String? pattern, String? text}) {
+            if (text == null) {
+              return Container();
+            }
+            return ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 550),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(7.0),
+                  child: Image.network(text),
+                ),
+              ),
+            );
+          },
+        ),
         // Mention
         MatchText(
           pattern: r"\[(@([^\]]+)):([^\]]+)\]",
@@ -262,35 +282,25 @@ class _MessageBoxState extends State<MessageBox> {
               return Container();
             }
 
-            if (_authController.currentUser.value.idDocument ==
-                userTagParts[1]) {
-              return Container(
-                decoration: BoxDecoration(
-                  color: AppColors.mentionBackground.withOpacity(0.95),
-                  borderRadius: BorderRadius.circular(3.0),
+            return Container(
+              decoration: BoxDecoration(
+                color: AppColors.mentionBackground.withOpacity(0.95),
+                borderRadius: BorderRadius.circular(3.0),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 3.0,
+                  horizontal: 6.0,
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 3.0,
-                    horizontal: 6.0,
-                  ),
-                  child: Text(
-                    userTagParts[0],
-                    style: const TextStyle(
-                      color: Vx.white,
-                      fontWeight: FontWeight.w600,
-                    ),
+                child: Text(
+                  userTagParts[0],
+                  style: const TextStyle(
+                    color: Vx.white,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
-              );
-            } else {
-              return Text(
-                userTagParts[0],
-                style: const TextStyle(
-                  color: Vx.white,
-                ),
-              );
-            }
+              ),
+            );
           },
         ),
         // Emotes
@@ -301,12 +311,16 @@ class _MessageBoxState extends State<MessageBox> {
               return Container();
             }
 
-            final String emoji =
-                Emoji.byShortName(text.replaceAll(":", "")).toString();
+            final Emoji? emoji = Emoji.byShortName(text.replaceAll(":", ""));
 
             return Text(
-              emoji,
-              style: const TextStyle(fontSize: 24),
+              emoji != null ? emoji.toString() : text,
+              style: emoji != null
+                  ? const TextStyle(fontSize: 24)
+                  : const TextStyle(
+                      fontSize: 16,
+                      color: Vx.white,
+                    ),
             );
           },
         ),
