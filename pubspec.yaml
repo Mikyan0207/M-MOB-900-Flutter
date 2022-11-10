@@ -29,6 +29,7 @@ dependencies:
   flutter:
     sdk: flutter
   fluttertoast: ^8.1.1
+  flutter_dropzone: ^3.0.5
   flutter_parsed_text: ^2.2.1
   flutter_parsed_text_field: ^0.1.10
   get: ^4.6.5
