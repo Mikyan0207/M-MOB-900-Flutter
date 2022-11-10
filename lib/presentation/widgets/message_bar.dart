@@ -48,7 +48,7 @@ class _MessageBarState extends State<MessageBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
-            color: highlighted1 ? Colors.red : Colors.transparent,
+            color: highlighted1 ? const Color(0xFF8667f2): Colors.transparent,
               child: Stack(
                 children: [
                   Padding(
@@ -214,11 +214,6 @@ class _MessageBarState extends State<MessageBar> {
                                         ),
                                       ],
                                     ),
-
-
-
-
-
                                 ),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
