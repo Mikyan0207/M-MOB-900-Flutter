@@ -22,7 +22,7 @@ class CreateChannelDialog extends GetView<ServerController> {
 
   bool isAdmin() {
     for (int i = 0; i < controller.currentServer.value.members.length; i++) {
-      if (auth.currentUser.value.idDocument ==
+      if (auth.currentUser.value.id ==
           controller.currentServer.value.members[i].id) {
         if (controller.currentServer.value.members[i].role == "admin") {
           return true;

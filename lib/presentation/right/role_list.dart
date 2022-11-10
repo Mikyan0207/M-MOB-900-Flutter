@@ -107,7 +107,7 @@ class RoleList extends StatelessWidget {
 
   bool iAmCreator() {
     for (int i = 0; i < controller.currentServer.value.members.length; i++) {
-      if (auth.currentUser.value.idDocument ==
+      if (auth.currentUser.value.id ==
           controller.currentServer.value.members[i].id) {
         if (controller.currentServer.value.members[i].role == "creator") {
           return true;
@@ -119,7 +119,7 @@ class RoleList extends StatelessWidget {
 
   bool iAmAdmin() {
     for (int i = 0; i < controller.currentServer.value.members.length; i++) {
-      if (auth.currentUser.value.idDocument ==
+      if (auth.currentUser.value.id ==
           controller.currentServer.value.members[i].id) {
         if (controller.currentServer.value.members[i].role == "admin") {
           return true;
