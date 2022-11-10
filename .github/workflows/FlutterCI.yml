@@ -1,0 +1,89 @@
+# This workflow uses actions that are not certified by GitHub.
+
+name: Flutter CI
+on:
+  pull_request:
+    branches: [ "main" ]
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+    steps: 
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v1
+        with:
+          java-version: '12.x'
+      - uses: subosito/flutter-action@v1
+        with:
+          flutter-version: '3.3.7'
+          channel: stable
+      - name: Build apk
+        run: |
+          flutter pub get
+          flutter format --set-exit-if-changed .
+          flutter analyze
+          flutter test
+          flutter build appbundle --release
+      - name: Retrieve Release Version
+        id: versionstep
+        run: |
+          VERSION=$(more pubspec.yaml | grep version: | cut -d ' ' -f2)
+          echo "::set-output name=VERSION::$VERSION"
+      - name: Upload the APK onto Github
+        uses: actions/upload-artifact@v1
+        with:
+          name: starlight-app-bundle
+          path: 'build/app/outputs/bundle/release/*.aab'
+  build-web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: subosito/flutter-action@v1
+        with:
+          flutter-version: '3.3.7'
+          channel: stable 
+      - name: Build web
+        run: |
+          flutter pub get
+          flutter format --set-exit-if-changed .
+          flutter analyze
+          flutter test
+          flutter build web
+      - name: Deploy web
+        env:
+          WEB_DEPLOY_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+        if: github.ref =='refs/heads/main'
+        run: |
+          curl -sL https://firebase.tools | bash
+          firebase deploy --token $FIREBASE_TOKEN
+  build-ios:
+    runs-on: macos-latest
+    env:
+      SHEME: Runner
+      BUILD_CONFIGURATION: Release
+    steps:
+      - uses: actions/checkout@v2
+      - uses: subosito/flutter-action@v1
+        with:
+          flutter-version: '3.3.7'
+          channel: stable 
+      - name: Build iOS
+        run: |
+          flutter pub get
+          flutter format --set-exit-if-changed .
+          flutter analyze
+          flutter test
+          flutter build ios --release --no-codesign
+      - name: Build resolve Swift dependencies
+        run: xcodebuild -resolvePackageDependencies -workspace ios/Runner.xcworkspace -scheme ${{ env.SHEME }} -configuration ${{ env.BUILD_CONFIGURATION }}
+
+      - name: Build xArchive
+        run: |
+          xcodebuild -workspace ios/Runner.xcworkspace -scheme ${{ env.SHEME }} -configuration ${{ env.BUILD_CONFIGURATION }} DEVELOPMENT_TEAM=${{ env.TEAM_ID }} -sdk 'iphoneos' -destination 'generic/platform=iOS' -archivePath build-output/app.xcarchive PROVISIONING_PROFILE=106bdc42-25d3-4f77-a431-e69c56fc0b49 clean archive CODE_SIGN_IDENTITY="Apple Distribution: Starlight"
+      - name: Export ipa
+        run: xcodebuild -exportArchive -archivePath build-output/app.xcarchive -exportPath build-output/ios -exportOptionsPlist ios/ExportOptions.plist
+
+      - name: Publish iOS Artefacts
+        uses: actions/upload-artifact@v1
+        with:
+          name: release-ios
+          path: build-output/ios
