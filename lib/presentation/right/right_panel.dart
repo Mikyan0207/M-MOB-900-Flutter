@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
 
@@ -11,5 +10,4 @@ class RightPanel extends StatelessWidget {
       color: AppColors.black700,
     );
   }
-  
 }

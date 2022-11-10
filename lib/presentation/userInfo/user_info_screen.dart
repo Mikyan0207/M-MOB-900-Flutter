@@ -145,7 +145,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
       imageUrl = await ref.getDownloadURL();
       await FirebaseFirestore.instance
           .collection('Users')
-          .doc(auth.currentUser.value.idDocument)
+          .doc(auth.currentUser.value.id)
           .update(<String, Object?>{
         'Avatar': imageUrl,
       });

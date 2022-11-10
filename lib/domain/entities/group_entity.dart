@@ -5,6 +5,7 @@ class GroupEntity {
   GroupEntity({
     this.id = '',
     this.name = '',
+    this.icon = '',
     this.members = const <UserEntity>[],
     this.messages = const <MessageEntity>[],
   });
@@ -27,13 +28,27 @@ class GroupEntity {
     return <String, dynamic>{
       'Id': id,
       'Name': name,
-      'Members': members,
-      'Messages': messages,
+      'Members': members
+          .map(
+            (UserEntity ue) => <String, dynamic>{
+              'Id': ue.id,
+              'Username': ue.username,
+              'Discriminator': ue.discriminator,
+              'Avatar': ue.avatar,
+            },
+          )
+          .toList(),
+      'Messages': messages
+          .map(
+            (MessageEntity me) => me.toJson(),
+          )
+          .toList(),
     };
   }
 
   String id;
   String name;
+  String icon;
   List<UserEntity> members;
   List<MessageEntity> messages;
 }

@@ -7,12 +7,12 @@ import 'package:starlight/auth/auth_controller.dart';
 import 'package:starlight/domain/controllers/home_controller.dart';
 import 'package:starlight/presentation/chat/server_chat.dart';
 import 'package:starlight/presentation/chat/starlight_chat.dart';
+import 'package:starlight/presentation/friends/friends_list_manager.dart';
+import 'package:starlight/presentation/left/groups_panel.dart';
 import 'package:starlight/presentation/left/left_menu.dart';
 import 'package:starlight/presentation/left/server_panel.dart';
 import 'package:starlight/presentation/right/right_panel.dart';
 import 'package:starlight/presentation/splash/splash_screen.dart';
-import 'package:starlight/presentation/starlight/friends_list_manager.dart';
-import 'package:starlight/presentation/starlight/starlight_friends_list.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class Home extends StatefulWidget {
@@ -48,7 +48,7 @@ class _HomeState extends State<Home> {
       case AppTab.servers:
         return Expanded(child: ServerChat());
       case AppTab.friends:
-        return const Expanded(child: FriendsListManager());
+        return Expanded(child: FriendsListManager());
       case AppTab.privateMessage:
         return Expanded(child: StarlightChat());
     }
@@ -107,7 +107,11 @@ class _HomeState extends State<Home> {
               () =>
                   _displayCorrespondingView(_homeController.tabSelected.value),
             ),
-            const SizedBox(width: 275, child: RightPanel()),
+            Obx(
+              () => _homeController.tabSelected.value == AppTab.servers
+                  ? const SizedBox(width: 275, child: RightPanel())
+                  : Container(),
+            ),
           ],
         ),
       ),
