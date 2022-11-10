@@ -37,7 +37,7 @@ packages:
     source: hosted
     version: "3.0.0"
   blackfoot_flutter_lint:
-    dependency: "direct main"
+    dependency: "direct dev"
     description:
       name: blackfoot_flutter_lint
       url: "https://pub.dartlang.org"

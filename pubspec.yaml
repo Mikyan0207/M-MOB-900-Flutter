@@ -14,7 +14,6 @@ environment:
 dependencies:
   adaptive_breakpoints: ^0.1.4
   any_link_preview: ^2.0.9
-  blackfoot_flutter_lint: ^1.0.6
   camera: ^0.10.0
   cloud_firestore: ^4.0.4
   context_menus: ^1.0.2
@@ -26,10 +25,10 @@ dependencies:
   firebase_storage: "^11.0.3"
   flutter:
     sdk: flutter
-  fluttertoast: ^8.1.1
   flutter_dropzone: ^3.0.5
   flutter_parsed_text: ^2.2.1
   flutter_parsed_text_field: ^0.1.10
+  fluttertoast: ^8.1.1
   get: ^4.6.5
   google_fonts: ^3.0.1
   image_cropper: ^3.0.0
