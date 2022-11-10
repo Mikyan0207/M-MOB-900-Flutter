@@ -247,6 +247,26 @@ class _MessageBoxState extends State<MessageBox> {
         fontFamily: GoogleFonts.quicksand().fontFamily,
       ),
       parse: <MatchText>[
+        // Uploaded images
+        MatchText(
+          pattern:
+              r"(https://firebasestorage.googleapis.com/v0/b/mob-900-flutter.appspot.com/o/)(.*)(\?.*)",
+          renderWidget: ({String? pattern, String? text}) {
+            if (text == null) {
+              return Container();
+            }
+            return ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 550),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(7.0),
+                  child: Image.network(text),
+                ),
+              ),
+            );
+          },
+        ),
         // Mention
         MatchText(
           pattern: r"\[(@([^\]]+)):([^\]]+)\]",

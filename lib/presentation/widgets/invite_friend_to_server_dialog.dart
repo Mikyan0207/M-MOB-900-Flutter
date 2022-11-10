@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:starlight/auth/auth_controller.dart';
-import 'package:starlight/domain/entities/friend_request_entity.dart';
+import 'package:starlight/domain/controllers/server_controller.dart';
 import 'package:starlight/domain/entities/user_entity.dart';
-import 'package:starlight/domain/repositories/friend_request_repository.dart';
 import 'package:starlight/domain/repositories/user_repository.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -20,9 +19,7 @@ class InviteFriendToServerDialog extends StatefulWidget {
 
 class _InviteFriendToServerDialogState
     extends State<InviteFriendToServerDialog> {
-  final AuthController _authController = Get.find();
-  final FriendRequestRepository _friendRequestRepository =
-      FriendRequestRepository();
+  final ServerController _serverController = Get.find();
   final UserRepository _userRepository = UserRepository();
   final TextEditingController _textFieldController = TextEditingController();
 
@@ -222,14 +219,21 @@ class _InviteFriendToServerDialogState
                                   Get.back();
                                 }
 
-                                await _friendRequestRepository.create(
-                                  FriendRequestEntity(
-                                    fromUser: _authController.currentUser.value,
-                                    toUser: toUser!,
-                                  ),
-                                );
-
-                                Get.back();
+                                if (_serverController
+                                    .currentServer.value.members
+                                    .any(
+                                  (UserEntity ue) => ue.id == toUser!.id,
+                                )) {
+                                  await Fluttertoast.showToast(
+                                    msg:
+                                        "User already in ${_serverController.currentServer.value.name}.",
+                                  );
+                                  Get.back();
+                                } else {
+                                  await _serverController
+                                      .addUserToCurrentServer(toUser!);
+                                  Get.back();
+                                }
                               },
                             ),
                           ),
