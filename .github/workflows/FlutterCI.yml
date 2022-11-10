@@ -21,7 +21,6 @@ jobs:
           flutter pub get
           flutter format --set-exit-if-changed .
           flutter analyze
-          flutter test
           flutter build appbundle --release
       - name: Retrieve Release Version
         id: versionstep
@@ -46,7 +45,6 @@ jobs:
           flutter pub get
           flutter format --set-exit-if-changed .
           flutter analyze
-          flutter test
           flutter build web
       - name: Deploy web
         env:
@@ -71,7 +69,6 @@ jobs:
           flutter pub get
           flutter format --set-exit-if-changed .
           flutter analyze
-          flutter test
           flutter build ios --release --no-codesign
       - name: Build resolve Swift dependencies
         run: xcodebuild -resolvePackageDependencies -workspace ios/Runner.xcworkspace -scheme ${{ env.SHEME }} -configuration ${{ env.BUILD_CONFIGURATION }}
