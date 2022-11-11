@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:starlight/auth/auth_controller.dart';
 import 'package:starlight/domain/controllers/server_controller.dart';
+import 'package:starlight/domain/controllers/user_controller.dart';
 import 'package:starlight/domain/entities/channel_entity.dart';
 import 'package:starlight/domain/repositories/channel_repository.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
@@ -12,7 +12,7 @@ class CreateChannelDialog extends GetView<ServerController> {
     Key? key,
   }) : super(key: key);
 
-  final AuthController auth = Get.find();
+  final UserController _userController = Get.find();
 
   final ChannelRepository _channelRepository = ChannelRepository();
 
@@ -22,7 +22,7 @@ class CreateChannelDialog extends GetView<ServerController> {
 
   bool isAdmin() {
     for (int i = 0; i < controller.currentServer.value.members.length; i++) {
-      if (auth.currentUser.value.id ==
+      if (_userController.currentUser.value.id ==
           controller.currentServer.value.members[i].id) {
         if (controller.currentServer.value.members[i].role == "admin") {
           return true;
