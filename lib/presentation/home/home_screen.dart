@@ -46,7 +46,7 @@ class _HomeState extends State<Home> {
       if (userId.isEmptyOrNull) {
         await Get.to(() => const SplashScreen());
       } else {
-        await _userController.retrieveUserFromId(userId!);
+        await _userController.setCurrentUser(userId!);
         await setStatus("online");
       }
 

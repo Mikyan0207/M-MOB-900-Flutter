@@ -11,10 +11,10 @@ class UserController extends GetxController {
 
   final UserRepository repository = UserRepository();
 
-  Future<void> retrieveUserFromId(String userId) async {
+  Future<void> setCurrentUser(String userId) async {
     currentUser(
       await repository.get(
-        userId,
+        userId.isEmpty ? currentUser.value.id : userId,
         options: const UserQueryOptions(
           includeServers: true,
           includeGroups: true,

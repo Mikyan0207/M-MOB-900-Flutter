@@ -27,7 +27,7 @@ class _SplashScreenState extends State<SplashScreen> {
       } else {
         final UserController authController = Get.find();
 
-        await authController.retrieveUserFromId(userId!);
+        await authController.setCurrentUser(userId!);
         await Get.to(() => const Home());
       }
     });

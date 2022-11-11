@@ -17,7 +17,10 @@ class UserRepository {
           .map(
             (dynamic id) async => serverRepository.get(
               id.toString(),
-              options: const ServerQueryOptions(includeMembers: true),
+              options: const ServerQueryOptions(
+                includeMembers: true,
+                includeChannels: true,
+              ),
             ),
           )
           .toList(),
@@ -59,15 +62,15 @@ class UserRepository {
 
     final UserEntity user = UserEntity.fromJson(data);
 
-    if (options.includeServers) {
+    if (options.includeServers && data['Servers'] != null) {
       user.servers = await _getUserServers(data['Servers']);
     }
 
-    if (options.includeGroups) {
+    if (options.includeGroups && data['Groups'] != null) {
       user.groups = await _getUserGroups(data['Groups']);
     }
 
-    if (options.includeFriends) {
+    if (options.includeFriends && data['Friends'] != null) {
       user.friends = await _getUserFriends(data['Friends']);
     }
 
@@ -111,15 +114,15 @@ class UserRepository {
 
     final UserEntity user = UserEntity.fromJson(data);
 
-    if (options.includeServers) {
+    if (options.includeServers && data['Servers'] != null) {
       user.servers = await _getUserServers(data['Servers']);
     }
 
-    if (options.includeGroups) {
+    if (options.includeGroups && data['Groups'] != null) {
       user.groups = await _getUserGroups(data['Groups']);
     }
 
-    if (options.includeFriends) {
+    if (options.includeFriends && data['Friends'] != null) {
       user.friends = await _getUserFriends(data['Friends']);
     }
 
@@ -141,15 +144,15 @@ class UserRepository {
 
     final UserEntity user = UserEntity.fromJson(data);
 
-    if (options.includeServers) {
+    if (options.includeServers && data['Servers'] != null) {
       user.servers = await _getUserServers(data['Servers']);
     }
 
-    if (options.includeGroups) {
+    if (options.includeGroups && data['Groups'] != null) {
       user.groups = await _getUserGroups(data['Groups']);
     }
 
-    if (options.includeFriends) {
+    if (options.includeFriends && data['Friends'] != null) {
       user.friends = await _getUserFriends(data['Friends']);
     }
 

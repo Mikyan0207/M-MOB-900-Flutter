@@ -25,7 +25,7 @@ class CreateServerDialog extends StatefulWidget {
 }
 
 class _CreateServerDialogState extends State<CreateServerDialog> {
-  final UserController _authController = Get.find();
+  final UserController _userController = Get.find();
 
   final ServerRepository _serverRepository = ServerRepository();
   final ChannelRepository _channelRepository = ChannelRepository();
@@ -107,7 +107,7 @@ class _CreateServerDialogState extends State<CreateServerDialog> {
         name: _serverNameController.text.trim(),
         members: <UserEntity>[
           UserEntity(
-            id: _authController.currentUser.value.id,
+            id: _userController.currentUser.value.id,
             role: 'creator',
           ),
         ],
@@ -134,6 +134,7 @@ class _CreateServerDialogState extends State<CreateServerDialog> {
         'Channels': FieldValue.arrayUnion(<dynamic>[
           <String, dynamic>{
             'Id': defaultChannel.id,
+            'Name': defaultChannel.name,
           }
         ]),
       },
@@ -141,19 +142,16 @@ class _CreateServerDialogState extends State<CreateServerDialog> {
     );
 
     await _userRepository.updateField(
-      _authController.currentUser.value,
+      _userController.currentUser.value,
       <String, dynamic>{
-        'Servers': FieldValue.arrayUnion(<dynamic>[
-          <String, dynamic>{
-            'Id': server.id,
-          }
-        ]),
+        'Servers': <dynamic>[
+          server.id,
+        ]
       },
       merge: true,
     );
 
-    await _authController
-        .retrieveUserFromId(_authController.currentUser.value.id);
+    await _userController.setCurrentUser('');
     Get.back();
   }
 

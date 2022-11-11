@@ -9,7 +9,7 @@ class ChannelRepository {
         await _firestore.collection("Channels").add(ce.toJson());
 
     ce.id = document.id;
-    await document.set(<String, dynamic>{'Id': ce.id});
+    await document.set(<String, dynamic>{'Id': ce.id}, SetOptions(merge: true));
 
     return ce;
   }
