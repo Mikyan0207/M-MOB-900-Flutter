@@ -3,13 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dropzone/flutter_dropzone.dart';
 import 'package:flutter_parsed_text_field/flutter_parsed_text_field.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:get/get.dart';
-import 'package:starlight/domain/controllers/channel_controller.dart';
 import 'package:starlight/domain/entities/user_entity.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
+import 'package:starlight/presentation/widgets/messages/dropped_file.dart';
+import 'package:starlight/presentation/widgets/messages/dropped_file_widget.dart';
 import 'package:velocity_x/velocity_x.dart';
-import 'dropped_file.dart';
-import 'dropped_file_widget.dart';
 
 class MessageBar extends StatefulWidget {
   const MessageBar({
@@ -35,7 +33,6 @@ class _MessageBarState extends State<MessageBar> {
   final FlutterParsedTextFieldController flutterParsedTextFieldController =
       FlutterParsedTextFieldController();
 
-  final ChannelController _channelController = Get.find();
   final FocusNode _textFieldNode = FocusNode();
 
   late DropzoneViewController controller1;
@@ -97,131 +94,125 @@ class _MessageBarState extends State<MessageBar> {
                                   constraints: const BoxConstraints(
                                     maxHeight: 150,
                                   ),
-                                  child: Obx(
-                                    () => FlutterParsedTextField(
-                                      focusNode: _textFieldNode,
-                                      autofocus: true,
-                                      onSubmitted: (String? value) async {
-                                        final String content =
-                                            flutterParsedTextFieldController
-                                                .stringify()
-                                                .trim();
+                                  child: FlutterParsedTextField(
+                                    focusNode: _textFieldNode,
+                                    autofocus: true,
+                                    onSubmitted: (String? value) async {
+                                      final String content =
+                                          flutterParsedTextFieldController
+                                              .stringify()
+                                              .trim();
 
-                                        if (!file.name.isEmptyOrNull) {
-                                          try {
-                                            final String extension = file.name
-                                                .split('.')
-                                                .last
-                                                .toString();
-                                            final Reference ref =
-                                                FirebaseStorage.instance
-                                                    .ref()
-                                                    .child('ImageMessage/')
-                                                    .child(DateTime.now()
-                                                        .toString());
-                                            final SettableMetadata newMetadata =
-                                                SettableMetadata(
-                                              cacheControl:
-                                                  "public,max-age=300",
-                                              contentType: "image/$extension",
-                                            );
+                                      if (!file.name.isEmptyOrNull) {
+                                        try {
+                                          final String extension = file.name
+                                              .split('.')
+                                              .last
+                                              .toString();
+                                          final Reference ref = FirebaseStorage
+                                              .instance
+                                              .ref()
+                                              .child('ImageMessage/')
+                                              .child(DateTime.now().toString());
+                                          final SettableMetadata newMetadata =
+                                              SettableMetadata(
+                                            cacheControl: "public,max-age=300",
+                                            contentType: "image/$extension",
+                                          );
 
-                                            await ref.putData(
-                                              await controller1
-                                                  .getFileData(image),
-                                              newMetadata,
-                                            );
+                                          await ref.putData(
+                                            await controller1
+                                                .getFileData(image),
+                                            newMetadata,
+                                          );
 
-                                            await Fluttertoast.showToast(
-                                              msg: "Image uploaded",
-                                            );
-                                            url = await ref.getDownloadURL();
-                                            flutterParsedTextFieldController
-                                                .text = url;
-                                          } catch (e) {
-                                            await Fluttertoast.showToast(
-                                              msg: e.toString(),
+                                          await Fluttertoast.showToast(
+                                            msg: "Image uploaded",
+                                          );
+                                          url = await ref.getDownloadURL();
+                                          flutterParsedTextFieldController
+                                              .text = url;
+                                        } catch (e) {
+                                          await Fluttertoast.showToast(
+                                            msg: e.toString(),
+                                          );
+                                        }
+                                      }
+
+                                      flutterParsedTextFieldController.clear();
+                                      await widget.onSendMessage.call(content);
+                                      _textFieldNode.unfocus();
+                                      _textFieldNode.requestFocus();
+
+                                      setState(() {
+                                        highlighted1 = false;
+                                        url = "";
+                                        file = const DroppedFile(
+                                          url: "",
+                                          name: "",
+                                          mime: "",
+                                          bytes: 0,
+                                        );
+                                      });
+                                    },
+                                    suggestionPosition:
+                                        SuggestionPosition.above,
+                                    matchers: <Matcher<dynamic>>[
+                                      Matcher<UserEntity>(
+                                        trigger: "@",
+                                        style: const TextStyle(
+                                          color: AppColors.primaryColor,
+                                        ),
+                                        suggestions: widget.members,
+                                        idProp: (dynamic suggestion) =>
+                                            suggestion.id,
+                                        displayProp: (dynamic suggestion) =>
+                                            suggestion.username,
+                                        stringify: (String trigger,
+                                            dynamic suggestion) {
+                                          return '[$trigger${suggestion.username}:${suggestion.id}]';
+                                        },
+                                        parse:
+                                            (RegExp regex, String suggestion) {
+                                          final RegExpMatch? match =
+                                              regex.firstMatch(suggestion);
+
+                                          if (match != null) {
+                                            return UserEntity(
+                                              id: match.group(3)!,
+                                              username: match.group(2)!,
                                             );
                                           }
-                                        }
 
-                                        flutterParsedTextFieldController
-                                            .clear();
-                                        await widget.onSendMessage
-                                            .call(content);
-                                        _textFieldNode.unfocus();
-                                        _textFieldNode.requestFocus();
-
-                                        setState(() {
-                                          highlighted1 = false;
-                                          url = "";
-                                          file = const DroppedFile(
-                                            url: "",
-                                            name: "",
-                                            mime: "",
-                                            bytes: 0,
-                                          );
-                                        });
-                                      },
-                                      suggestionPosition:
-                                          SuggestionPosition.above,
-                                      matchers: <Matcher<dynamic>>[
-                                        Matcher<UserEntity>(
-                                          trigger: "@",
-                                          style: const TextStyle(
-                                            color: AppColors.primaryColor,
-                                          ),
-                                          suggestions: widget.members,
-                                          idProp: (dynamic suggestion) =>
-                                              suggestion.id,
-                                          displayProp: (dynamic suggestion) =>
-                                              suggestion.username,
-                                          stringify: (String trigger,
-                                              dynamic suggestion) {
-                                            return '[$trigger${suggestion.username}:${suggestion.id}]';
-                                          },
-                                          parse: (RegExp regex,
-                                              String suggestion) {
-                                            final RegExpMatch? match =
-                                                regex.firstMatch(suggestion);
-
-                                            if (match != null) {
-                                              return UserEntity(
-                                                id: match.group(3)!,
-                                                username: match.group(2)!,
-                                              );
-                                            }
-
-                                            return UserEntity();
-                                          },
-                                          parseRegExp: RegExp(
-                                              r"\[(@([^\]]+)):([^\]]+)\]"),
-                                        ),
-                                      ],
-                                      textInputAction: TextInputAction.send,
-                                      controller:
-                                          flutterParsedTextFieldController,
-                                      maxLines: null,
-                                      keyboardType: TextInputType.multiline,
-                                      style: const TextStyle(
-                                        color: Vx.gray100,
+                                          return UserEntity();
+                                        },
+                                        parseRegExp:
+                                            RegExp(r"\[(@([^\]]+)):([^\]]+)\]"),
                                       ),
-                                      cursorColor: Vx.gray400,
-                                      decoration: InputDecoration(
-                                        border: InputBorder.none,
-                                        focusedBorder: InputBorder.none,
-                                        enabledBorder: InputBorder.none,
-                                        errorBorder: InputBorder.none,
-                                        disabledBorder: InputBorder.none,
-                                        hintStyle: TextStyle(
-                                          color: Vx.gray500,
-                                          fontSize: Theme.of(context)
-                                              .textTheme
-                                              .subtitle2!
-                                              .fontSize,
-                                        ),
-                                        hintText: widget.messagePlaceholder,
+                                    ],
+                                    textInputAction: TextInputAction.send,
+                                    controller:
+                                        flutterParsedTextFieldController,
+                                    maxLines: null,
+                                    keyboardType: TextInputType.multiline,
+                                    style: const TextStyle(
+                                      color: Vx.gray100,
+                                    ),
+                                    cursorColor: Vx.gray400,
+                                    decoration: InputDecoration(
+                                      border: InputBorder.none,
+                                      focusedBorder: InputBorder.none,
+                                      enabledBorder: InputBorder.none,
+                                      errorBorder: InputBorder.none,
+                                      disabledBorder: InputBorder.none,
+                                      hintStyle: TextStyle(
+                                        color: Vx.gray500,
+                                        fontSize: Theme.of(context)
+                                            .textTheme
+                                            .subtitle2!
+                                            .fontSize,
                                       ),
+                                      hintText: widget.messagePlaceholder,
                                     ),
                                   ),
                                 ),

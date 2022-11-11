@@ -131,9 +131,11 @@ class _FriendListState extends State<FriendList> {
             .collection("Users")
             .where(
               "Id",
-              whereIn: _userController.currentUser.value.friends
-                  .map((UserEntity e) => e.id)
-                  .toList(),
+              whereIn: _userController.currentUser.value.friends.isEmpty
+                  ? <String>['']
+                  : _userController.currentUser.value.friends
+                      .map((UserEntity e) => e.id)
+                      .toList(),
             )
             .snapshots(),
         builder: (

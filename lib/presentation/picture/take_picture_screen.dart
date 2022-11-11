@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:starlight/domain/controllers/camera_controller.dart';
 import 'package:starlight/domain/controllers/user_controller.dart';
-import 'package:starlight/presentation/userInfo/user_info_screen.dart';
+import 'package:starlight/presentation/user_info/user_info_screen.dart';
 import 'package:starlight/presentation/widgets/custom_button.dart';
 
 class TakePictureScreen extends StatefulWidget {

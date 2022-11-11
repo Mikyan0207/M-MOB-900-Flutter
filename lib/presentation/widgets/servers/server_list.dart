@@ -5,7 +5,7 @@ import 'package:starlight/domain/controllers/home_controller.dart';
 import 'package:starlight/domain/controllers/server_controller.dart';
 import 'package:starlight/domain/controllers/user_controller.dart';
 import 'package:starlight/domain/entities/server_entity.dart';
-import 'package:starlight/presentation/widgets/server_icon.dart';
+import 'package:starlight/presentation/widgets/servers/server_icon.dart';
 
 class ServerList extends StatelessWidget {
   ServerList({Key? key}) : super(key: key);
@@ -65,7 +65,10 @@ class ServerList extends StatelessWidget {
       itemCount: servers.length,
       controller: ScrollController(),
       itemBuilder: (BuildContext context, int index) {
-        final ServerEntity se = ServerEntity.fromJson(servers[index]);
+        final ServerEntity se = ServerEntity.fromJson(
+          servers[index],
+          options: const ServerQueryOptions(includeMembers: true),
+        );
 
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -75,7 +78,7 @@ class ServerList extends StatelessWidget {
               iconSize: 50,
               iconRadius: 25,
               onIconClicked: () async {
-                await _serverController.setCurrentServer(se);
+                await _serverController.setCurrentServer(se.id);
                 _homeController.setSelectedTab(AppTab.servers);
               },
             ),

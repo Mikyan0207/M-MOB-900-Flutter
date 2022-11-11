@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:starlight/domain/controllers/server_controller.dart';
 import 'package:starlight/domain/entities/channel_entity.dart';
-import 'package:starlight/presentation/widgets/channel_card.dart';
+import 'package:starlight/presentation/widgets/channels/channel_card.dart';
 
 class ChannelList extends GetView<ServerController> {
   const ChannelList({

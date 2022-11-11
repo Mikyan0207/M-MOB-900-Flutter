@@ -2,7 +2,7 @@ import 'package:context_menus/context_menus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:starlight/domain/controllers/server_controller.dart';
-import 'package:starlight/presentation/right/role_list.dart';
+import 'package:starlight/presentation/right_menu/role_list.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
 
 class RightPanel extends StatelessWidget {

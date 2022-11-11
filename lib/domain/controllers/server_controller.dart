@@ -27,24 +27,21 @@ class ServerController extends GetxController {
     return serverRepository.getServer(id);
   }
 
-  Future<void> setCurrentServer(ServerEntity e) async {
+  Future<void> setCurrentServer(String serverId) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     await prefs.remove("LastChannelId");
-    await prefs.setString("LastServerId", e.id);
+    await prefs.setString("LastServerId", serverId);
 
-    if (e.channels.isEmpty) {
-      e.channels = await _channelRepository.getWhereIsEqualTo(
-        'Server.Id',
-        e.id,
-      );
-    }
+    final ServerEntity server = await serverRepository.get(
+      serverId,
+      options: const ServerQueryOptions(
+        includeMembers: true,
+        includeChannels: true,
+      ),
+    );
 
-    if (e.members.isEmpty) {
-      e.members = await _userRepository.getWhereArrayContains('Servers', e.id);
-    }
-
-    currentServer(e);
-    _channelController.setCurrentChannel(e.channels[0]);
+    currentServer(server);
+    _channelController.setCurrentChannel(server.channels[0]);
   }
 }

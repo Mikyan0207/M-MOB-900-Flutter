@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:starlight/domain/controllers/user_controller.dart';
 import 'package:starlight/domain/entities/message_entity.dart';
-import 'package:starlight/presentation/widgets/message_box.dart';
+import 'package:starlight/presentation/widgets/messages/message_box.dart';
 
 class MessagesList extends StatelessWidget {
   MessagesList({

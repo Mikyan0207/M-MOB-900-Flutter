@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:starlight/domain/controllers/user_controller.dart';
 import 'package:starlight/domain/entities/group_entity.dart';
-import 'package:starlight/presentation/widgets/group_card.dart';
+import 'package:starlight/presentation/widgets/groups/group_card.dart';
 
 class GroupList extends StatelessWidget {
   GroupList({Key? key}) : super(key: key);

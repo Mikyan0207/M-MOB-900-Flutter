@@ -106,7 +106,10 @@ class _CreateServerDialogState extends State<CreateServerDialog> {
       ServerEntity(
         name: _serverNameController.text.trim(),
         members: <UserEntity>[
-          _authController.currentUser.value,
+          UserEntity(
+            id: _authController.currentUser.value.id,
+            role: 'creator',
+          ),
         ],
       ),
     );
@@ -120,18 +123,19 @@ class _CreateServerDialogState extends State<CreateServerDialog> {
       ),
     );
 
-    server.icon = serverIcon;
-    await _serverRepository.update(server);
+    await _serverRepository.updateField(
+      server,
+      <String, dynamic>{'Icon': serverIcon},
+      merge: true,
+    );
     await _serverRepository.updateField(
       server,
       <String, dynamic>{
         'Channels': FieldValue.arrayUnion(<dynamic>[
           <String, dynamic>{
             'Id': defaultChannel.id,
-            'Name': defaultChannel.name,
-            'Description': defaultChannel.description,
           }
-        ])
+        ]),
       },
       merge: true,
     );
@@ -142,10 +146,8 @@ class _CreateServerDialogState extends State<CreateServerDialog> {
         'Servers': FieldValue.arrayUnion(<dynamic>[
           <String, dynamic>{
             'Id': server.id,
-            'Icon': server.icon,
-            'Name': server.name,
           }
-        ])
+        ]),
       },
       merge: true,
     );

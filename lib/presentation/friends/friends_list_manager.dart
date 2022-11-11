@@ -5,7 +5,7 @@ import 'package:starlight/presentation/friends/friends_list.dart';
 import 'package:starlight/presentation/friends/incoming_friend_request_list.dart';
 import 'package:starlight/presentation/friends/pending_friend_request_list.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
-import 'package:starlight/presentation/widgets/add_friend_dialog.dart';
+import 'package:starlight/presentation/widgets/dialogs/add_friend_dialog.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class FriendsListManager extends StatelessWidget {

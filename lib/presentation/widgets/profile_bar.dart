@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:starlight/domain/controllers/user_controller.dart';
 import 'package:starlight/presentation/splash/splash_screen.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
-import 'package:starlight/presentation/userInfo/user_info_screen.dart';
+import 'package:starlight/presentation/user_info/user_info_screen.dart';
 import 'package:starlight/presentation/widgets/profile_widget.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -32,12 +32,14 @@ class ProfileBar extends StatelessWidget {
             SizedBox(
               height: 40,
               width: 40,
-              child: Obx(() =>
-                ProfileWidget(
-                    onClicked: () {
-                      Get.to(() => const UserInfoScreen());
-                    },
-                    showEdit: false, showStatus: true, status: auth.currentUser.value.status,
+              child: Obx(
+                () => ProfileWidget(
+                  onClicked: () {
+                    Get.to(() => const UserInfoScreen());
+                  },
+                  showEdit: false,
+                  showStatus: true,
+                  status: auth.currentUser.value.status,
                 ),
               ),
             ),

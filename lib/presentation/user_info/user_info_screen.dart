@@ -11,8 +11,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:starlight/domain/controllers/camera_controller.dart';
 import 'package:starlight/domain/controllers/user_controller.dart';
 import 'package:starlight/presentation/picture/take_picture_screen.dart';
-import 'package:starlight/presentation/userInfo/alert_dialog_widget_change_info.dart';
-import 'package:starlight/presentation/userInfo/avatar_clipper.dart';
+import 'package:starlight/presentation/user_info/alert_dialog_widget_change_info.dart';
+import 'package:starlight/presentation/user_info/avatar_clipper.dart';
 import 'package:starlight/presentation/widgets/custom_button.dart';
 import 'package:starlight/presentation/widgets/profile_widget.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -264,7 +264,8 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                         )
                                       ],
                                     );
-                                  }, showStatus: false,
+                                  },
+                                  showStatus: false,
                                 ),
                                 const SizedBox(width: 20),
                                 Column(

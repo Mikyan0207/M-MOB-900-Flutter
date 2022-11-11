@@ -62,7 +62,7 @@ class ServerRepository {
     bool merge = false,
   }) async {
     await _firestore
-        .collection("Users")
+        .collection("Servers")
         .doc(se.id)
         .set(values, SetOptions(merge: merge));
     return se;
@@ -84,9 +84,7 @@ class ServerRepository {
         'Members': FieldValue.arrayUnion(<dynamic>[
           <String, dynamic>{
             'Id': user.id,
-            'Username': user.username,
-            'Discriminator': user.discriminator,
-            'Avatar': user.avatar,
+            'Role': user.role,
           }
         ])
       },

@@ -1,16 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:starlight/domain/controllers/private_message_controller.dart';
+import 'package:starlight/domain/controllers/channel_controller.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
-import 'package:starlight/presentation/widgets/messages_list.dart';
+import 'package:starlight/presentation/widgets/messages/messages_list.dart';
 
-class PrivateMessagesList extends StatelessWidget {
-  PrivateMessagesList({
+class ServerMessagesList extends StatelessWidget {
+  ServerMessagesList({
     Key? key,
   }) : super(key: key);
 
-  final PrivateMessageController _pmController = Get.find();
+  final ChannelController _channelController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -19,8 +19,8 @@ class PrivateMessagesList extends StatelessWidget {
         firestoreStream: FirebaseFirestore.instance
             .collection("Messages")
             .where(
-              "Group.Id",
-              isEqualTo: _pmController.currentGroup.value.id,
+              "Channel.Id",
+              isEqualTo: _channelController.currentChannel.value.id,
             )
             .snapshots(),
         noDataWidget: const Center(

@@ -14,7 +14,12 @@ class UserRepository {
 
     final List<ServerEntity> servers = await Future.wait(
       serverIds
-          .map((dynamic id) async => serverRepository.get(id.toString()))
+          .map(
+            (dynamic id) async => serverRepository.get(
+              id.toString(),
+              options: const ServerQueryOptions(includeMembers: true),
+            ),
+          )
           .toList(),
     );
 
@@ -71,8 +76,9 @@ class UserRepository {
 
   Future<List<UserEntity>> getWhereArrayContains(
     String field,
-    Object value,
-  ) async {
+    Object value, {
+    UserQueryOptions options = const UserQueryOptions(),
+  }) async {
     final List<Map<String, dynamic>> data = (await _firestore
             .collection(collection)
             .where(field, arrayContains: value)
@@ -81,7 +87,7 @@ class UserRepository {
         .map((QueryDocumentSnapshot<Map<String, dynamic>> e) => e.data())
         .toList();
 
-    return UserEntity.fromJsonList(data);
+    return UserEntity.fromJsonList(data, options: options);
   }
 
   Future<UserEntity?> getUserByUsernameAndDiscriminator(

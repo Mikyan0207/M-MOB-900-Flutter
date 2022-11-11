@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:starlight/presentation/userInfo/user_info_screen.dart';
+import 'package:starlight/presentation/user_info/user_info_screen.dart';
 
 import '../../common/constants/route_constants.dart';
 

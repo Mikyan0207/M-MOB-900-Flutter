@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
-import 'package:starlight/presentation/widgets/create_server_dialog.dart';
-import 'package:starlight/presentation/widgets/friends_icon_button.dart';
-import 'package:starlight/presentation/widgets/server_list.dart';
+import 'package:starlight/presentation/widgets/dialogs/create_server_dialog.dart';
+import 'package:starlight/presentation/widgets/groups/friends_icon_button.dart';
+import 'package:starlight/presentation/widgets/servers/server_list.dart';
 import 'package:starlight/presentation/widgets/starlight_icon_button.dart';
 import 'package:velocity_x/velocity_x.dart';
 

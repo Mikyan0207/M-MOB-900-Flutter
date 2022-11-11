@@ -49,11 +49,16 @@ class UserEntity {
             ? UserEntity.fromJsonList(json['Friends'])
             : const <UserEntity>[],
         status: json['Status'] ?? '',
-        role: json['Role'] ?? 'Member',
+        role: json['Role'] ?? 'member',
       );
 
-  static List<UserEntity> fromJsonList(List<dynamic> jsonList) =>
-      jsonList.map((dynamic json) => UserEntity.fromJson(json)).toList();
+  static List<UserEntity> fromJsonList(
+    List<dynamic> jsonList, {
+    UserQueryOptions options = const UserQueryOptions(),
+  }) =>
+      jsonList
+          .map((dynamic json) => UserEntity.fromJson(json, options: options))
+          .toList();
 
   Map<String, dynamic> toJson() {
     return <String, dynamic>{

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:starlight/domain/controllers/server_controller.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
-import 'package:starlight/presentation/widgets/channel_list.dart';
-import 'package:starlight/presentation/widgets/create_channel_dialog.dart';
-import 'package:starlight/presentation/widgets/invite_friend_to_server_dialog.dart';
+import 'package:starlight/presentation/widgets/channels/channel_list.dart';
+import 'package:starlight/presentation/widgets/dialogs/create_channel_dialog.dart';
+import 'package:starlight/presentation/widgets/dialogs/invite_friend_to_server_dialog.dart';
 import 'package:starlight/presentation/widgets/profile_bar.dart';
 import 'package:velocity_x/velocity_x.dart';
 
