@@ -22,8 +22,10 @@ class UserEntity {
     this.discriminator = '',
     this.email = '',
     this.servers = const <ServerEntity>[],
+    this.role = '',
     this.groups = const <GroupEntity>[],
     this.friends = const <UserEntity>[],
+    this.status = '',
   });
 
   factory UserEntity.fromJson(
@@ -46,6 +48,8 @@ class UserEntity {
         friends: json['Friends'] != null && options.includeFriends
             ? UserEntity.fromJsonList(json['Friends'])
             : const <UserEntity>[],
+        status: json['Status'] ?? '',
+        role: json['Role'] ?? 'Member',
       );
 
   static List<UserEntity> fromJsonList(List<dynamic> jsonList) =>
@@ -62,6 +66,8 @@ class UserEntity {
       'Servers': servers.map((ServerEntity se) => <String>{se.id}).toList(),
       'Groups': groups.map((GroupEntity ge) => <String>{ge.id}).toList(),
       'Friends': friends.map((UserEntity ue) => <String>{ue.id}).toList(),
+      'Status': status,
+      'Role': role,
     };
   }
 
@@ -77,6 +83,8 @@ class UserEntity {
   String discriminator;
   String email;
   List<ServerEntity> servers;
+  String role;
   List<GroupEntity> groups;
   List<UserEntity> friends;
+  String status;
 }

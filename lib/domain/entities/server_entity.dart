@@ -19,6 +19,7 @@ class ServerEntity {
     this.icon = '',
     this.members = const <UserEntity>[],
     this.channels = const <ChannelEntity>[],
+    this.admin = const <UserEntity>[],
   });
 
   factory ServerEntity.fromJson(
@@ -36,6 +37,9 @@ class ServerEntity {
         channels: json['Channels'] != null && options.includeChannels
             ? ChannelEntity.fromJsonList(json['Channels'])
             : const <ChannelEntity>[],
+        admin: json['Admin'] != null
+            ? UserEntity.fromJsonList(json['Admin'])
+            : const <UserEntity>[],
       );
 
   static List<ServerEntity> fromJsonList(List<dynamic>? jsonList) {
@@ -59,6 +63,7 @@ class ServerEntity {
               'Username': ue.username,
               'Avatar': ue.avatar,
               'Discriminator': ue.discriminator,
+              'Role': 'member',
             },
           )
           .toList(),
@@ -68,6 +73,16 @@ class ServerEntity {
               'Id': ce.id,
               'Name': ce.name,
               'Description': ce.description,
+            },
+          )
+          .toList(),
+      'Admin': admin
+          .map(
+            (UserEntity ue) => <String, dynamic>{
+              'Id': ue.id,
+              'Username': ue.username,
+              'Avatar': ue.avatar,
+              'Discriminator': ue.discriminator,
             },
           )
           .toList(),
@@ -85,4 +100,5 @@ class ServerEntity {
   String icon;
   List<UserEntity> members;
   List<ChannelEntity> channels;
+  List<UserEntity> admin;
 }

@@ -32,6 +32,14 @@ class App extends StatelessWidget {
         Get.lazyPut(() => PrivateMessageController()),
         Get.lazyPut(() => GroupController()),
       },
+      onDispose: () async {
+        final UserController userController = Get.find();
+
+        await userController.repository
+            .updateField(userController.currentUser.value, <String, dynamic>{
+          'Status': "offline",
+        });
+      },
       getPages: <GetPage<Widget>>[
         GetPage<Widget>(
           name: '/SplashScreen',

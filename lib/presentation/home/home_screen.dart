@@ -1,4 +1,8 @@
+import 'dart:html';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:overlapping_panels/overlapping_panels.dart';
@@ -24,8 +28,8 @@ class Home extends StatefulWidget {
   State<Home> createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> {
-  final UserController _authController = Get.find();
+class _HomeState extends State<Home> with WidgetsBindingObserver {
+  final UserController _userController = Get.find();
   final HomeController _homeController = Get.find();
   final ServerController _serverController = Get.find();
   final ChannelController _channelController = Get.find();
@@ -33,6 +37,16 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
+
+    WidgetsBinding.instance.addObserver(this);
+    setStatus("online");
+
+    if (kIsWeb) {
+      window.addEventListener('focus', onFocus);
+      window.addEventListener('blur', onBlur);
+    } else {
+      WidgetsBinding.instance.addObserver(this);
+    }
 
     Future<void>.delayed(Duration.zero, () async {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -42,7 +56,7 @@ class _HomeState extends State<Home> {
       if (userId.isEmptyOrNull) {
         await Get.to(() => const SplashScreen());
       } else {
-        await _authController.retrieveUserFromId(userId!);
+        await _userController.retrieveUserFromId(userId!);
       }
 
       final String? lastServerId = prefs.getString("LastServerId");
@@ -66,6 +80,51 @@ class _HomeState extends State<Home> {
         _homeController.setSelectedTab(AppTab.friends);
       }
     });
+  }
+
+  Future<void> setStatus(String newStatus) async {
+    await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(_userController.currentUser.value.id)
+        .update(<String, Object?>{
+      'Status': newStatus,
+    });
+  }
+
+  @override
+  void deactivate() {
+    print("deactivate");
+    super.deactivate();
+  }
+
+  @override
+  void dispose() {
+    if (kIsWeb) {
+      window.removeEventListener('focus', onFocus);
+      window.removeEventListener('blur', onBlur);
+    } else {
+      WidgetsBinding.instance.removeObserver(this);
+    }
+    super.dispose();
+  }
+
+  void onFocus(Event e) {
+    didChangeAppLifecycleState(AppLifecycleState.resumed);
+  }
+
+  void onBlur(Event e) {
+    didChangeAppLifecycleState(AppLifecycleState.paused);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      //Online
+      setStatus("online");
+    } else {
+      //Offline
+      setStatus("offline");
+    }
   }
 
   Widget _displayCorrespondingView(AppTab currentTab) {
@@ -104,7 +163,7 @@ class _HomeState extends State<Home> {
             ),
             right: Builder(
               builder: (BuildContext context) {
-                return const RightPanel();
+                return RightPanel();
               },
             ),
           ),
@@ -136,7 +195,7 @@ class _HomeState extends State<Home> {
             ),
             Obx(
               () => _homeController.tabSelected.value == AppTab.servers
-                  ? const SizedBox(width: 275, child: RightPanel())
+                  ? SizedBox(width: 275, child: RightPanel())
                   : Container(),
             ),
           ],

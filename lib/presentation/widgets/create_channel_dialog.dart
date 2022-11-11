@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:starlight/auth/auth_controller.dart';
 import 'package:starlight/domain/controllers/server_controller.dart';
 import 'package:starlight/domain/entities/channel_entity.dart';
 import 'package:starlight/domain/repositories/channel_repository.dart';
@@ -11,11 +12,25 @@ class CreateChannelDialog extends GetView<ServerController> {
     Key? key,
   }) : super(key: key);
 
+  final AuthController auth = Get.find();
+
   final ChannelRepository _channelRepository = ChannelRepository();
 
   final TextEditingController _channelNameController = TextEditingController();
   final TextEditingController _channelDescriptionController =
       TextEditingController();
+
+  bool isAdmin() {
+    for (int i = 0; i < controller.currentServer.value.members.length; i++) {
+      if (auth.currentUser.value.id ==
+          controller.currentServer.value.members[i].id) {
+        if (controller.currentServer.value.members[i].role == "admin") {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,6 +83,14 @@ class CreateChannelDialog extends GetView<ServerController> {
                   const SizedBox(
                     height: 25,
                   ),
+                  Text(
+                    isAdmin() ? "" : "This functionality is only for admin",
+                    style: const TextStyle(
+                      color: Vx.red700,
+                      fontSize: 23,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                   Expanded(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
@@ -92,6 +115,7 @@ class CreateChannelDialog extends GetView<ServerController> {
                               ),
                             ),
                             TextFormField(
+                              readOnly: !isAdmin(),
                               controller: _channelNameController,
                               style: const TextStyle(
                                 color: AppColors.white,
@@ -137,6 +161,7 @@ class CreateChannelDialog extends GetView<ServerController> {
                               ),
                             ),
                             TextFormField(
+                              readOnly: !isAdmin(),
                               controller: _channelDescriptionController,
                               style: const TextStyle(
                                 color: AppColors.white,
@@ -201,7 +226,9 @@ class CreateChannelDialog extends GetView<ServerController> {
                                 padding: const EdgeInsets.all(
                                   8.0,
                                 ),
-                                backgroundColor: Colors.transparent,
+                                backgroundColor: isAdmin()
+                                    ? AppColors.primaryColor
+                                    : Colors.transparent,
                                 shadowColor: Colors.transparent,
                                 elevation: 0,
                                 shape: RoundedRectangleBorder(
@@ -247,7 +274,8 @@ class CreateChannelDialog extends GetView<ServerController> {
                                 ),
                               ),
                               onPressed: () async {
-                                if (_channelNameController.text.isEmptyOrNull) {
+                                if (_channelNameController.text.isEmptyOrNull ||
+                                    !isAdmin()) {
                                   return;
                                 }
 
