@@ -83,14 +83,22 @@ class CreateChannelDialog extends GetView<ServerController> {
                   const SizedBox(
                     height: 25,
                   ),
-                  Text(
-                    isAdmin() ? "" : "This functionality is only for admin",
-                    style: const TextStyle(
-                      color: Vx.red700,
-                      fontSize: 23,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
+                  if (!isAdmin())
+                    const Padding(
+                      padding: EdgeInsets.only(bottom: 8.0),
+                      child: Center(
+                        child: Text(
+                          "This functionality is only for admin",
+                          style: TextStyle(
+                            color: Vx.red700,
+                            fontSize: 23,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    )
+                  else
+                    Container(),
                   Expanded(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
