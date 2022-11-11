@@ -168,8 +168,10 @@ class _MessageBarState extends State<MessageBar> {
                                             suggestion.id,
                                         displayProp: (dynamic suggestion) =>
                                             suggestion.username,
-                                        stringify: (String trigger,
-                                            dynamic suggestion) {
+                                        stringify: (
+                                          String trigger,
+                                          dynamic suggestion,
+                                        ) {
                                           return '[$trigger${suggestion.username}:${suggestion.id}]';
                                         },
                                         parse:

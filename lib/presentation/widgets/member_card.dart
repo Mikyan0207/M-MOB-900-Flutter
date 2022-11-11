@@ -1,10 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:starlight/domain/entities/user_entity.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
-import 'package:starlight/presentation/widgets/profile_widget.dart';
 import 'package:velocity_x/velocity_x.dart';
-
-import '../../domain/entities/user_entity.dart';
 
 class MemberCard extends StatefulWidget {
   const MemberCard({
@@ -78,10 +76,11 @@ class _MemberCardState extends State<MemberCard> {
                           color: Colors.transparent,
                           child: Ink.image(
                             colorFilter: ColorFilter.mode(
-                                widget.member.status == "online"
-                                    ? Colors.transparent
-                                    : Vx.gray700.withOpacity(0.45),
-                                BlendMode.darken),
+                              widget.member.status == "online"
+                                  ? Colors.transparent
+                                  : Vx.gray700.withOpacity(0.45),
+                              BlendMode.darken,
+                            ),
                             image: widget.member.avatar.isNotEmptyAndNotNull
                                 ? NetworkImage(widget.member.avatar)
                                 : const NetworkImage(

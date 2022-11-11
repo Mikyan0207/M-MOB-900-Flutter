@@ -6,7 +6,6 @@ import 'package:get/get.dart';
 import 'package:starlight/domain/controllers/server_controller.dart';
 import 'package:starlight/domain/controllers/user_controller.dart';
 import 'package:starlight/domain/entities/user_entity.dart';
-import 'package:starlight/presentation/themes/theme_colors.dart';
 import 'package:starlight/presentation/widgets/member_card.dart';
 import 'package:velocity_x/velocity_x.dart';
 
