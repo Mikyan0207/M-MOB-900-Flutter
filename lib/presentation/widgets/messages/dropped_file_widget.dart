@@ -14,7 +14,6 @@ class DroppedFileWidget extends StatelessWidget {
   Widget build(BuildContext context) => buildImage();
 
   Widget buildImage() {
-
     if (file.name.isEmptyOrNull) {
       return buildEmptyFile('No File');
     }

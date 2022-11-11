@@ -1,5 +1,4 @@
 class DroppedFile {
-
   const DroppedFile({
     required this.url,
     required this.name,
