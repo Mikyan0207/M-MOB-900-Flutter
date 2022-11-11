@@ -8,6 +8,7 @@ import 'package:starlight/domain/controllers/group_controller.dart';
 import 'package:starlight/domain/controllers/home_controller.dart';
 import 'package:starlight/domain/controllers/private_message_controller.dart';
 import 'package:starlight/domain/controllers/server_controller.dart';
+import 'package:starlight/domain/repositories/user_repository.dart';
 import 'package:starlight/presentation/home/home_screen.dart';
 import 'package:starlight/presentation/routes.dart';
 import 'package:starlight/presentation/sign_in/sign_in_screen.dart';
@@ -31,6 +32,15 @@ class App extends StatelessWidget {
         Get.lazyPut(() => HomeController()),
         Get.lazyPut(() => PrivateMessageController()),
         Get.lazyPut(() => GroupController()),
+      },
+      onDispose: () async {
+        final UserRepository userRepository = UserRepository();
+        final AuthController authController = Get.find();
+
+        await userRepository
+            .updateField(authController.currentUser.value, <String, dynamic>{
+          'Status': "offline",
+        });
       },
       getPages: <GetPage<Widget>>[
         GetPage<Widget>(

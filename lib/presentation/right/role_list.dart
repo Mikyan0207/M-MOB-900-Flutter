@@ -19,7 +19,7 @@ class RoleList extends StatelessWidget {
 
   final String roleToShow;
 
-  final ServerController controller = Get.find();
+  final ServerController _serverController = Get.find();
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -30,7 +30,7 @@ class RoleList extends StatelessWidget {
             .collection("Servers")
             .where(
               "Id",
-              isEqualTo: controller.currentServer.value.id,
+              isEqualTo: _serverController.currentServer.value.id,
             )
             .snapshots(),
         builder: (
@@ -40,7 +40,7 @@ class RoleList extends StatelessWidget {
           if (!snapshot.hasData) {
             return Container();
           } else {
-            if (controller.currentServer.value.id.isEmptyOrNull) {
+            if (_serverController.currentServer.value.id.isEmptyOrNull) {
               return Container();
             } else {
               return buildRoleList(
@@ -78,10 +78,13 @@ class RoleList extends StatelessWidget {
   }
 
   bool iAmCreator() {
-    for (int i = 0; i < controller.currentServer.value.members.length; i++) {
+    for (int i = 0;
+        i < _serverController.currentServer.value.members.length;
+        i++) {
       if (auth.currentUser.value.id ==
-          controller.currentServer.value.members[i].id) {
-        if (controller.currentServer.value.members[i].role == "creator") {
+          _serverController.currentServer.value.members[i].id) {
+        if (_serverController.currentServer.value.members[i].role ==
+            "creator") {
           return true;
         }
       }
@@ -90,10 +93,12 @@ class RoleList extends StatelessWidget {
   }
 
   bool iAmAdmin() {
-    for (int i = 0; i < controller.currentServer.value.members.length; i++) {
+    for (int i = 0;
+        i < _serverController.currentServer.value.members.length;
+        i++) {
       if (auth.currentUser.value.id ==
-          controller.currentServer.value.members[i].id) {
-        if (controller.currentServer.value.members[i].role == "admin") {
+          _serverController.currentServer.value.members[i].id) {
+        if (_serverController.currentServer.value.members[i].role == "admin") {
           return true;
         }
       }
@@ -103,17 +108,18 @@ class RoleList extends StatelessWidget {
 
   void promoteAdmin(UserEntity user, int index) async {
     try {
-      final List<dynamic> newMembers = controller.currentServer.value.members
-          .map(
-            (UserEntity e) => e.id == user.id && e.role == "member"
-                ? e.toJsonSimplifiedWithRole("admin")
-                : e.toJsonSimplifiedWithRole(e.role),
-          )
-          .toList();
+      final List<dynamic> newMembers =
+          _serverController.currentServer.value.members
+              .map(
+                (UserEntity e) => e.id == user.id && e.role == "member"
+                    ? e.toJsonSimplifiedWithRole("admin")
+                    : e.toJsonSimplifiedWithRole(e.role),
+              )
+              .toList();
 
       await FirebaseFirestore.instance
           .collection('Servers')
-          .doc(controller.currentServer.value.id)
+          .doc(_serverController.currentServer.value.id)
           .update(
         <String, dynamic>{'Members': newMembers},
       );
@@ -124,17 +130,18 @@ class RoleList extends StatelessWidget {
 
   void delegateMember(UserEntity user, int index) async {
     try {
-      final List<dynamic> newMembers = controller.currentServer.value.members
-          .map(
-            (UserEntity e) => e.id == user.id && e.role == "admin"
-                ? e.toJsonSimplifiedWithRole("member")
-                : e.toJsonSimplifiedWithRole(e.role),
-          )
-          .toList();
+      final List<dynamic> newMembers =
+          _serverController.currentServer.value.members
+              .map(
+                (UserEntity e) => e.id == user.id && e.role == "admin"
+                    ? e.toJsonSimplifiedWithRole("member")
+                    : e.toJsonSimplifiedWithRole(e.role),
+              )
+              .toList();
 
       await FirebaseFirestore.instance
           .collection('Servers')
-          .doc(controller.currentServer.value.id)
+          .doc(_serverController.currentServer.value.id)
           .update(
         <String, dynamic>{'Members': newMembers},
       );
