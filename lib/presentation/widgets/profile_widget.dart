@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:starlight/auth/auth_controller.dart';
+import 'package:starlight/domain/controllers/user_controller.dart';
 
 class ProfileWidget extends StatelessWidget {
   ProfileWidget({
@@ -14,7 +14,7 @@ class ProfileWidget extends StatelessWidget {
   final VoidCallback onClicked;
   final bool showEdit;
 
-  final AuthController auth = Get.find();
+  final UserController auth = Get.find();
 
   String getImageFromUser() {
     if (imagePath != null) {

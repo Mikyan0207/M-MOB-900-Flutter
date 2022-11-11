@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:overlapping_panels/overlapping_panels.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:starlight/auth/auth_controller.dart';
 import 'package:starlight/domain/controllers/channel_controller.dart';
 import 'package:starlight/domain/controllers/home_controller.dart';
 import 'package:starlight/domain/controllers/server_controller.dart';
+import 'package:starlight/domain/controllers/user_controller.dart';
 import 'package:starlight/presentation/chat/server_chat.dart';
 import 'package:starlight/presentation/chat/starlight_chat.dart';
 import 'package:starlight/presentation/friends/friends_list_manager.dart';
@@ -25,7 +25,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final AuthController _authController = Get.find();
+  final UserController _authController = Get.find();
   final HomeController _homeController = Get.find();
   final ServerController _serverController = Get.find();
   final ChannelController _channelController = Get.find();
@@ -62,6 +62,8 @@ class _HomeState extends State<Home> {
           );
         }
         _homeController.setSelectedTab(AppTab.servers);
+      } else {
+        _homeController.setSelectedTab(AppTab.friends);
       }
     });
   }

@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:starlight/auth/auth_controller.dart';
 import 'package:starlight/domain/controllers/group_controller.dart';
+import 'package:starlight/domain/controllers/user_controller.dart';
 import 'package:starlight/domain/entities/group_entity.dart';
 import 'package:starlight/domain/entities/user_entity.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
@@ -16,7 +16,7 @@ class FriendList extends StatefulWidget {
 }
 
 class _FriendListState extends State<FriendList> {
-  final AuthController _authController = Get.find();
+  final UserController _userController = Get.find();
   final GroupController _groupController = Get.find();
 
   Widget _buildFriendCard(UserEntity ue) {
@@ -78,7 +78,7 @@ class _FriendListState extends State<FriendList> {
                     GroupEntity(
                       members: <UserEntity>[
                         ue,
-                        _authController.currentUser.value,
+                        _userController.currentUser.value,
                       ],
                     ),
                   );
@@ -96,7 +96,7 @@ class _FriendListState extends State<FriendList> {
     );
   }
 
-  List<dynamic> _parseFriends(
+  List<UserEntity> _parseFriends(
     List<QueryDocumentSnapshot<Map<String, dynamic>>> docs,
   ) {
     final List<dynamic> friends = docs
@@ -104,25 +104,21 @@ class _FriendListState extends State<FriendList> {
           (
             QueryDocumentSnapshot<Map<String, dynamic>> e,
           ) =>
-              e.data()['Friends'] ?? <dynamic>[],
+              e.data(),
         )
         .toList();
 
-    return friends.expand((dynamic element) => element).toList();
+    return UserEntity.fromJsonList(friends);
   }
 
-  ListView _buildFriendsList(List<dynamic> friends) {
+  ListView _buildFriendsList(List<UserEntity> friends) {
     return ListView.builder(
       padding: const EdgeInsets.symmetric(horizontal: 6.0),
       shrinkWrap: true,
       itemCount: friends.length,
       controller: ScrollController(),
       itemBuilder: (BuildContext context, int index) {
-        final UserEntity ue = UserEntity.fromJson(
-          friends[index],
-        );
-
-        return _buildFriendCard(ue);
+        return _buildFriendCard(friends[index]);
       },
     );
   }
@@ -135,7 +131,9 @@ class _FriendListState extends State<FriendList> {
             .collection("Users")
             .where(
               "Id",
-              isEqualTo: _authController.currentUser.value.id,
+              whereIn: _userController.currentUser.value.friends
+                  .map((UserEntity e) => e.id)
+                  .toList(),
             )
             .snapshots(),
         builder: (

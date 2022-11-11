@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:starlight/auth/auth_controller.dart';
+import 'package:starlight/domain/controllers/user_controller.dart';
 import 'package:starlight/domain/entities/user_entity.dart';
 import 'package:starlight/domain/repositories/user_repository.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
@@ -17,7 +17,7 @@ class CreateGroupDialog extends StatefulWidget {
 }
 
 class _CreateGroupDialogState extends State<CreateGroupDialog> {
-  final AuthController _authController = Get.find();
+  final UserController _authController = Get.find();
   final UserRepository _userRepository = UserRepository();
 
   List<bool> _isChecked = <bool>[];

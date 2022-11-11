@@ -8,8 +8,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:starlight/auth/auth_controller.dart';
 import 'package:starlight/domain/controllers/camera_controller.dart';
+import 'package:starlight/domain/controllers/user_controller.dart';
 import 'package:starlight/presentation/picture/take_picture_screen.dart';
 import 'package:starlight/presentation/userInfo/alert_dialog_widget_change_info.dart';
 import 'package:starlight/presentation/userInfo/avatar_clipper.dart';
@@ -39,9 +39,9 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
 
   String? extension;
 
-  //final AuthController auth = Get.put(AuthController());
+  //final UserController auth = Get.put(UserController());
   final CameraXController camera = Get.put(CameraXController());
-  final AuthController auth = Get.find();
+  final UserController auth = Get.find();
 
   // todo create a widget
   void _showImageDialog(

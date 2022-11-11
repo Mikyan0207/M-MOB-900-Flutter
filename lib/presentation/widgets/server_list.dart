@@ -1,19 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:starlight/auth/auth_controller.dart';
 import 'package:starlight/domain/controllers/home_controller.dart';
 import 'package:starlight/domain/controllers/server_controller.dart';
+import 'package:starlight/domain/controllers/user_controller.dart';
 import 'package:starlight/domain/entities/server_entity.dart';
 import 'package:starlight/presentation/widgets/server_icon.dart';
 
 class ServerList extends StatelessWidget {
   ServerList({Key? key}) : super(key: key);
 
-  final String iconPlaceholder =
-      "https://static.vecteezy.com/system/resources/previews/007/479/717/original/icon-contacts-suitable-for-mobile-apps-symbol-long-shadow-style-simple-design-editable-design-template-simple-symbol-illustration-vector.jpg";
-
-  final AuthController _authController = Get.find();
+  final UserController _authController = Get.find();
   final ServerController _serverController = Get.find();
   final HomeController _homeController = Get.find();
 
@@ -25,9 +22,11 @@ class ServerList extends StatelessWidget {
             .collection("Servers")
             .where(
               "Id",
-              whereIn: _authController.currentUserServers.isEmpty
+              whereIn: _authController.currentUser.value.servers.isEmpty
                   ? <String>['']
-                  : _authController.currentUserServers,
+                  : _authController.currentUser.value.servers
+                      .map((ServerEntity e) => e.id)
+                      .toList(),
             )
             .snapshots(),
         builder: (
@@ -72,7 +71,7 @@ class ServerList extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: Center(
             child: ServerIcon(
-              icon: se.icon.isNotEmpty ? se.icon : iconPlaceholder,
+              icon: se.icon,
               iconSize: 50,
               iconRadius: 25,
               onIconClicked: () async {

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:starlight/auth/auth_controller.dart';
 import 'package:starlight/domain/controllers/home_controller.dart';
 import 'package:starlight/domain/controllers/private_message_controller.dart';
+import 'package:starlight/domain/controllers/user_controller.dart';
 import 'package:starlight/domain/entities/group_entity.dart';
 import 'package:starlight/domain/entities/user_entity.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
@@ -20,7 +20,7 @@ class GroupCard extends StatelessWidget {
 
   final PrivateMessageController _pmController = Get.find();
   final HomeController _homeController = Get.find();
-  final AuthController _authController = Get.find();
+  final UserController _authController = Get.find();
 
   @override
   Widget build(BuildContext context) {

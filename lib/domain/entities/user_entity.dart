@@ -1,6 +1,18 @@
 import 'package:starlight/domain/entities/group_entity.dart';
 import 'package:starlight/domain/entities/server_entity.dart';
 
+class UserQueryOptions {
+  const UserQueryOptions({
+    this.includeServers = false,
+    this.includeGroups = false,
+    this.includeFriends = false,
+  });
+
+  final bool includeServers;
+  final bool includeGroups;
+  final bool includeFriends;
+}
+
 class UserEntity {
   UserEntity({
     this.id = '',
@@ -14,20 +26,24 @@ class UserEntity {
     this.friends = const <UserEntity>[],
   });
 
-  factory UserEntity.fromJson(dynamic json) => UserEntity(
+  factory UserEntity.fromJson(
+    dynamic json, {
+    UserQueryOptions options = const UserQueryOptions(),
+  }) =>
+      UserEntity(
         id: json['Id'] ?? '',
         authId: json['AuthId'] ?? '',
         username: json['Username'] ?? '',
         avatar: json['Avatar'] ?? '',
         discriminator: json['Discriminator'] ?? '#0000',
         email: json['Email'] ?? '',
-        servers: json['Servers'] != null
+        servers: json['Servers'] != null && options.includeServers
             ? ServerEntity.fromJsonList(json['Servers'])
             : const <ServerEntity>[],
-        groups: json['Groups'] != null
+        groups: json['Groups'] != null && options.includeGroups
             ? GroupEntity.fromJsonList(json['Groups'])
             : const <GroupEntity>[],
-        friends: json['Friends'] != null
+        friends: json['Friends'] != null && options.includeFriends
             ? UserEntity.fromJsonList(json['Friends'])
             : const <UserEntity>[],
       );
@@ -43,33 +59,15 @@ class UserEntity {
       'Avatar': avatar,
       'Discriminator': discriminator,
       'Email': email,
-      'Servers': servers
-          .map(
-            (ServerEntity se) => <String, dynamic>{
-              'Id': se.id,
-              'Name': se.name,
-              'Description': se.description,
-              'Icon': se.icon,
-            },
-          )
-          .toList(),
-      'Groups': groups
-          .map(
-            (GroupEntity ge) => <String, dynamic>{
-              'Id': ge.id,
-              'Name': ge.name,
-              'Icon': ge.icon,
-            },
-          )
-          .toList(),
-      'Friends': friends.map(
-        (UserEntity ue) => <String, dynamic>{
-          'Id': ue.id,
-          'Username': ue.username,
-          'Avatar': ue.avatar,
-        },
-      ),
+      'Servers': servers.map((ServerEntity se) => <String>{se.id}).toList(),
+      'Groups': groups.map((GroupEntity ge) => <String>{ge.id}).toList(),
+      'Friends': friends.map((UserEntity ue) => <String>{ue.id}).toList(),
     };
+  }
+
+  @override
+  String toString() {
+    return toJson().toString();
   }
 
   String id;

@@ -2,33 +2,26 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:starlight/domain/entities/group_entity.dart';
-import 'package:starlight/domain/entities/server_entity.dart';
 import 'package:starlight/domain/entities/user_entity.dart';
 import 'package:starlight/domain/repositories/user_repository.dart';
 import 'package:starlight/presentation/sign_in/sign_in_screen.dart';
 
-class AuthController extends GetxController {
+class UserController extends GetxController {
   Rx<UserEntity> currentUser = UserEntity().obs;
-  RxList<String> currentUserServers = <String>[].obs;
-  RxList<String> currentUserGroups = <String>[].obs;
 
-  final UserRepository _userRepository = UserRepository();
+  final UserRepository repository = UserRepository();
 
   Future<void> retrieveUserFromId(String userId) async {
-    currentUser(await _userRepository.get(userId));
-
-    if (currentUser.value.servers.isNotEmpty) {
-      currentUserServers(
-        currentUser.value.servers.map((ServerEntity se) => se.id).toList(),
-      );
-    }
-
-    if (currentUser.value.groups.isNotEmpty) {
-      currentUserGroups(
-        currentUser.value.groups.map((GroupEntity ge) => ge.id).toList(),
-      );
-    }
+    currentUser(
+      await repository.get(
+        userId,
+        options: const UserQueryOptions(
+          includeServers: true,
+          includeGroups: true,
+          includeFriends: true,
+        ),
+      ),
+    );
   }
 
   Future<bool> loginAsync(String email, String password) async {
@@ -44,26 +37,23 @@ class AuthController extends GetxController {
         return false;
       }
 
-      currentUser(await _userRepository.getByAuthId(userCredential.user!.uid));
+      currentUser(
+        await repository.getByAuthId(
+          userCredential.user!.uid,
+          options: const UserQueryOptions(
+            includeServers: true,
+            includeGroups: true,
+            includeFriends: true,
+          ),
+        ),
+      );
       if (currentUser.value.id == '') {
-        await Fluttertoast.showToast(msg: "Current User is null");
+        await Fluttertoast.showToast(msg: "Error during Sign in.");
         await Get.to(() => SignInScreen());
       }
 
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString("UserId", currentUser.value.id);
-
-      if (currentUser.value.servers.isNotEmpty) {
-        currentUserServers(
-          currentUser.value.servers.map((ServerEntity se) => se.id).toList(),
-        );
-      }
-
-      if (currentUser.value.groups.isNotEmpty) {
-        currentUserGroups(
-          currentUser.value.groups.map((GroupEntity ge) => ge.id).toList(),
-        );
-      }
 
       return true;
     } on FirebaseAuthException catch (e) {
@@ -90,7 +80,7 @@ class AuthController extends GetxController {
       }
 
       currentUser(
-        await _userRepository.create(
+        await repository.create(
           UserEntity(
             authId: userCredential.user!.uid,
             username: userCredential.user!.email!.split('@').first,

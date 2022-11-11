@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_parsed_text/flutter_parsed_text.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:starlight/auth/auth_controller.dart';
+import 'package:starlight/domain/controllers/user_controller.dart';
 import 'package:starlight/domain/entities/message_entity.dart';
 import 'package:starlight/domain/repositories/message_repository.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
@@ -37,7 +37,7 @@ class _MessageBoxState extends State<MessageBox> {
   bool isMessageMenuHovered = false;
   Color hoverBackground = AppColors.black800.withOpacity(0.25);
 
-  final AuthController _authController = Get.find();
+  final UserController _authController = Get.find();
   final MessageRepository _messageRepository = MessageRepository();
 
   final RegexOptions options = const RegexOptions();

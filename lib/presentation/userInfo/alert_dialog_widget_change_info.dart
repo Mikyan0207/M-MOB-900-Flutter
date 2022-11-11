@@ -3,12 +3,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:starlight/auth/auth_controller.dart';
+import 'package:starlight/domain/controllers/user_controller.dart';
 import 'package:starlight/presentation/widgets/custom_button.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 void updateDataUserInFirebase(String field, String value) async {
-  final AuthController auth = Get.find();
+  final UserController auth = Get.find();
 
   // todo check if it's work
   if (field == "password") {

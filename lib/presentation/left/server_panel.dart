@@ -71,7 +71,7 @@ class ServerPanel extends GetView<ServerController> {
                                   onSelected: (int value) async {
                                     if (value == 0) {
                                       await Get.dialog(
-                                        const InviteFriendToServerDialog(),
+                                        InviteFriendToServerDialog(),
                                         barrierDismissible: true,
                                         barrierColor:
                                             Vx.gray800.withOpacity(0.75),

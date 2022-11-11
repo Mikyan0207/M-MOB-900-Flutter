@@ -5,10 +5,26 @@ import 'package:starlight/domain/entities/user_entity.dart';
 class ServerRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<List<ServerEntity>> getAll() async {
+  Future<List<ServerEntity>> getAll({
+    ServerQueryOptions options = const ServerQueryOptions(),
+  }) async {
     return ServerEntity.fromJsonList(
       await _firestore.collection("Servers").snapshots().toList(),
     );
+  }
+
+  Future<ServerEntity> get(
+    String id, {
+    ServerQueryOptions options = const ServerQueryOptions(),
+  }) async {
+    final Map<String, dynamic>? data =
+        (await _firestore.collection("Servers").doc(id).get()).data();
+
+    if (data == null) {
+      return ServerEntity();
+    }
+
+    return ServerEntity.fromJson(data, options: options);
   }
 
   Future<ServerEntity> getServer(String serverId) async {

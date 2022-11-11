@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:starlight/auth/auth_controller.dart';
 import 'package:starlight/common/constants/route_constants.dart';
 import 'package:starlight/domain/controllers/channel_controller.dart';
 import 'package:starlight/domain/controllers/friends_controller.dart';
@@ -8,6 +7,7 @@ import 'package:starlight/domain/controllers/group_controller.dart';
 import 'package:starlight/domain/controllers/home_controller.dart';
 import 'package:starlight/domain/controllers/private_message_controller.dart';
 import 'package:starlight/domain/controllers/server_controller.dart';
+import 'package:starlight/domain/controllers/user_controller.dart';
 import 'package:starlight/presentation/home/home_screen.dart';
 import 'package:starlight/presentation/routes.dart';
 import 'package:starlight/presentation/sign_in/sign_in_screen.dart';
@@ -24,7 +24,7 @@ class App extends StatelessWidget {
       title: 'Starlight',
       home: const Home(),
       onInit: () => <void>{
-        Get.lazyPut(() => AuthController()),
+        Get.lazyPut(() => UserController()),
         Get.lazyPut(() => ServerController()),
         Get.lazyPut(() => ChannelController()),
         Get.lazyPut(() => FriendsController()),

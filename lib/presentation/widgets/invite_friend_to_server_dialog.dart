@@ -2,25 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:starlight/domain/controllers/server_controller.dart';
+import 'package:starlight/domain/controllers/user_controller.dart';
 import 'package:starlight/domain/entities/user_entity.dart';
-import 'package:starlight/domain/repositories/user_repository.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
 import 'package:velocity_x/velocity_x.dart';
 
-class InviteFriendToServerDialog extends StatefulWidget {
-  const InviteFriendToServerDialog({
+class InviteFriendToServerDialog extends StatelessWidget {
+  InviteFriendToServerDialog({
     Key? key,
   }) : super(key: key);
 
-  @override
-  State<InviteFriendToServerDialog> createState() =>
-      _InviteFriendToServerDialogState();
-}
-
-class _InviteFriendToServerDialogState
-    extends State<InviteFriendToServerDialog> {
   final ServerController _serverController = Get.find();
-  final UserRepository _userRepository = UserRepository();
+  final UserController _userController = Get.find();
+
   final TextEditingController _textFieldController = TextEditingController();
 
   @override
@@ -209,8 +203,9 @@ class _InviteFriendToServerDialogState
                                   return;
                                 }
 
-                                final UserEntity? toUser = await _userRepository
-                                    .getUserFromUsernameAndDiscriminator(
+                                final UserEntity? toUser = await _userController
+                                    .repository
+                                    .getUserByUsernameAndDiscriminator(
                                   parts[0],
                                   parts[1],
                                 );
@@ -230,8 +225,7 @@ class _InviteFriendToServerDialogState
                                   );
                                   Get.back();
                                 } else {
-                                  await _serverController
-                                      .addUserToCurrentServer(toUser!);
+                                  await _serverController.joinServer(toUser!);
                                   Get.back();
                                 }
                               },

@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:starlight/auth/auth_controller.dart';
+import 'package:starlight/domain/controllers/user_controller.dart';
 import 'package:starlight/domain/entities/message_entity.dart';
 import 'package:starlight/presentation/widgets/message_box.dart';
 
@@ -15,7 +15,7 @@ class MessagesList extends StatelessWidget {
   final Stream<QuerySnapshot<Map<String, dynamic>>> firestoreStream;
   final Widget noDataWidget;
 
-  final AuthController _authController = Get.find();
+  final UserController _authController = Get.find();
 
   @override
   Widget build(BuildContext context) {

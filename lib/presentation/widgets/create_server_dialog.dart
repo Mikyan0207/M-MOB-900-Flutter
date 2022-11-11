@@ -5,7 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:starlight/auth/auth_controller.dart';
+import 'package:starlight/domain/controllers/user_controller.dart';
 import 'package:starlight/domain/entities/channel_entity.dart';
 import 'package:starlight/domain/entities/server_entity.dart';
 import 'package:starlight/domain/entities/user_entity.dart';
@@ -25,7 +25,7 @@ class CreateServerDialog extends StatefulWidget {
 }
 
 class _CreateServerDialogState extends State<CreateServerDialog> {
-  final AuthController _authController = Get.find();
+  final UserController _authController = Get.find();
 
   final ServerRepository _serverRepository = ServerRepository();
   final ChannelRepository _channelRepository = ChannelRepository();

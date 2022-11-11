@@ -169,7 +169,7 @@ class FriendsListManager extends StatelessWidget {
                         ),
                         onPressed: () async {
                           await Get.dialog(
-                            const AddFriendDialog(),
+                            AddFriendDialog(),
                             barrierDismissible: true,
                             barrierColor: Vx.gray800.withOpacity(0.75),
                           );

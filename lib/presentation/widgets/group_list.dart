@@ -1,14 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:starlight/auth/auth_controller.dart';
+import 'package:starlight/domain/controllers/user_controller.dart';
 import 'package:starlight/domain/entities/group_entity.dart';
 import 'package:starlight/presentation/widgets/group_card.dart';
 
 class GroupList extends StatelessWidget {
   GroupList({Key? key}) : super(key: key);
 
-  final AuthController _authController = Get.find();
+  final UserController _authController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -18,9 +18,11 @@ class GroupList extends StatelessWidget {
             .collection("Groups")
             .where(
               "Id",
-              whereIn: _authController.currentUserGroups.isEmpty
+              whereIn: _authController.currentUser.value.groups.isEmpty
                   ? <String>['']
-                  : _authController.currentUserGroups,
+                  : _authController.currentUser.value.groups
+                      .map((GroupEntity e) => e.id)
+                      .toList(),
             )
             .snapshots(),
         builder: (

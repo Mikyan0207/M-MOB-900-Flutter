@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:starlight/auth/auth_controller.dart';
 import 'package:starlight/domain/controllers/channel_controller.dart';
 import 'package:starlight/domain/controllers/server_controller.dart';
+import 'package:starlight/domain/controllers/user_controller.dart';
 import 'package:starlight/domain/entities/message_entity.dart';
 import 'package:starlight/domain/repositories/message_repository.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
@@ -16,7 +16,7 @@ class ServerChat extends StatelessWidget {
 
   final ServerController _serverController = Get.find();
   final ChannelController _channelController = Get.find();
-  final AuthController _authController = Get.find();
+  final UserController _authController = Get.find();
 
   final MessageRepository _messageRepository = MessageRepository();
   @override
@@ -73,21 +73,23 @@ class ServerChat extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   Expanded(child: ServerMessagesList()),
-                  MessageBar(
-                    members: _serverController.currentServer.value.members,
-                    onSendMessage: (String value) async {
-                      if (value.isEmptyOrNull) {
-                        return;
-                      }
-                      await _messageRepository.create(
-                        MessageEntity(
-                          author: _authController.currentUser.value,
-                          content: value,
-                          channel: _channelController.currentChannel.value,
-                          time: Timestamp.now(),
-                        ),
-                      );
-                    },
+                  Obx(
+                    () => MessageBar(
+                      members: _serverController.currentServer.value.members,
+                      onSendMessage: (String value) async {
+                        if (value.isEmptyOrNull) {
+                          return;
+                        }
+                        await _messageRepository.create(
+                          MessageEntity(
+                            author: _authController.currentUser.value,
+                            content: value,
+                            channel: _channelController.currentChannel.value,
+                            time: Timestamp.now(),
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ],
               ),

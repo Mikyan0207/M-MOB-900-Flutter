@@ -1,27 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:starlight/auth/auth_controller.dart';
+import 'package:starlight/domain/controllers/user_controller.dart';
 import 'package:starlight/domain/entities/friend_request_entity.dart';
 import 'package:starlight/domain/entities/user_entity.dart';
 import 'package:starlight/domain/repositories/friend_request_repository.dart';
-import 'package:starlight/domain/repositories/user_repository.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
 import 'package:velocity_x/velocity_x.dart';
 
-class AddFriendDialog extends StatefulWidget {
-  const AddFriendDialog({
+class AddFriendDialog extends StatelessWidget {
+  AddFriendDialog({
     Key? key,
   }) : super(key: key);
 
-  @override
-  State<AddFriendDialog> createState() => _AddFriendDialogState();
-}
+  final UserController _userController = Get.find();
 
-class _AddFriendDialogState extends State<AddFriendDialog> {
-  final AuthController _authController = Get.find();
   final FriendRequestRepository _friendRequestRepository =
       FriendRequestRepository();
-  final UserRepository _userRepository = UserRepository();
+
   final TextEditingController _textFieldController = TextEditingController();
 
   @override
@@ -210,8 +205,9 @@ class _AddFriendDialogState extends State<AddFriendDialog> {
                                   return;
                                 }
 
-                                final UserEntity? toUser = await _userRepository
-                                    .getUserFromUsernameAndDiscriminator(
+                                final UserEntity? toUser = await _userController
+                                    .repository
+                                    .getUserByUsernameAndDiscriminator(
                                   parts[0],
                                   parts[1],
                                 );
@@ -222,7 +218,7 @@ class _AddFriendDialogState extends State<AddFriendDialog> {
 
                                 await _friendRequestRepository.create(
                                   FriendRequestEntity(
-                                    fromUser: _authController.currentUser.value,
+                                    fromUser: _userController.currentUser.value,
                                     toUser: toUser!,
                                   ),
                                 );

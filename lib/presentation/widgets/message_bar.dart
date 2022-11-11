@@ -69,78 +69,75 @@ class _MessageBarState extends State<MessageBar> {
                             constraints: const BoxConstraints(
                               maxHeight: 150,
                             ),
-                            child: Obx(
-                              () => FlutterParsedTextField(
-                                focusNode: _textFieldNode,
-                                autofocus: true,
-                                onSubmitted: (String? value) async {
-                                  final String content =
-                                      flutterParsedTextFieldController
-                                          .stringify()
-                                          .trim();
+                            child: FlutterParsedTextField(
+                              focusNode: _textFieldNode,
+                              autofocus: true,
+                              onSubmitted: (String? value) async {
+                                final String content =
+                                    flutterParsedTextFieldController
+                                        .stringify()
+                                        .trim();
 
-                                  flutterParsedTextFieldController.clear();
-                                  await widget.onSendMessage.call(content);
-                                  _textFieldNode.unfocus();
-                                  _textFieldNode.requestFocus();
-                                },
-                                suggestionPosition: SuggestionPosition.above,
-                                matchers: <Matcher<dynamic>>[
-                                  Matcher<UserEntity>(
-                                    trigger: "@",
-                                    style: const TextStyle(
-                                      color: AppColors.primaryColor,
-                                    ),
-                                    suggestions: widget.members,
-                                    idProp: (dynamic suggestion) =>
-                                        suggestion.id,
-                                    displayProp: (dynamic suggestion) =>
-                                        suggestion.username,
-                                    stringify:
-                                        (String trigger, dynamic suggestion) {
-                                      return '[$trigger${suggestion.username}:${suggestion.id}]';
-                                    },
-                                    parse: (RegExp regex, String suggestion) {
-                                      final RegExpMatch? match =
-                                          regex.firstMatch(suggestion);
-
-                                      if (match != null) {
-                                        return UserEntity(
-                                          id: match.group(3)!,
-                                          username: match.group(2)!,
-                                        );
-                                      }
-
-                                      return UserEntity();
-                                    },
-                                    parseRegExp:
-                                        RegExp(r"\[(@([^\]]+)):([^\]]+)\]"),
+                                flutterParsedTextFieldController.clear();
+                                await widget.onSendMessage.call(content);
+                                _textFieldNode.unfocus();
+                                _textFieldNode.requestFocus();
+                              },
+                              suggestionPosition: SuggestionPosition.above,
+                              matchers: <Matcher<dynamic>>[
+                                Matcher<UserEntity>(
+                                  trigger: "@",
+                                  style: const TextStyle(
+                                    color: AppColors.primaryColor,
                                   ),
-                                ],
-                                textInputAction: TextInputAction.send,
-                                controller: flutterParsedTextFieldController,
-                                maxLines: null,
-                                keyboardType: TextInputType.multiline,
-                                style: const TextStyle(
-                                  color: Vx.gray100,
+                                  suggestions: widget.members,
+                                  idProp: (dynamic suggestion) => suggestion.id,
+                                  displayProp: (dynamic suggestion) =>
+                                      suggestion.username,
+                                  stringify:
+                                      (String trigger, dynamic suggestion) {
+                                    return '[$trigger${suggestion.username}:${suggestion.id}]';
+                                  },
+                                  parse: (RegExp regex, String suggestion) {
+                                    final RegExpMatch? match =
+                                        regex.firstMatch(suggestion);
+
+                                    if (match != null) {
+                                      return UserEntity(
+                                        id: match.group(3)!,
+                                        username: match.group(2)!,
+                                      );
+                                    }
+
+                                    return UserEntity();
+                                  },
+                                  parseRegExp:
+                                      RegExp(r"\[(@([^\]]+)):([^\]]+)\]"),
                                 ),
-                                cursorColor: Vx.gray400,
-                                decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  focusedBorder: InputBorder.none,
-                                  enabledBorder: InputBorder.none,
-                                  errorBorder: InputBorder.none,
-                                  disabledBorder: InputBorder.none,
-                                  hintStyle: TextStyle(
-                                    color: Vx.gray500,
-                                    fontSize: Theme.of(context)
-                                        .textTheme
-                                        .subtitle2!
-                                        .fontSize,
-                                  ),
-                                  hintText:
-                                      'Message #${_channelController.currentChannel.value.name.toLowerCase()}',
+                              ],
+                              textInputAction: TextInputAction.send,
+                              controller: flutterParsedTextFieldController,
+                              maxLines: null,
+                              keyboardType: TextInputType.multiline,
+                              style: const TextStyle(
+                                color: Vx.gray100,
+                              ),
+                              cursorColor: Vx.gray400,
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                focusedBorder: InputBorder.none,
+                                enabledBorder: InputBorder.none,
+                                errorBorder: InputBorder.none,
+                                disabledBorder: InputBorder.none,
+                                hintStyle: TextStyle(
+                                  color: Vx.gray500,
+                                  fontSize: Theme.of(context)
+                                      .textTheme
+                                      .subtitle2!
+                                      .fontSize,
                                 ),
+                                hintText:
+                                    'Message #${_channelController.currentChannel.value.name.toLowerCase()}',
                               ),
                             ),
                           ),
