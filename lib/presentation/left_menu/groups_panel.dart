@@ -12,67 +12,70 @@ class StarlightFriendsList extends GetView<FriendsController> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Container(
-          decoration: const BoxDecoration(
-            color: AppColors.black900,
-          ),
-          child: ClipRRect(
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(8),
-              bottomLeft: Radius.circular(8),
+    return Container(
+      color: AppColors.black900,
+      child: SafeArea(
+        child: Scaffold(
+          body: Container(
+            decoration: const BoxDecoration(
+              color: AppColors.black900,
             ),
-            child: Container(
-              decoration: const BoxDecoration(
-                color: AppColors.black700,
+            child: ClipRRect(
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(8),
+                bottomLeft: Radius.circular(8),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Container(
-                    width: double.infinity,
-                    height: 60,
-                    decoration: const BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(
-                          color: AppColors.black900,
+              child: Container(
+                decoration: const BoxDecoration(
+                  color: AppColors.black700,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                      width: double.infinity,
+                      height: 60,
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                            color: AppColors.black900,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        const Text(
-                          "PRIVATE MESSAGES",
-                          style: TextStyle(
-                            color: Vx.gray400,
-                            fontWeight: FontWeight.w600,
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          const Text(
+                            "PRIVATE MESSAGES",
+                            style: TextStyle(
+                              color: Vx.gray400,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
-                        ),
-                        IconButton(
-                          onPressed: () async {
-                            await Get.dialog(
-                              const CreateGroupDialog(),
-                              barrierDismissible: true,
-                              barrierColor: Vx.gray800.withOpacity(0.75),
-                            );
-                          },
-                          icon: const Icon(
-                            Icons.add_rounded,
-                            size: 22,
-                            color: Vx.gray300,
-                          ),
-                        )
-                      ],
+                          IconButton(
+                            onPressed: () async {
+                              await Get.dialog(
+                                const CreateGroupDialog(),
+                                barrierDismissible: true,
+                                barrierColor: Vx.gray800.withOpacity(0.75),
+                              );
+                            },
+                            icon: const Icon(
+                              Icons.add_rounded,
+                              size: 22,
+                              color: Vx.gray300,
+                            ),
+                          )
+                        ],
+                      ),
                     ),
-                  ),
-                  Expanded(child: GroupList()),
-                  ProfileBar(),
-                ],
+                    Expanded(child: GroupList()),
+                    ProfileBar(),
+                  ],
+                ),
               ),
             ),
           ),

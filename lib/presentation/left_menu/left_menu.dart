@@ -12,74 +12,77 @@ class LeftMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Container(
-          width: double.infinity,
-          height: double.infinity,
-          color: Vx.gray800,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: AppColors.black900,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 12.0),
-                    child: Column(
-                      children: <Widget>[
-                        const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: FriendsIconButton(
-                            icon: Icons.star_rounded,
-                            iconColor: Vx.gray400,
-                            iconHoverColor: Vx.white,
-                            backgroundColor: AppColors.black700,
-                            backgroundHoverColor: AppColors.primaryColor,
-                            iconRadius: 25,
-                            iconSize: 50,
+    return Container(
+      color: AppColors.black900,
+      child: SafeArea(
+        child: Scaffold(
+          body: Container(
+            width: double.infinity,
+            height: double.infinity,
+            color: Vx.gray800,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: AppColors.black900,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 12.0),
+                      child: Column(
+                        children: <Widget>[
+                          const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: FriendsIconButton(
+                              icon: Icons.star_rounded,
+                              iconColor: Vx.gray400,
+                              iconHoverColor: Vx.white,
+                              backgroundColor: AppColors.black700,
+                              backgroundHoverColor: AppColors.primaryColor,
+                              iconRadius: 25,
+                              iconSize: 50,
+                            ),
                           ),
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 12.0),
-                          child: Divider(
-                            color: Vx.gray600,
-                            thickness: 0.5,
+                          const Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 12.0),
+                            child: Divider(
+                              color: Vx.gray600,
+                              thickness: 0.5,
+                            ),
                           ),
-                        ),
-                        Expanded(child: ServerList()),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: StarlightIconButton(
-                            icon: Icons.add_circle,
-                            iconColor: Vx.green600,
-                            iconHoverColor: Vx.white,
-                            backgroundColor: AppColors.black700,
-                            backgroundHoverColor: Vx.green400,
-                            iconRadius: 25,
-                            iconSize: 50,
-                            isSelected: false,
-                            onIconClicked: () async {
-                              await Get.dialog(
-                                const CreateServerDialog(),
-                                barrierDismissible: true,
-                                barrierColor: Vx.gray800.withOpacity(0.75),
-                              );
-                            },
+                          Expanded(child: ServerList()),
+                          const SizedBox(
+                            height: 10,
                           ),
-                        )
-                      ],
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: StarlightIconButton(
+                              icon: Icons.add_circle,
+                              iconColor: Vx.green600,
+                              iconHoverColor: Vx.white,
+                              backgroundColor: AppColors.black700,
+                              backgroundHoverColor: Vx.green400,
+                              iconRadius: 25,
+                              iconSize: 50,
+                              isSelected: false,
+                              onIconClicked: () async {
+                                await Get.dialog(
+                                  const CreateServerDialog(),
+                                  barrierDismissible: true,
+                                  barrierColor: Vx.gray800.withOpacity(0.75),
+                                );
+                              },
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

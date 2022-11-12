@@ -11,6 +11,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:starlight/domain/controllers/camera_controller.dart';
 import 'package:starlight/domain/controllers/user_controller.dart';
 import 'package:starlight/presentation/picture/take_picture_screen.dart';
+import 'package:starlight/presentation/themes/theme_colors.dart';
 import 'package:starlight/presentation/user_info/alert_dialog_widget_change_info.dart';
 import 'package:starlight/presentation/user_info/avatar_clipper.dart';
 import 'package:starlight/presentation/widgets/custom_button.dart';
@@ -160,43 +161,47 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Material(
-        child: Container(
-          height: double.infinity,
-          width: double.infinity,
-          decoration: const BoxDecoration(
-            color: Vx.gray800,
-          ),
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: Container(
-                constraints: const BoxConstraints(maxWidth: 500),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    SizedBox(
-                      height: 150,
-                      child: Stack(
-                        children: <Widget>[
-                          ClipPath(
-                            clipper: AvatarClipper(),
-                            child: Container(
-                              height: 100,
-                              decoration: const BoxDecoration(
-                                color: darkColor,
-                                borderRadius: BorderRadius.only(
-                                  topRight: Radius.circular(20),
-                                  topLeft: Radius.circular(20),
+    return Container(
+      color: AppColors.black900,
+      child: SafeArea(
+        child: Material(
+          child: Container(
+            height: double.infinity,
+            width: double.infinity,
+            decoration: const BoxDecoration(
+              color: Vx.gray800,
+            ),
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Container(
+                  constraints: const BoxConstraints(maxWidth: 500),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      SizedBox(
+                        height: 150,
+                        child: Stack(
+                          children: <Widget>[
+                            ClipPath(
+                              clipper: AvatarClipper(),
+                              child: Container(
+                                height: 100,
+                                decoration: const BoxDecoration(
+                                  color: darkColor,
+                                  borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(20),
+                                    topLeft: Radius.circular(20),
+                                  ),
                                 ),
                               ),
                             ),
+<<<<<<< Updated upstream
                           ),
                           Positioned(
                             left: 11,
@@ -234,142 +239,183 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                                 "Camera",
                                                 style: TextStyle(
                                                   color: Colors.red,
+=======
+                            Positioned(
+                              left: 11,
+                              top: 50,
+                              child: Row(
+                                children: <Widget>[
+                                  ProfileWidget(
+                                    showEdit: true,
+                                    showStatus: false,
+                                    onClicked: () async {
+                                      _showImageDialog(
+                                        context,
+                                        "Choose an option",
+                                        <Widget>[
+                                          InkWell(
+                                            onTap: () async {
+                                              if (kIsWeb) {
+                                                await camera.initCamera();
+                                                await Get.to(
+                                                  const TakePictureScreen(),
+                                                );
+                                              } else {
+                                                _getFromCamera();
+                                              }
+                                            },
+                                            child: Row(
+                                              children: const <Widget>[
+                                                Padding(
+                                                  padding: EdgeInsets.all(4.0),
+                                                  child: Icon(
+                                                    Icons.camera,
+                                                    color: Colors.red,
+                                                  ),
+>>>>>>> Stashed changes
                                                 ),
-                                              )
-                                            ],
+                                                Text(
+                                                  "Camera",
+                                                  style: TextStyle(
+                                                    color: Colors.red,
+                                                  ),
+                                                )
+                                              ],
+                                            ),
                                           ),
+                                          InkWell(
+                                            onTap: () {
+                                              _getFromGallery();
+                                            },
+                                            child: Row(
+                                              children: const <Widget>[
+                                                Padding(
+                                                  padding: EdgeInsets.all(4.0),
+                                                  child: Icon(
+                                                    Icons.image,
+                                                    color: Colors.red,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  "Image",
+                                                  style: TextStyle(
+                                                    color: Colors.red,
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          )
+                                        ],
+                                      );
+                                    },
+                                  ),
+                                  const SizedBox(width: 20),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(
+                                        auth.currentUser.value.username,
+                                        style: const TextStyle(
+                                          fontSize: 32,
+                                          color: Color(0xFFFFFFFF),
                                         ),
-                                        InkWell(
-                                          onTap: () {
-                                            _getFromGallery();
-                                          },
-                                          child: Row(
-                                            children: const <Widget>[
-                                              Padding(
-                                                padding: EdgeInsets.all(4.0),
-                                                child: Icon(
-                                                  Icons.image,
-                                                  color: Colors.red,
-                                                ),
-                                              ),
-                                              Text(
-                                                "Image",
-                                                style: TextStyle(
-                                                  color: Colors.red,
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        )
-                                      ],
+                                      ),
+                                      const SizedBox(height: 50),
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 70,
+                          vertical: 30,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                const Text(
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  "Username:",
+                                ),
+                                Obx(
+                                  () => Text(
+                                    "${auth.currentUser.value.username}\n\n",
+                                  ),
+                                ),
+                                const Text(
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  "Email:",
+                                ),
+                                Obx(
+                                  () => Text(
+                                    "${auth.currentUser.value.email}\n\n",
+                                  ),
+                                ),
+                                const Text(
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  "Password: \n *******",
+                                ),
+                              ],
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: <Widget>[
+                                CustomButton(
+                                  customText: "Modify",
+                                  onClicked: () {
+                                    displayModifyInfoDialog(
+                                      context,
+                                      "Change your username",
+                                      "Username",
                                     );
                                   },
                                 ),
-                                const SizedBox(width: 20),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Text(
-                                      auth.currentUser.value.username,
-                                      style: const TextStyle(
-                                        fontSize: 32,
-                                        color: Color(0xFFFFFFFF),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 50),
-                                  ],
-                                )
+                                const SizedBox(height: 40),
+                                CustomButton(
+                                  customText: "Modify",
+                                  onClicked: () {
+                                    displayModifyInfoDialog(
+                                      context,
+                                      "Change your email",
+                                      "Email",
+                                    );
+                                  },
+                                ),
+                                const SizedBox(height: 40),
+                                CustomButton(
+                                  customText: "Modify",
+                                  onClicked: () {
+                                    displayModifyInfoDialog(
+                                      context,
+                                      "Modify your password",
+                                      "password",
+                                    );
+                                  },
+                                ),
                               ],
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 70,
-                        vertical: 30,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              const Text(
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                "Username:",
-                              ),
-                              Obx(
-                                () => Text(
-                                  "${auth.currentUser.value.username}\n\n",
-                                ),
-                              ),
-                              const Text(
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                "Email:",
-                              ),
-                              Obx(
-                                () => Text(
-                                  "${auth.currentUser.value.email}\n\n",
-                                ),
-                              ),
-                              const Text(
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                "Password: \n *******",
-                              ),
-                            ],
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: <Widget>[
-                              CustomButton(
-                                customText: "Modify",
-                                onClicked: () {
-                                  displayModifyInfoDialog(
-                                    context,
-                                    "Change your username",
-                                    "Username",
-                                  );
-                                },
-                              ),
-                              const SizedBox(height: 40),
-                              CustomButton(
-                                customText: "Modify",
-                                onClicked: () {
-                                  displayModifyInfoDialog(
-                                    context,
-                                    "Change your email",
-                                    "Email",
-                                  );
-                                },
-                              ),
-                              const SizedBox(height: 40),
-                              CustomButton(
-                                customText: "Modify",
-                                onClicked: () {
-                                  displayModifyInfoDialog(
-                                    context,
-                                    "Modify your password",
-                                    "password",
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),

@@ -192,6 +192,21 @@ class RoleList extends StatelessWidget {
         },
         merge: true,
       );
+
+      await _userController.repository.updateField(
+        user,
+        <String, dynamic>{
+          'Status': 'online ',
+        },
+        merge: true,
+      );
+      await _userController.repository.updateField(
+        user,
+        <String, dynamic>{
+          'Status': 'online',
+        },
+        merge: true,
+      );
     } catch (e) {
       await Fluttertoast.showToast(msg: e.toString());
     }

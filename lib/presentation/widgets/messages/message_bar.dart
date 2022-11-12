@@ -96,7 +96,7 @@ class _MessageBarState extends State<MessageBar> {
                                   ),
                                   child: FlutterParsedTextField(
                                     focusNode: _textFieldNode,
-                                    autofocus: true,
+                                    autofocus: Vx.isWeb || Vx.isDesktop,
                                     onSubmitted: (String? value) async {
                                       final String content =
                                           flutterParsedTextFieldController
