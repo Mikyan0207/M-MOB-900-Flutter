@@ -69,8 +69,9 @@ jobs:
           flutter pub get
           find . -name "Podfile" -execdir pod install \;
           flutter build ios --release --no-codesign
-      - name: Publish iOS Artefacts
+          ls -la /build/ios/iphoneos/
         uses: actions/upload-artifact@v1
         with:
           name: release-ios
-          path: '/build/ios/iphoneos/Runner.app'
+          path: '/build/ios/iphoneos/*'
+          if-no-files-found: 'warn'
