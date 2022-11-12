@@ -12,20 +12,16 @@ workflows:
       xcode: latest
       cocoapods: default
       vars:
-        FCI_KEYSTORE_PATH: /tmp/keystore.keystore
         PACKAGE_NAME: "io.starlight.flutteryaml" # <-- Put your package name here
         GOOGLE_PLAY_TRACK: "alpha" # <-- This must be "alpha" or above.
         CODE_COVERAGE_TARGET: 10 # <-- Expected code coverage rate
     triggering:
       events:
-        - pull_request
+        - push
       branch_patterns:
-        - pattern: "*"
+        - pattern: "main"
           include: true
           source: true
-      tag_patterns:
-        - pattern: "*"
-          include: true
     scripts:
       - name: Get Flutter packages
         script: |
@@ -62,10 +58,12 @@ workflows:
       - name: Build APK with Flutter
         script: |
           flutter build apk --release --build-name=1.0.0
-      - name: Build iOS
-        script: |
+      - name: Install pods
+        script: | 
           find . -name "Podfile" -execdir pod install \;
-          flutter build ios --debug --no-codesign
+      - name: Flutter build ipa
+        script: | 
+          flutter build ios --release --no-codesign
       - name: Build Web
         script: |
           flutter config --enable-web

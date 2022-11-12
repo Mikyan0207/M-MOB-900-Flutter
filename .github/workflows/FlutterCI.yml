@@ -21,8 +21,6 @@ jobs:
       - name: Build apk
         run: |
           flutter pub get
-          flutter format --set-exit-if-changed .
-          flutter analyze
           flutter build appbundle --release
       - name: Retrieve Release Version
         id: versionstep
@@ -69,11 +67,11 @@ jobs:
       - name: Build iOS
         run: |
           flutter pub get
-          flutter format --set-exit-if-changed .
-          flutter analyze
+          find . -name "Podfile" -execdir pod install \;
           flutter build ios --release --no-codesign
       - name: Publish iOS Artefacts
         uses: actions/upload-artifact@v1
         with:
           name: release-ios
-          path: /build/ios/iphoneos/
+          path: '${{ github.workspace }}/build/ios/iphoneos/Runner.app'
+          if-no-files-found: 'warn'
