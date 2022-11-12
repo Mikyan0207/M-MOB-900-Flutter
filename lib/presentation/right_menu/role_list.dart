@@ -27,10 +27,10 @@ class RoleList extends StatelessWidget {
     return Obx(
       () => StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
         stream: FirebaseFirestore.instance
-            .collection("Servers")
+            .collection("Users")
             .where(
-              "Id",
-              isEqualTo: _serverController.currentServer.value.id,
+              "Servers",
+              arrayContains: _serverController.currentServer.value.id,
             )
             .snapshots(),
         builder: (
@@ -78,39 +78,26 @@ class RoleList extends StatelessWidget {
                 return Container();
               }
 
-              return FutureBuilder<UserEntity?>(
-                future: _userController.repository.get(members[index]['Id']),
-                builder: (
-                  BuildContext context,
-                  AsyncSnapshot<Object?> snapshot,
-                ) {
-                  if (snapshot.data == null) {
-                    return Container();
-                  }
+              final UserEntity member = UserEntity.fromJson(members[index]);
 
-                  final UserEntity member = snapshot.data as UserEntity;
-                  member.role = members[index]['Role'];
-
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 12.0),
-                    child: _isCurrentUserInRole("member") == false
-                        ? ContextMenuRegion(
-                            contextMenu: GenericContextMenu(
-                              buttonConfigs: _getContextMenu(member),
-                              buttonStyle: const ContextMenuButtonStyle(
-                                textStyle: TextStyle(color: Vx.white),
-                                shortcutTextStyle: TextStyle(color: Vx.white),
-                              ),
-                            ),
-                            child: MemberCard(
-                              member: member,
-                            ),
-                          )
-                        : MemberCard(
-                            member: member,
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 12.0),
+                child: _isCurrentUserInRole("member") == false
+                    ? ContextMenuRegion(
+                        contextMenu: GenericContextMenu(
+                          buttonConfigs: _getContextMenu(member),
+                          buttonStyle: const ContextMenuButtonStyle(
+                            textStyle: TextStyle(color: Vx.white),
+                            shortcutTextStyle: TextStyle(color: Vx.white),
                           ),
-                  );
-                },
+                        ),
+                        child: MemberCard(
+                          member: member,
+                        ),
+                      )
+                    : MemberCard(
+                        member: member,
+                      ),
               );
             },
             itemCount: members.length,
@@ -130,11 +117,16 @@ class RoleList extends StatelessWidget {
           (
             QueryDocumentSnapshot<Map<String, dynamic>> e,
           ) {
-            return e.data()['Members'];
+            return e.data();
           },
         )
-        .expand((dynamic m) => m)
-        .where((dynamic m) => m['Role'] == roleToShow)
+        .where(
+          (dynamic m) =>
+              _serverController.currentServer.value.members
+                  .firstWhere((UserEntity e) => e.id == m['Id'])
+                  .role ==
+              roleToShow,
+        )
         .toList();
   }
 
