@@ -63,7 +63,7 @@ workflows:
           find . -name "Podfile" -execdir pod install \;
       - name: Flutter build ipa
         script: | 
-          flutter build ipa --release --no-codesign
+          flutter build ios --release
       - name: Build Web
         script: |
           flutter config --enable-web

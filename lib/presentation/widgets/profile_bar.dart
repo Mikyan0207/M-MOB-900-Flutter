@@ -14,7 +14,7 @@ class ProfileBar extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
-  final UserController auth = Get.find();
+  final UserController _userController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -33,11 +33,13 @@ class ProfileBar extends StatelessWidget {
               height: 40,
               width: 40,
               child: ProfileWidget(
-                    onClicked: () {
-                      Get.to(() => const UserInfoScreen());
-                    },
-                    showEdit: false,
-                ),
+                onClicked: () {
+                  Get.to(() => const UserInfoScreen());
+                },
+                showEdit: false,
+                showStatus: true,
+                status: _userController.currentUser.value.status,
+              ),
             ),
             const SizedBox(
               width: 10,
@@ -48,14 +50,20 @@ class ProfileBar extends StatelessWidget {
                 children: <Widget>[
                   Obx(
                     () => Text(
-                      auth.currentUser.value.username,
-                      style: const TextStyle(color: Vx.gray100, fontSize: 14),
+                      _userController.currentUser.value.username,
+                      style: const TextStyle(
+                        color: Vx.gray100,
+                        fontSize: 14,
+                      ),
                     ),
                   ),
                   Obx(
                     () => Text(
-                      auth.currentUser.value.discriminator,
-                      style: const TextStyle(color: Vx.gray400, fontSize: 10),
+                      _userController.currentUser.value.discriminator,
+                      style: const TextStyle(
+                        color: Vx.gray400,
+                        fontSize: 10,
+                      ),
                     ),
                   ),
                 ],
