@@ -70,8 +70,9 @@ jobs:
           find . -name "Podfile" -execdir pod install \;
           flutter build ios --release --no-codesign
           ls -la /build/ios/iphoneos/
+      - name: Publish iOS Artefacts
         uses: actions/upload-artifact@v1
         with:
           name: release-ios
-          path: '/build/ios/iphoneos/*'
+          path: '${{ github.workspace }}/build/ios/iphoneos/*'
           if-no-files-found: 'warn'
