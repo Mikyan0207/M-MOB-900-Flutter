@@ -12,20 +12,16 @@ workflows:
       xcode: latest
       cocoapods: default
       vars:
-        FCI_KEYSTORE_PATH: /tmp/keystore.keystore
         PACKAGE_NAME: "io.starlight.flutteryaml" # <-- Put your package name here
         GOOGLE_PLAY_TRACK: "alpha" # <-- This must be "alpha" or above.
         CODE_COVERAGE_TARGET: 10 # <-- Expected code coverage rate
     triggering:
       events:
-        - pull_request
+        - push
       branch_patterns:
-        - pattern: "*"
+        - pattern: "main"
           include: true
           source: true
-      tag_patterns:
-        - pattern: "*"
-          include: true
     scripts:
       - name: Get Flutter packages
         script: |
@@ -36,37 +32,37 @@ workflows:
       - name: Flutter analyze
         script: |
           flutter analyze
-      - name: Flutter unit tests
-        script: |
-          flutter test
-        ignore_failure: true
-      - name: Collecting code coverage and storing in a location
-        script: |
-          HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_NO_INSTALL_CLEANUP=1 brew install lcov
-          mkdir -p test-results 
-          flutter test --coverage --machine > test-results/flutter.json  
+      # - name: Flutter unit tests
+      #   script: |
+      #     flutter test
+      #   ignore_failure: true
+      # - name: Collecting code coverage and storing in a location
+      #   script: |
+      #     HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_NO_INSTALL_CLEANUP=1 brew install lcov
+      #     mkdir -p test-results 
+      #     flutter test --coverage --machine > test-results/flutter.json  
           
-          code_coverage=$(lcov --list $FCI_BUILD_DIR/coverage/lcov.info | sed -n "s/.*Total:|\(.*\)%.*/\1/p")
+      #     code_coverage=$(lcov --list $FCI_BUILD_DIR/coverage/lcov.info | sed -n "s/.*Total:|\(.*\)%.*/\1/p")
           
-          echo "Code Coverage: ${code_coverage}% "
-          if (( $(echo "$code_coverage < $CODE_COVERAGE_TARGET" | bc) ))
-            then { echo "code coverage is less than expected" && exit 1; }
-          fi
-        test_report: test-results/flutter.json
-      - name: Codecov upload
-        script: |
-          #!/bin/bash
-          curl -Os https://uploader.codecov.io/latest/macos/codecov
-          chmod +x codecov
-          ./codecov -t ${CODECOV_TOKEN} -f "test-results/flutter.json"
+      #     echo "Code Coverage: ${code_coverage}% "
+      #     if (( $(echo "$code_coverage < $CODE_COVERAGE_TARGET" | bc) ))
+      #       then { echo "code coverage is less than expected" && exit 1; }
+      #     fi
+      #   test_report: test-results/flutter.json
+      # - name: Codecov upload
+      #   script: |
+      #     #!/bin/bash
+      #     curl -Os https://uploader.codecov.io/latest/macos/codecov
+      #     chmod +x codecov
+      #     ./codecov -t ${CODECOV_TOKEN} -f "test-results/flutter.json"
       - name: Build APK with Flutter
         script: |
-          flutter build apk --release --build-name=1.0.0
-      - name: Build iOS
-        script: |
+          flutter build appbundle --release
+      - name: Build iOS with Flutter
+        script: | 
           find . -name "Podfile" -execdir pod install \;
           flutter build ios --debug --no-codesign
-      - name: Build Web
+      - name: Build Web with Flutter
         script: |
           flutter config --enable-web
           flutter build web --release
@@ -75,16 +71,6 @@ workflows:
     artifacts:
       - build/**/outputs/apk/**/*.apk
       - build/**/outputs/bundle/**/*.aab
-      - build/**/outputs/**/mapping.txt
-      - build/ios/ipa/*.ipa
       - build/ios/**/*.app
-      - build/macos/**/*.pkg
-      - /tmp/xcodebuild_logs/*.log
       - build/web.zip
-      - "*.snap"
-      - build/windows/**/*.msix
-      - flutter_drive.log
-    publishing:
-      email:
-        recipients:
-          - florian.theron@epitech.eu
+

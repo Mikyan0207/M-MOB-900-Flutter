@@ -22,6 +22,14 @@ class UserController extends GetxController {
         ),
       ),
     );
+
+    await repository.updateField(
+      currentUser.value,
+      <String, dynamic>{
+        'Status': "online",
+      },
+      merge: true,
+    );
   }
 
   Future<bool> loginAsync(String email, String password) async {
@@ -55,6 +63,14 @@ class UserController extends GetxController {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString("UserId", currentUser.value.id);
 
+      await repository.updateField(
+        currentUser.value,
+        <String, dynamic>{
+          'Status': "online",
+        },
+        merge: true,
+      );
+
       return true;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
@@ -79,14 +95,31 @@ class UserController extends GetxController {
         return false;
       }
 
+      await repository.create(
+        UserEntity(
+          authId: userCredential.user!.uid,
+          username: userCredential.user!.email!.split('@').first,
+          email: userCredential.user!.email!,
+        ),
+      );
+
       currentUser(
-        await repository.create(
-          UserEntity(
-            authId: userCredential.user!.uid,
-            username: userCredential.user!.email!.split('@').first,
-            email: userCredential.user!.email!,
+        await repository.getByAuthId(
+          userCredential.user!.uid,
+          options: const UserQueryOptions(
+            includeServers: true,
+            includeGroups: true,
+            includeFriends: true,
           ),
         ),
+      );
+
+      await repository.updateField(
+        currentUser.value,
+        <String, dynamic>{
+          'Status': "online",
+        },
+        merge: true,
       );
 
       return true;

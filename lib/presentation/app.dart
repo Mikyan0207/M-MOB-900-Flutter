@@ -35,10 +35,13 @@ class App extends StatelessWidget {
       onDispose: () async {
         final UserController userController = Get.find();
 
-        await userController.repository
-            .updateField(userController.currentUser.value, <String, dynamic>{
-          'Status': "offline",
-        });
+        await userController.repository.updateField(
+          userController.currentUser.value,
+          <String, dynamic>{
+            'Status': "offline",
+          },
+          merge: true,
+        );
       },
       getPages: <GetPage<Widget>>[
         GetPage<Widget>(

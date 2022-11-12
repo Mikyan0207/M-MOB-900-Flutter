@@ -210,6 +210,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                               children: <Widget>[
                                 ProfileWidget(
                                   showEdit: true,
+                                  showStatus: false,
                                   onClicked: () async {
                                     _showImageDialog(
                                       context,
