@@ -188,14 +188,14 @@ class RoleList extends StatelessWidget {
       await _userController.repository.updateField(
         user,
         <String, dynamic>{
-          'Status': 'online ',
+          'Status': "${user.status} ",
         },
         merge: true,
       );
       await _userController.repository.updateField(
         user,
         <String, dynamic>{
-          'Status': 'online',
+          'Status': user.status.trim(),
         },
         merge: true,
       );
