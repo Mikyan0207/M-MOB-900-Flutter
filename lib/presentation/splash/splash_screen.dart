@@ -37,19 +37,22 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Container(
-          decoration: const BoxDecoration(
-            color: AppColors.black800,
-          ),
-          child: const Center(
-            child: Text(
-              "Starlight ✨",
-              style: TextStyle(
-                fontSize: 40,
-                fontWeight: FontWeight.bold,
-                color: Vx.gray100,
+    return Container(
+      color: AppColors.black900,
+      child: SafeArea(
+        child: Scaffold(
+          body: Container(
+            decoration: const BoxDecoration(
+              color: AppColors.black800,
+            ),
+            child: const Center(
+              child: Text(
+                "Starlight ✨",
+                style: TextStyle(
+                  fontSize: 40,
+                  fontWeight: FontWeight.bold,
+                  color: Vx.gray100,
+                ),
               ),
             ),
           ),

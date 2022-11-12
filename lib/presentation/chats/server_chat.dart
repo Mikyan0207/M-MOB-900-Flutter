@@ -21,82 +21,89 @@ class ServerChat extends StatelessWidget {
   final MessageRepository _messageRepository = MessageRepository();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        color: AppColors.black500,
-        height: double.infinity,
-        width: double.infinity,
-        child: Column(
-          children: <Widget>[
-            Container(
-              width: double.infinity,
-              height: 60,
-              decoration: const BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(
-                    color: AppColors.black900,
-                  ),
-                ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10.0,
-                  vertical: 14.5,
-                ),
-                child: Row(
-                  children: <Widget>[
-                    const Padding(
-                      padding: EdgeInsets.only(right: 3.0),
-                      child: Icon(
-                        Icons.numbers_rounded,
-                        color: Vx.gray400,
-                        size: 26,
+    return Container(
+      color: AppColors.black900,
+      child: SafeArea(
+        child: Scaffold(
+          body: Container(
+            color: AppColors.black500,
+            height: double.infinity,
+            width: double.infinity,
+            child: Column(
+              children: <Widget>[
+                Container(
+                  width: double.infinity,
+                  height: 60,
+                  decoration: const BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
+                        color: AppColors.black900,
                       ),
                     ),
-                    Obx(
-                      () => Text(
-                        _channelController.currentChannel.value.name
-                            .toLowerCase(),
-                        style: const TextStyle(
-                          color: Vx.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10.0,
+                      vertical: 14.5,
+                    ),
+                    child: Row(
+                      children: <Widget>[
+                        const Padding(
+                          padding: EdgeInsets.only(right: 3.0),
+                          child: Icon(
+                            Icons.numbers_rounded,
+                            color: Vx.gray400,
+                            size: 26,
+                          ),
+                        ),
+                        Obx(
+                          () => Text(
+                            _channelController.currentChannel.value.name
+                                .toLowerCase(),
+                            style: const TextStyle(
+                              color: Vx.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      Expanded(child: ServerMessagesList()),
+                      Obx(
+                        () => MessageBar(
+                          messagePlaceholder:
+                              'Message #${_channelController.currentChannel.value.name}',
+                          members:
+                              _serverController.currentServer.value.members,
+                          onSendMessage: (String value) async {
+                            if (value.isEmptyOrNull) {
+                              return;
+                            }
+                            await _messageRepository.create(
+                              MessageEntity(
+                                author: _authController.currentUser.value,
+                                content: value,
+                                channel:
+                                    _channelController.currentChannel.value,
+                                time: Timestamp.now(),
+                              ),
+                            );
+                          },
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  Expanded(child: ServerMessagesList()),
-                  Obx(
-                    () => MessageBar(
-                      messagePlaceholder:
-                          'Message #${_channelController.currentChannel.value.name}',
-                      members: _serverController.currentServer.value.members,
-                      onSendMessage: (String value) async {
-                        if (value.isEmptyOrNull) {
-                          return;
-                        }
-                        await _messageRepository.create(
-                          MessageEntity(
-                            author: _authController.currentUser.value,
-                            content: value,
-                            channel: _channelController.currentChannel.value,
-                            time: Timestamp.now(),
-                          ),
-                        );
-                      },
-                    ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

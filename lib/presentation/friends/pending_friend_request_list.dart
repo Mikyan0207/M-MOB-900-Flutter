@@ -9,7 +9,7 @@ import 'package:starlight/presentation/widgets/groups/friend_request_list.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class PendingFriendRequestList extends StatelessWidget {
-  PendingFriendRequestList({super.key});
+  PendingFriendRequestList({Key? key}) : super(key: key);
 
   final UserController _authController = Get.find();
   final FriendsController _friendsController = Get.find();

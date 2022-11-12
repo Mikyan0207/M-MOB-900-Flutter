@@ -234,9 +234,7 @@ class CreateChannelDialog extends GetView<ServerController> {
                                 padding: const EdgeInsets.all(
                                   8.0,
                                 ),
-                                backgroundColor: isAdmin()
-                                    ? AppColors.primaryColor
-                                    : Colors.transparent,
+                                backgroundColor: Colors.transparent,
                                 shadowColor: Colors.transparent,
                                 elevation: 0,
                                 shape: RoundedRectangleBorder(
@@ -266,7 +264,9 @@ class CreateChannelDialog extends GetView<ServerController> {
                                 padding: const EdgeInsets.all(
                                   8.0,
                                 ),
-                                backgroundColor: AppColors.primaryColor,
+                                backgroundColor: isAdmin()
+                                    ? AppColors.primaryColor
+                                    : Vx.gray400,
                                 elevation: 0,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(

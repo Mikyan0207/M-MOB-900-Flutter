@@ -71,56 +71,63 @@ class ProfileBar extends StatelessWidget {
                 ],
               ),
             ),
-            PopupMenuButton<int>(
-              color: AppColors.black900,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              offset: const Offset(-125, -75),
-              icon: const Icon(
-                Icons.settings_rounded,
-                size: 22,
-                color: Vx.gray400,
-              ),
-              onSelected: (int value) async {
-                if (value != 0) {
-                  return;
-                }
+            Padding(
+              padding: Vx.isWeb || Vx.isDesktop
+                  ? EdgeInsets.zero
+                  : const EdgeInsets.only(
+                      right: 22.0,
+                    ),
+              child: PopupMenuButton<int>(
+                color: AppColors.black900,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                offset: const Offset(-125, -75),
+                icon: const Icon(
+                  Icons.settings_rounded,
+                  size: 24.0,
+                  color: Vx.gray400,
+                ),
+                onSelected: (int value) async {
+                  if (value != 0) {
+                    return;
+                  }
 
-                final SharedPreferences prefs =
-                    await SharedPreferences.getInstance();
+                  final SharedPreferences prefs =
+                      await SharedPreferences.getInstance();
 
-                await prefs.remove("UserId");
-                await FirebaseAuth.instance.signOut();
-                await Get.to(() => const SplashScreen());
-              },
-              itemBuilder: (BuildContext context) => <PopupMenuItem<int>>[
-                PopupMenuItem<int>(
-                  value: 0,
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: Row(
-                      children: const <Widget>[
-                        Expanded(
-                          child: Text(
-                            "Sign out",
-                            style: TextStyle(
-                              color: Vx.red400,
-                              fontWeight: FontWeight.w600,
+                  await prefs.remove("UserId");
+                  await FirebaseAuth.instance.signOut();
+                  await Get.to(() => const SplashScreen());
+                },
+                itemBuilder: (BuildContext context) => <PopupMenuItem<int>>[
+                  PopupMenuItem<int>(
+                    value: 0,
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: Row(
+                        children: const <Widget>[
+                          Expanded(
+                            child: Text(
+                              "Sign out",
+                              style: TextStyle(
+                                color: Vx.red400,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                           ),
-                        ),
-                        SizedBox(width: 50),
-                        Icon(
-                          Icons.logout_rounded,
-                          color: Vx.red400,
-                          size: 18,
-                        ),
-                      ],
+                          SizedBox(width: 50),
+                          Icon(
+                            Icons.logout_rounded,
+                            color: Vx.red400,
+                            size: 18,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ],
         ),

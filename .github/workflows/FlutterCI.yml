@@ -21,17 +21,9 @@ jobs:
       - name: Build apk
         run: |
           flutter pub get
+          flutter format --set-exit-if-changed .
+          flutter analyze
           flutter build appbundle --release
-      - name: Retrieve Release Version
-        id: versionstep
-        run: |
-          VERSION=$(more pubspec.yaml | grep version: | cut -d ' ' -f2)
-          echo "::set-output name=VERSION::$VERSION"
-      - name: Upload the APK onto Github
-        uses: actions/upload-artifact@v1
-        with:
-          name: starlight-app-bundle
-          path: 'build/app/outputs/bundle/release/app-release.aab'
   build-web:
     runs-on: ubuntu-latest
     steps:
@@ -46,13 +38,6 @@ jobs:
           flutter format --set-exit-if-changed .
           flutter analyze
           flutter build web
-      - name: Deploy web
-        env:
-          WEB_DEPLOY_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-        if: github.ref =='refs/heads/main'
-        run: |
-          curl -sL https://firebase.tools | bash
-          firebase deploy --token $FIREBASE_TOKEN
   build-ios:
     runs-on: macos-latest
     env:
@@ -67,11 +52,6 @@ jobs:
       - name: Build iOS
         run: |
           flutter pub get
-          find . -name "Podfile" -execdir pod install \;
+          flutter format --set-exit-if-changed .
+          flutter analyze
           flutter build ios --release --no-codesign
-      - name: Publish iOS Artefacts
-        uses: actions/upload-artifact@v1
-        with:
-          name: release-ios
-          path: '${{ github.workspace }}/build/ios/iphoneos/Runner.app'
-          if-no-files-found: 'warn'
