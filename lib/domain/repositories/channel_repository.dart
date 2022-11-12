@@ -9,7 +9,7 @@ class ChannelRepository {
         await _firestore.collection("Channels").add(ce.toJson());
 
     ce.id = document.id;
-    await document.set(ce.toJson());
+    await document.set(<String, dynamic>{'Id': ce.id}, SetOptions(merge: true));
 
     return ce;
   }
@@ -21,19 +21,17 @@ class ChannelRepository {
     return ChannelEntity.fromJson(data);
   }
 
-  Future<List<ChannelEntity>> getServerChannels(String serverId) async {
+  Future<List<ChannelEntity>> getWhereIsEqualTo(
+    String field,
+    Object value,
+  ) async {
     final List<Map<String, dynamic>> data = (await _firestore
             .collection("Channels")
-            .where('Server.Id', isEqualTo: serverId)
+            .where(field, isEqualTo: value)
             .get())
         .docs
-        .map((QueryDocumentSnapshot<Map<String, dynamic>> e) {
-      final Map<String, dynamic> r = e.data();
-
-      r['Id'] = e.id;
-
-      return r;
-    }).toList();
+        .map((QueryDocumentSnapshot<Map<String, dynamic>> e) => e.data())
+        .toList();
 
     return ChannelEntity.fromJsonList(data);
   }

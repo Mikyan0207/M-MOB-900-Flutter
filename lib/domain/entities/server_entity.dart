@@ -1,6 +1,16 @@
 import 'package:starlight/domain/entities/channel_entity.dart';
 import 'package:starlight/domain/entities/user_entity.dart';
 
+class ServerQueryOptions {
+  const ServerQueryOptions({
+    this.includeMembers = false,
+    this.includeChannels = false,
+  });
+
+  final bool includeMembers;
+  final bool includeChannels;
+}
+
 class ServerEntity {
   ServerEntity({
     this.id = '',
@@ -11,15 +21,19 @@ class ServerEntity {
     this.channels = const <ChannelEntity>[],
   });
 
-  factory ServerEntity.fromJson(dynamic json) => ServerEntity(
+  factory ServerEntity.fromJson(
+    dynamic json, {
+    ServerQueryOptions options = const ServerQueryOptions(),
+  }) =>
+      ServerEntity(
         id: json['Id'] ?? '',
         name: json['Name'] ?? '',
         description: json['Description'] ?? '',
         icon: json['Icon'] ?? '',
-        members: json['Members'] != null
+        members: json['Members'] != null && options.includeMembers
             ? UserEntity.fromJsonList(json['Members'])
             : const <UserEntity>[],
-        channels: json['Channels'] != null
+        channels: json['Channels'] != null && options.includeChannels
             ? ChannelEntity.fromJsonList(json['Channels'])
             : const <ChannelEntity>[],
       );
@@ -42,9 +56,7 @@ class ServerEntity {
           .map(
             (UserEntity ue) => <String, dynamic>{
               'Id': ue.id,
-              'Username': ue.username,
-              'Avatar': ue.avatar,
-              'Discriminator': ue.discriminator,
+              'Role': ue.role,
             },
           )
           .toList(),
@@ -58,6 +70,11 @@ class ServerEntity {
           )
           .toList(),
     };
+  }
+
+  @override
+  String toString() {
+    return toJson().toString();
   }
 
   String id;

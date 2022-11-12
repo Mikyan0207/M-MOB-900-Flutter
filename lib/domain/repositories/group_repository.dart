@@ -1,9 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:starlight/domain/entities/group_entity.dart';
-import 'package:starlight/domain/entities/user_entity.dart';
 
 class GroupRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  Future<GroupEntity> get(String id) async {
+    final Map<String, dynamic>? data =
+        (await _firestore.collection("Groups").doc(id).get()).data();
+
+    return GroupEntity.fromJson(data);
+  }
 
   Future<void> create(GroupEntity ge) async {
     final DocumentReference<Map<String, dynamic>> document =
@@ -19,20 +25,5 @@ class GroupRepository {
 
   Future<void> update(GroupEntity ge) async {
     await _firestore.collection("Groups").doc(ge.id).update(ge.toJson());
-  }
-
-  Future<GroupEntity?> groupExistsWithSpecificMembers(
-    List<UserEntity> members,
-  ) async {
-    // final QuerySnapshot<Map<String, dynamic>> data = await _firestore
-    //     .collection("Groups")
-    //     .where(
-    //       "Members.Id",
-    //       arrayContains: members.map((UserEntity e) => e.idDocument).toList(),
-    //     )
-    //     .snapshots()
-    //     .first;
-
-    return GroupEntity();
   }
 }

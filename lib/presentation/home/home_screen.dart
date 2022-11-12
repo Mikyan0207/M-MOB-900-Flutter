@@ -3,17 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:overlapping_panels/overlapping_panels.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:starlight/auth/auth_controller.dart';
 import 'package:starlight/domain/controllers/channel_controller.dart';
 import 'package:starlight/domain/controllers/home_controller.dart';
 import 'package:starlight/domain/controllers/server_controller.dart';
-import 'package:starlight/presentation/chat/server_chat.dart';
-import 'package:starlight/presentation/chat/starlight_chat.dart';
+import 'package:starlight/domain/controllers/user_controller.dart';
+import 'package:starlight/presentation/chats/server_chat.dart';
+import 'package:starlight/presentation/chats/starlight_chat.dart';
 import 'package:starlight/presentation/friends/friends_list_manager.dart';
-import 'package:starlight/presentation/left/groups_panel.dart';
-import 'package:starlight/presentation/left/left_menu.dart';
-import 'package:starlight/presentation/left/server_panel.dart';
-import 'package:starlight/presentation/right/right_panel.dart';
+import 'package:starlight/presentation/left_menu/groups_panel.dart';
+import 'package:starlight/presentation/left_menu/left_menu.dart';
+import 'package:starlight/presentation/left_menu/server_panel.dart';
+import 'package:starlight/presentation/right_menu/right_panel.dart';
 import 'package:starlight/presentation/splash/splash_screen.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -25,7 +25,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final AuthController _authController = Get.find();
+  final UserController _userController = Get.find();
   final HomeController _homeController = Get.find();
   final ServerController _serverController = Get.find();
   final ChannelController _channelController = Get.find();
@@ -42,15 +42,14 @@ class _HomeState extends State<Home> {
       if (userId.isEmptyOrNull) {
         await Get.to(() => const SplashScreen());
       } else {
-        await _authController.retrieveUserFromId(userId!);
+        await _userController.setCurrentUser(userId!);
+        //await setStatus("online");
       }
 
       final String? lastServerId = prefs.getString("LastServerId");
 
       if (lastServerId != null) {
-        await _serverController.setCurrentServer(
-          await _serverController.getFromId(lastServerId),
-        );
+        await _serverController.setCurrentServer(lastServerId);
 
         _homeController.setSelectedTab(AppTab.servers);
 
@@ -62,6 +61,8 @@ class _HomeState extends State<Home> {
           );
         }
         _homeController.setSelectedTab(AppTab.servers);
+      } else {
+        _homeController.setSelectedTab(AppTab.friends);
       }
     });
   }
@@ -102,7 +103,7 @@ class _HomeState extends State<Home> {
             ),
             right: Builder(
               builder: (BuildContext context) {
-                return const RightPanel();
+                return RightPanel();
               },
             ),
           ),
@@ -134,7 +135,7 @@ class _HomeState extends State<Home> {
             ),
             Obx(
               () => _homeController.tabSelected.value == AppTab.servers
-                  ? const SizedBox(width: 275, child: RightPanel())
+                  ? SizedBox(width: 275, child: RightPanel())
                   : Container(),
             ),
           ],
