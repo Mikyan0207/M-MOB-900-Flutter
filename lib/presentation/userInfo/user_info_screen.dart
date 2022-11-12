@@ -204,7 +204,6 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                             child: Row(
                               children: <Widget>[
                                 ProfileWidget(
-                                  status: auth.currentUser.value.status,
                                   showEdit: true,
                                   onClicked: () async {
                                     _showImageDialog(
@@ -264,7 +263,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                         )
                                       ],
                                     );
-                                  }, showStatus: false,
+                                  },
                                 ),
                                 const SizedBox(width: 20),
                                 Column(

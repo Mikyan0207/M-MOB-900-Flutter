@@ -32,14 +32,12 @@ class ProfileBar extends StatelessWidget {
             SizedBox(
               height: 40,
               width: 40,
-              child: Obx(() =>
-                ProfileWidget(
+              child: ProfileWidget(
                     onClicked: () {
                       Get.to(() => const UserInfoScreen());
                     },
-                    showEdit: false, showStatus: true, status: auth.currentUser.value.status,
+                    showEdit: false,
                 ),
-              ),
             ),
             const SizedBox(
               width: 10,

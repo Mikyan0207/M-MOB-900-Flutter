@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -43,16 +41,6 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance.addObserver(this);
-    setStatus("online");
-
-    if (kIsWeb) {
-      window.addEventListener('focus', onFocus);
-      window.addEventListener('blur', onBlur);
-    } else {
-      WidgetsBinding.instance!.addObserver(this);
-    }
-
     Future<void>.delayed(Duration.zero, () async {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -85,53 +73,6 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
     });
   }
 
-  Future<void> setStatus(String newStatus)
-  async {
-    await FirebaseFirestore.instance
-        .collection('Users')
-        .doc(_authController.currentUser.value.id)
-        .update(<String, Object?>{
-          'Status': newStatus,
-    });
-    final List<String> serverId = _authController.currentUser.value.servers.map((ServerEntity e) => e.id).toList();
-    //print(serverId.length);
-
-
-    List<dynamic> newMembers = List.empty();
-
-    ServerRepository server = ServerRepository();
-    ServerEntity serverEntity;
-
-    /*
-
-    for (int i = 0; i < serverId.length; i++)
-    {
-      serverEntity = await server.getServer(serverId[i]);
-      for (int j = 0; j < serverEntity.members.length; j++)
-      {
-        _authController.currentUser.value.id == serverEntity.members[j].id
-            ?
-              newMembers[j] = serverEntity.members[j].toJsonSimplifiedWithStatus(newStatus)
-            :
-              newMembers[j] = serverEntity.members[j].toJsonSimplified();
-      }
-      try {
-        await FirebaseFirestore.instance
-              .collection('Servers')
-              .doc(serverId[i])
-              .update(
-            <String, dynamic>{'Members': newMembers},
-          );
-          newMembers = List.empty();
-        } catch (e) {
-          await Fluttertoast.showToast(msg: e.toString());
-        }
-
-    }
-
-     */
-  }
-
   @override
   void deactivate()
   {
@@ -139,37 +80,6 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
     super.deactivate();
   }
 
-  @override
-  void dispose() {
-    if (kIsWeb) {
-      window.removeEventListener('focus', onFocus);
-      window.removeEventListener('blur', onBlur);
-    } else {
-      WidgetsBinding.instance!.removeObserver(this);
-    }
-    super.dispose();
-  }
-
-  void onFocus(Event e) {
-    didChangeAppLifecycleState(AppLifecycleState.resumed);
-  }
-
-  void onBlur(Event e) {
-    didChangeAppLifecycleState(AppLifecycleState.paused);
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state)
-  {
-    if (state == AppLifecycleState.resumed)
-    {
-      //Online
-      setStatus("online");
-    } else {
-      //Offline
-      setStatus("offline");
-    }
-  }
 
   Widget _displayCorrespondingView(AppTab currentTab) {
     switch (currentTab) {

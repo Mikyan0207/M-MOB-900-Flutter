@@ -12,33 +12,6 @@ class AdminBox extends StatelessWidget {
 
   final UserEntity adminUser;
 
-  Widget buildStatus() => buildCircle(
-    color: adminUser.status == "online" ? Colors.green : Colors.white10,
-    all: 2,
-    child: buildCircle(
-      color: adminUser.status == "online" ? Colors.green : Colors.white10,
-      all: 2,
-      child: const Icon(
-        Icons.add_circle,
-        color: Colors.transparent,
-        size: 3,
-      ),
-    ),
-  );
-
-  Widget buildCircle({
-    required Widget child,
-    required double all,
-    required Color color,
-  }) =>
-      ClipOval(
-        child: Container(
-          padding: EdgeInsets.all(all),
-          color: color,
-          child: child,
-        ),
-      );
-
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -51,29 +24,20 @@ class AdminBox extends StatelessWidget {
               height: 40,
               width: 40,
               child:
-                Stack(
-                  children: <Widget>[
-                    ClipOval(
-                      child: Material(
-                        color: Colors.transparent,
-                        child: Ink.image(
-                          image: adminUser.avatar.isNotEmptyAndNotNull
-                              ? NetworkImage(adminUser.avatar)
-                              : const NetworkImage(
-                                  "https://ddrg.farmasi.unej.ac.id/wp-content/uploads/sites/6/2017/10/unknown-person-icon-Image-from.png",
-                                ),
-                          fit: BoxFit.cover,
-                          width: 100,
-                          height: 100,
-                        ),
-                      ),
+                ClipOval(
+                  child: Material(
+                    color: Colors.transparent,
+                    child: Ink.image(
+                      image: adminUser.avatar.isNotEmptyAndNotNull
+                          ? NetworkImage(adminUser.avatar)
+                          : const NetworkImage(
+                              "https://ddrg.farmasi.unej.ac.id/wp-content/uploads/sites/6/2017/10/unknown-person-icon-Image-from.png",
+                            ),
+                      fit: BoxFit.cover,
+                      width: 100,
+                      height: 100,
                     ),
-                    Positioned(
-                      bottom: 0,
-                      right: 4,
-                      child: buildStatus(),
-                    ),
-                  ],
+                  ),
                 ),
             ),
         ),
