@@ -1,28 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:overlapping_panels/overlapping_panels.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:starlight/auth/auth_controller.dart';
 import 'package:starlight/domain/controllers/channel_controller.dart';
 import 'package:starlight/domain/controllers/home_controller.dart';
 import 'package:starlight/domain/controllers/server_controller.dart';
-import 'package:starlight/domain/entities/server_entity.dart';
-import 'package:starlight/domain/repositories/server_repository.dart';
-import 'package:starlight/presentation/chat/server_chat.dart';
-import 'package:starlight/presentation/chat/starlight_chat.dart';
+import 'package:starlight/domain/controllers/user_controller.dart';
+import 'package:starlight/presentation/chats/server_chat.dart';
+import 'package:starlight/presentation/chats/starlight_chat.dart';
 import 'package:starlight/presentation/friends/friends_list_manager.dart';
-import 'package:starlight/presentation/left/groups_panel.dart';
-import 'package:starlight/presentation/left/left_menu.dart';
-import 'package:starlight/presentation/left/server_panel.dart';
-import 'package:starlight/presentation/right/right_panel.dart';
+import 'package:starlight/presentation/left_menu/groups_panel.dart';
+import 'package:starlight/presentation/left_menu/left_menu.dart';
+import 'package:starlight/presentation/left_menu/server_panel.dart';
+import 'package:starlight/presentation/right_menu/right_panel.dart';
 import 'package:starlight/presentation/splash/splash_screen.dart';
 import 'package:velocity_x/velocity_x.dart';
-
-import '../../domain/entities/user_entity.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -31,8 +25,8 @@ class Home extends StatefulWidget {
   State<Home> createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> with WidgetsBindingObserver {
-  final AuthController _authController = Get.find();
+class _HomeState extends State<Home> {
+  final UserController _userController = Get.find();
   final HomeController _homeController = Get.find();
   final ServerController _serverController = Get.find();
   final ChannelController _channelController = Get.find();
@@ -49,15 +43,14 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
       if (userId.isEmptyOrNull) {
         await Get.to(() => const SplashScreen());
       } else {
-        await _authController.retrieveUserFromId(userId!);
+        await _userController.setCurrentUser(userId!);
+        await setStatus("online");
       }
 
       final String? lastServerId = prefs.getString("LastServerId");
 
       if (lastServerId != null) {
-        await _serverController.setCurrentServer(
-          await _serverController.getFromId(lastServerId),
-        );
+        await _serverController.setCurrentServer(lastServerId);
 
         _homeController.setSelectedTab(AppTab.servers);
 
@@ -69,17 +62,11 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
           );
         }
         _homeController.setSelectedTab(AppTab.servers);
+      } else {
+        _homeController.setSelectedTab(AppTab.friends);
       }
     });
   }
-
-  @override
-  void deactivate()
-  {
-    print("deactivate");
-    super.deactivate();
-  }
-
 
   Widget _displayCorrespondingView(AppTab currentTab) {
     switch (currentTab) {

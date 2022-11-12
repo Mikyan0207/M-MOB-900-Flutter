@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:starlight/auth/auth_controller.dart';
 import 'package:starlight/common/constants/route_constants.dart';
 import 'package:starlight/domain/controllers/channel_controller.dart';
 import 'package:starlight/domain/controllers/friends_controller.dart';
@@ -8,7 +7,7 @@ import 'package:starlight/domain/controllers/group_controller.dart';
 import 'package:starlight/domain/controllers/home_controller.dart';
 import 'package:starlight/domain/controllers/private_message_controller.dart';
 import 'package:starlight/domain/controllers/server_controller.dart';
-import 'package:starlight/domain/repositories/user_repository.dart';
+import 'package:starlight/domain/controllers/user_controller.dart';
 import 'package:starlight/presentation/home/home_screen.dart';
 import 'package:starlight/presentation/routes.dart';
 import 'package:starlight/presentation/sign_in/sign_in_screen.dart';
@@ -25,7 +24,7 @@ class App extends StatelessWidget {
       title: 'Starlight',
       home: const Home(),
       onInit: () => <void>{
-        Get.lazyPut(() => AuthController()),
+        Get.lazyPut(() => UserController()),
         Get.lazyPut(() => ServerController()),
         Get.lazyPut(() => ChannelController()),
         Get.lazyPut(() => FriendsController()),
@@ -34,11 +33,10 @@ class App extends StatelessWidget {
         Get.lazyPut(() => GroupController()),
       },
       onDispose: () async {
-        final UserRepository userRepository = UserRepository();
-        final AuthController authController = Get.find();
+        final UserController userController = Get.find();
 
-        await userRepository
-            .updateField(authController.currentUser.value, <String, dynamic>{
+        await userController.repository
+            .updateField(userController.currentUser.value, <String, dynamic>{
           'Status': "offline",
         });
       },

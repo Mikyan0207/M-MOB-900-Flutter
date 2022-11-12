@@ -1,6 +1,16 @@
 import 'package:starlight/domain/entities/channel_entity.dart';
 import 'package:starlight/domain/entities/user_entity.dart';
 
+class ServerQueryOptions {
+  const ServerQueryOptions({
+    this.includeMembers = false,
+    this.includeChannels = false,
+  });
+
+  final bool includeMembers;
+  final bool includeChannels;
+}
+
 class ServerEntity {
   ServerEntity({
     this.id = '',
@@ -9,23 +19,23 @@ class ServerEntity {
     this.icon = '',
     this.members = const <UserEntity>[],
     this.channels = const <ChannelEntity>[],
-    this.admin = const <UserEntity>[],
   });
 
-  factory ServerEntity.fromJson(dynamic json) => ServerEntity(
+  factory ServerEntity.fromJson(
+    dynamic json, {
+    ServerQueryOptions options = const ServerQueryOptions(),
+  }) =>
+      ServerEntity(
         id: json['Id'] ?? '',
         name: json['Name'] ?? '',
         description: json['Description'] ?? '',
         icon: json['Icon'] ?? '',
-        members: json['Members'] != null
+        members: json['Members'] != null && options.includeMembers
             ? UserEntity.fromJsonList(json['Members'])
             : const <UserEntity>[],
-        channels: json['Channels'] != null
+        channels: json['Channels'] != null && options.includeChannels
             ? ChannelEntity.fromJsonList(json['Channels'])
             : const <ChannelEntity>[],
-        admin: json['Admin'] != null
-            ? UserEntity.fromJsonList(json['Admin'])
-            : const <UserEntity>[],
       );
 
   static List<ServerEntity> fromJsonList(List<dynamic>? jsonList) {
@@ -46,10 +56,7 @@ class ServerEntity {
           .map(
             (UserEntity ue) => <String, dynamic>{
               'Id': ue.id,
-              'Username': ue.username,
-              'Avatar': ue.avatar,
-              'Discriminator': ue.discriminator,
-              'Role': 'member',
+              'Role': ue.role,
             },
           )
           .toList(),
@@ -62,17 +69,12 @@ class ServerEntity {
             },
           )
           .toList(),
-      'Admin': admin
-          .map(
-            (UserEntity ue) => <String, dynamic>{
-              'Id': ue.id,
-              'Username': ue.username,
-              'Avatar': ue.avatar,
-              'Discriminator': ue.discriminator,
-            },
-          )
-          .toList(),
     };
+  }
+
+  @override
+  String toString() {
+    return toJson().toString();
   }
 
   String id;
@@ -81,5 +83,4 @@ class ServerEntity {
   String icon;
   List<UserEntity> members;
   List<ChannelEntity> channels;
-  List<UserEntity> admin;
 }

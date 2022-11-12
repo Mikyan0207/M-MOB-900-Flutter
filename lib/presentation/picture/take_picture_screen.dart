@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:camera/camera.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -6,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
-import 'package:starlight/auth/auth_controller.dart';
 import 'package:starlight/domain/controllers/camera_controller.dart';
-import 'package:starlight/presentation/userInfo/user_info_screen.dart';
+import 'package:starlight/domain/controllers/user_controller.dart';
+import 'package:starlight/presentation/user_info/user_info_screen.dart';
 import 'package:starlight/presentation/widgets/custom_button.dart';
 
 class TakePictureScreen extends StatefulWidget {
@@ -104,7 +103,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
 class DisplayPictureScreen extends StatelessWidget {
   DisplayPictureScreen({super.key, required this.imagePath});
   final String imagePath;
-  final AuthController auth = Get.find();
+  final UserController auth = Get.find();
 
   void _cropImage(String filePath, BuildContext context) async {
     final CroppedFile? croppedImage = await ImageCropper().cropImage(

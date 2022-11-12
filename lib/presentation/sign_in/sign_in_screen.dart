@@ -1,7 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:starlight/auth/auth_controller.dart';
+import 'package:starlight/domain/controllers/user_controller.dart';
 import 'package:starlight/presentation/home/home_screen.dart';
 import 'package:starlight/presentation/sign_up/sign_up_screen.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
@@ -10,7 +10,7 @@ import 'package:velocity_x/velocity_x.dart';
 class SignInScreen extends StatelessWidget {
   SignInScreen({super.key});
 
-  final AuthController auth = Get.find();
+  final UserController auth = Get.find();
 
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();

@@ -2,10 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:starlight/auth/auth_controller.dart';
+import 'package:starlight/domain/controllers/user_controller.dart';
 import 'package:starlight/presentation/splash/splash_screen.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
-import 'package:starlight/presentation/userInfo/user_info_screen.dart';
+import 'package:starlight/presentation/user_info/user_info_screen.dart';
 import 'package:starlight/presentation/widgets/profile_widget.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -14,7 +14,7 @@ class ProfileBar extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
-  final AuthController auth = Get.find();
+  final UserController auth = Get.find();
 
   @override
   Widget build(BuildContext context) {

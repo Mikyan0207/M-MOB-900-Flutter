@@ -46,7 +46,6 @@ dev_dependencies:
   flutter_test: 
     sdk: flutter
 flutter:
+  uses-material-design: true
   assets:
     - assets/
-    - assets/undraw_chatting.png
-  uses-material-design: true

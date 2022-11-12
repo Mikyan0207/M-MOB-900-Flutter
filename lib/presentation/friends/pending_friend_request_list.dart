@@ -1,17 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:starlight/auth/auth_controller.dart';
 import 'package:starlight/domain/controllers/friends_controller.dart';
+import 'package:starlight/domain/controllers/user_controller.dart';
 import 'package:starlight/domain/entities/friend_request_entity.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
-import 'package:starlight/presentation/widgets/friend_request_list.dart';
+import 'package:starlight/presentation/widgets/groups/friend_request_list.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class PendingFriendRequestList extends StatelessWidget {
   PendingFriendRequestList({super.key});
 
-  final AuthController _authController = Get.find();
+  final UserController _authController = Get.find();
   final FriendsController _friendsController = Get.find();
 
   Widget _buildRequestCard(FriendRequestEntity fre) {

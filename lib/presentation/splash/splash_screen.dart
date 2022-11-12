@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:starlight/auth/auth_controller.dart';
+import 'package:starlight/domain/controllers/user_controller.dart';
 import 'package:starlight/presentation/home/home_screen.dart';
 import 'package:starlight/presentation/sign_in/sign_in_screen.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
@@ -25,9 +25,9 @@ class _SplashScreenState extends State<SplashScreen> {
       if (userId.isEmptyOrNull) {
         await Get.to(() => SignInScreen());
       } else {
-        final AuthController authController = Get.find();
+        final UserController authController = Get.find();
 
-        await authController.retrieveUserFromId(userId!);
+        await authController.setCurrentUser(userId!);
         await Get.to(() => const Home());
       }
     });
