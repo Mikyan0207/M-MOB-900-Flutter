@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:starlight/domain/controllers/user_controller.dart';
-import 'package:starlight/presentation/themes/theme_colors.dart';
-import 'package:velocity_x/velocity_x.dart';
 
 class ProfileWidget extends StatelessWidget {
   ProfileWidget({
@@ -10,15 +8,11 @@ class ProfileWidget extends StatelessWidget {
     this.imagePath,
     required this.onClicked,
     required this.showEdit,
-    required this.showStatus,
-    required this.status,
   }) : super(key: key);
 
   final String? imagePath;
   final VoidCallback onClicked;
   final bool showEdit;
-  final bool showStatus;
-  final String status;
 
   final UserController auth = Get.find();
 
@@ -45,22 +39,6 @@ class ProfileWidget extends StatelessWidget {
                 bottom: 0,
                 right: 4,
                 child: buildEditIcon(color),
-              ),
-            ],
-          ),
-        ),
-      );
-    } else if (showStatus == true) {
-      return Obx(
-        () => Center(
-          child: Stack(
-            clipBehavior: Clip.none,
-            children: <Widget>[
-              buildImage(),
-              Positioned(
-                bottom: -3,
-                right: -3,
-                child: buildStatus(),
               ),
             ],
           ),
@@ -95,26 +73,6 @@ class ProfileWidget extends StatelessWidget {
       ),
     );
   }
-
-  Widget buildStatus() => ClipRRect(
-        borderRadius: BorderRadius.circular(25.0),
-        child: SizedBox(
-          width: 17,
-          height: 17,
-          child: Container(
-            color: AppColors.black800,
-            child: Padding(
-              padding: const EdgeInsets.all(2.5),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(25.0),
-                child: Container(
-                  color: status == "online" ? Vx.green600 : Vx.gray500,
-                ),
-              ),
-            ),
-          ),
-        ),
-      );
 
   Widget buildEditIcon(Color color) => buildCircle(
         color: Colors.white,

@@ -15,7 +15,7 @@ dependencies:
   adaptive_breakpoints: ^0.1.4
   any_link_preview: ^2.0.9
   camera: ^0.10.0
-  cloud_firestore: ^4.0.4
+  cloud_firestore: ^4.0.5
   context_menus: ^1.0.2
   cross_file_image: ^1.0.0
   cupertino_icons: ^1.0.2
