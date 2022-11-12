@@ -55,11 +55,3 @@ jobs:
           flutter format --set-exit-if-changed .
           flutter analyze
           flutter build ios --release --no-codesign
-<<<<<<< Updated upstream
-      - name: Publish iOS Artefacts
-        uses: actions/upload-artifact@v1
-        with:
-          name: release-ios
-          path: /build/ios/iphoneos/
-=======
->>>>>>> Stashed changes

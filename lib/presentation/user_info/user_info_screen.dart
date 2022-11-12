@@ -201,46 +201,6 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                 ),
                               ),
                             ),
-<<<<<<< Updated upstream
-                          ),
-                          Positioned(
-                            left: 11,
-                            top: 50,
-                            child: Row(
-                              children: <Widget>[
-                                ProfileWidget(
-                                  showEdit: true,
-                                  showStatus: false,
-                                  onClicked: () async {
-                                    _showImageDialog(
-                                      context,
-                                      "Choose an option",
-                                      <Widget>[
-                                        InkWell(
-                                          onTap: () async {
-                                            if (kIsWeb) {
-                                              await camera.initCamera();
-                                              await Get.to(
-                                                const TakePictureScreen(),
-                                              );
-                                            } else {
-                                              _getFromCamera();
-                                            }
-                                          },
-                                          child: Row(
-                                            children: const <Widget>[
-                                              Padding(
-                                                padding: EdgeInsets.all(4.0),
-                                                child: Icon(
-                                                  Icons.camera,
-                                                  color: Colors.red,
-                                                ),
-                                              ),
-                                              Text(
-                                                "Camera",
-                                                style: TextStyle(
-                                                  color: Colors.red,
-=======
                             Positioned(
                               left: 11,
                               top: 50,
@@ -273,7 +233,6 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                                     Icons.camera,
                                                     color: Colors.red,
                                                   ),
->>>>>>> Stashed changes
                                                 ),
                                                 Text(
                                                   "Camera",

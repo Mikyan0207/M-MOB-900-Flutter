@@ -183,7 +183,8 @@ class ServerPanel extends GetView<ServerController> {
                                                   child: Text(
                                                     "Delete Server",
                                                     style: TextStyle(
-                                                        color: Vx.red500),
+                                                      color: Vx.red500,
+                                                    ),
                                                   ),
                                                 ),
                                                 SizedBox(width: 50),

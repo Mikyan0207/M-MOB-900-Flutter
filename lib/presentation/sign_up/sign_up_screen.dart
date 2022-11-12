@@ -120,15 +120,21 @@ class SignUpScreen extends StatelessWidget {
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(
-                                  color: Color(0xFF8667f2), width: 2),
+                                color: Color(0xFF8667f2),
+                                width: 2,
+                              ),
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
-                                  color: Color(0xFF8667f2), width: 2),
+                                color: Color(0xFF8667f2),
+                                width: 2,
+                              ),
                             ),
                             errorBorder: OutlineInputBorder(
                               borderSide: BorderSide(
-                                  color: Color(0xFF8667f2), width: 2),
+                                color: Color(0xFF8667f2),
+                                width: 2,
+                              ),
                             ),
                           ),
                           validator: (String? val) {
@@ -163,15 +169,21 @@ class SignUpScreen extends StatelessWidget {
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(
-                                  color: Color(0xFF8667f2), width: 2),
+                                color: Color(0xFF8667f2),
+                                width: 2,
+                              ),
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
-                                  color: Color(0xFF8667f2), width: 2),
+                                color: Color(0xFF8667f2),
+                                width: 2,
+                              ),
                             ),
                             errorBorder: OutlineInputBorder(
                               borderSide: BorderSide(
-                                  color: Color(0xFF8667f2), width: 2),
+                                color: Color(0xFF8667f2),
+                                width: 2,
+                              ),
                             ),
                           ),
                           validator: (String? val) {
