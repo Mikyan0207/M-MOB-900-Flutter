@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:starlight/domain/controllers/user_controller.dart';
-import 'package:starlight/presentation/themes/theme_colors.dart';
-import 'package:velocity_x/velocity_x.dart';
 
 class ProfileWidget extends StatelessWidget {
   ProfileWidget({

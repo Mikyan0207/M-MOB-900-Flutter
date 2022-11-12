@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -44,7 +43,7 @@ class _HomeState extends State<Home> {
         await Get.to(() => const SplashScreen());
       } else {
         await _userController.setCurrentUser(userId!);
-        await setStatus("online");
+        //await setStatus("online");
       }
 
       final String? lastServerId = prefs.getString("LastServerId");
