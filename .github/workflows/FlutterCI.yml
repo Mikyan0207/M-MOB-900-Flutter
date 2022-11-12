@@ -71,9 +71,9 @@ jobs:
           flutter pub get
           flutter format --set-exit-if-changed .
           flutter analyze
-          flutter build ios --release --no-codesign
+          flutter build ipa
       - name: Publish iOS Artefacts
         uses: actions/upload-artifact@v1
         with:
           name: release-ios
-          path: /build/ios/iphoneos/Runner.app
+          path: /build/ios/ipa/*.ipa
