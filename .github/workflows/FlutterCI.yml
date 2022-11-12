@@ -21,8 +21,6 @@ jobs:
       - name: Build apk
         run: |
           flutter pub get
-          flutter format --set-exit-if-changed .
-          flutter analyze
           flutter build appbundle --release
       - name: Retrieve Release Version
         id: versionstep
@@ -69,9 +67,10 @@ jobs:
       - name: Build iOS
         run: |
           flutter pub get
-          flutter format --set-exit-if-changed .
-          flutter analyze
-          flutter build ipa
+          find . -name "Podfile" -execdir pod install \;
+          flutter build ipa --release \
+            --build-name=1.0.0 \
+            --export-options-plist=/Users/builder/export_options.plist
       - name: Publish iOS Artefacts
         uses: actions/upload-artifact@v1
         with:
