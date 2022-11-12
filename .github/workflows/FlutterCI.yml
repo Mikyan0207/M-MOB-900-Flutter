@@ -73,5 +73,5 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: release-ios
-          path: '${{ github.workspace }}/build/ios/iphoneos/*'
+          path: '${{ github.workspace }}/build/ios/iphoneos/Runner.app'
           if-no-files-found: 'warn'
