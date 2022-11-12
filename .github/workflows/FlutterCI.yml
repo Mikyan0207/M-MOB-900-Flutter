@@ -68,9 +68,7 @@ jobs:
         run: |
           flutter pub get
           find . -name "Podfile" -execdir pod install \;
-          flutter build ipa --release --no-codesign \
-            --build-name=1.0.0 \
-            --export-options-plist=/Users/builder/export_options.plist
+          flutter build ipa --release --no-codesign
       - name: Publish iOS Artefacts
         uses: actions/upload-artifact@v1
         with:
