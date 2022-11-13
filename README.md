@@ -4,7 +4,9 @@
 [![Codemagic build status](https://api.codemagic.io/apps/63483ea222ff8dd9f01474ca/63483ea222ff8dd9f01474c9/status_badge.svg)](https://codemagic.io/apps/63483ea222ff8dd9f01474ca/63483ea222ff8dd9f01474c9/latest_build)
 [![CodeFactor](https://www.codefactor.io/repository/github/mikyan0207/m-mob-900-flutter/badge)](https://www.codefactor.io/repository/github/mikyan0207/m-mob-900-flutter)
 
-An instant messaging application inspired from Discord and LINE written with Flutter.
+An instant messaging application inspired from Discord and LINE written with Flutter available on Web, Android and IOS, where you can create a lot of different servers with different channels and invite your friends, you can also send friend invitation to your friends and send private message to them.
+
+![Screenshot](flutter_01.png)
 
 ## Packages
 
@@ -127,7 +129,7 @@ HTTP fetching at runtime, ideal for development. Can also be used in production 
 <br>
 
 ### image_cropper: ^3.0.0
-A Flutter plugin for Android, iOS and Web supports cropping images. This plugin is based on three different native libraries so it comes with different UI between these platforms.
+A Flutter plugin for Android, iOS and Web supports cropping images. This plugin is based on three different native libraries, so it comes with different UI between these platforms.
 <br><br>
 [Link](https://pub.dev/packages/image_cropper)
 
@@ -297,6 +299,31 @@ flutter build appbundle --release
 <br>
 
 -----
+
+## Locally
+
+#### How to use locally
+
+### Desktop
+
+This app didn't work on deskop (macos)
+
+### Web
+
+```.zsh
+flutter clean && flutter pub get && flutter run
+```
+
+### Mobile
+
+#### IOS
+```.zsh
+flutter clean && flutter pub get && flutter pub upgrade && cd ios/ && pod install --repo-update
+```
+
+After that you have to open the folder 'ios' with XCode and build locally
+
+_____
 
 ## Deploy
 
