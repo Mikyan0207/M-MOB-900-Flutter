@@ -229,9 +229,10 @@ class SignUpScreen extends StatelessWidget {
                             await Fluttertoast.showToast(
                               msg: 'Please enter a valid email',
                             );
-                          } else if (passwordController.text != passwordConfirmController.text) {
+                          } else if (passwordController.text !=
+                              passwordConfirmController.text) {
                             await Fluttertoast.showToast(
-                              msg: 'Password didn\'t match with confirm password' ,
+                              msg: 'Password didn\'t match with confirm password',
                             );
                           }
                           else {
@@ -250,6 +251,8 @@ class SignUpScreen extends StatelessWidget {
                               }
                             } catch (e) {
                               await Fluttertoast.showToast(msg: e.toString());
+                            }
+                          }
                         },
                       ),
                     ),
