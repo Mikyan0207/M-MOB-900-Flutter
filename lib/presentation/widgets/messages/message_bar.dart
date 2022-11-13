@@ -84,11 +84,8 @@ class _MessageBarState extends State<MessageBar> {
                         Expanded(
                           child: Stack(
                             children: <Widget>[
-                              if(kIsWeb)
-                                buildZone1(context)
-                              else
-                                Container(),
-                              if(kIsWeb && !file.name.isEmptyOrNull)
+                              if (kIsWeb) buildZone1(context) else Container(),
+                              if (kIsWeb && !file.name.isEmptyOrNull)
                                 DroppedFileWidget(key: UniqueKey(), file: file)
                               else
                                 Container(),
