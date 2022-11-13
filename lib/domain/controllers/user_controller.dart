@@ -103,8 +103,10 @@ class UserController extends GetxController {
           authId: userCredential.user!.uid,
           username: userCredential.user!.email!.split('@').first,
           email: userCredential.user!.email!,
-          discriminator: '#${discriminatorGenerator.toString().padLeft(4, '0')}',
-          avatar: "https://ddrg.farmasi.unej.ac.id/wp-content/uploads/sites/6/2017/10/unknown-person-icon-Image-from.png",
+          discriminator:
+              '#${discriminatorGenerator.toString().padLeft(4, '0')}',
+          avatar:
+              "https://ddrg.farmasi.unej.ac.id/wp-content/uploads/sites/6/2017/10/unknown-person-icon-Image-from.png",
         ),
       );
 
