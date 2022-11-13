@@ -223,7 +223,7 @@ lib
 
 -----
 
-## Build
+## Build & Run
 
 Flutter Version: `>= 3.2.2`<br>
 We use a main only strategy with PRs for our repository.
@@ -234,9 +234,64 @@ Download and install the latest available version of Flutter from: [flutter.dev]
 
 ### Windows
 
+##### Build (Web)
+```shell
+flutter pub get
+flutter build web
+```
+
+<br>
+
+##### Build (Android)
+```shell
+flutter pub get
+flutter build appbundle --release
+```
+
+<br>
+
 ### MacOS
 
+##### Build (Web)
+```shell
+flutter pub get
+flutter build web
+```
+<br>
+
+##### Build (Android)
+```shell
+flutter pub get
+flutter build appbundle --release
+```
+
+<br>
+
+##### Build (iOS)
+```shell
+flutter pub get
+flutter build ipa --release
+```
+*An Apple Developer Licence ($99) is required.*
+
+<br>
+
 ### Linux
+
+##### Build (Web)
+```shell
+flutter pub get
+flutter build web
+```
+
+<br>
+
+##### Build (Android)
+```shell
+flutter pub get
+flutter build appbundle --release
+```
+*Android SDK is required.*
 
 <br>
 
@@ -244,8 +299,4 @@ Download and install the latest available version of Flutter from: [flutter.dev]
 
 ## Deploy
 
-### Desktop
-
-### Web
-
-### Mobile
+We use CodeMagic and Firebase App Distribution / Hosting to deploy our app on different platform.
