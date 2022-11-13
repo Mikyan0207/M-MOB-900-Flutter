@@ -1,4 +1,3 @@
-import 'package:camera/camera.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -80,22 +79,18 @@ class _MessageBarState extends State<MessageBar> {
                             color: Vx.gray400,
                           ),
                           onPressed: () async {
-                            if (kIsWeb)
-                            {
+                            if (kIsWeb) {
                               await controller1.pickFiles(
                                 mime: <String>['image/jpeg', 'image/png'],
                               );
-                            }
-                            else {
-                              final XFile? pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+                            } else {
+                              final XFile? pickedFile = await ImagePicker()
+                                  .pickImage(source: ImageSource.gallery);
 
                               imageFile = XFile(pickedFile!.path);
-                              final String extension = pickedFile.name
-                                  .split('.')
-                                  .last
-                                  .toString();
 
-                              final CroppedFile? croppedImage = await ImageCropper().cropImage(
+                              final CroppedFile? croppedImage =
+                                  await ImageCropper().cropImage(
                                 sourcePath: pickedFile.path,
                                 maxHeight: 2080,
                                 maxWidth: 2080,
@@ -111,7 +106,8 @@ class _MessageBarState extends State<MessageBar> {
                                     toolbarTitle: 'Cropper',
                                     toolbarColor: Colors.deepOrange,
                                     toolbarWidgetColor: Colors.white,
-                                    initAspectRatio: CropAspectRatioPreset.original,
+                                    initAspectRatio:
+                                        CropAspectRatioPreset.original,
                                     lockAspectRatio: false,
                                   ),
                                   IOSUiSettings(
@@ -141,7 +137,10 @@ class _MessageBarState extends State<MessageBar> {
                         Expanded(
                           child: Stack(
                             children: <Widget>[
-                              if (kIsWeb) buildDropZone(context) else Container(),
+                              if (kIsWeb)
+                                buildDropZone(context)
+                              else
+                                Container(),
                               if (!file.name.isEmptyOrNull)
                                 DroppedFileWidget(key: UniqueKey(), file: file)
                               else
@@ -173,16 +172,17 @@ class _MessageBarState extends State<MessageBar> {
                                             contentType: "image/$extension",
                                           );
 
-                                          if (kIsWeb)
-                                          {
+                                          if (kIsWeb) {
                                             await ref.putData(
                                               await controller1
                                                   .getFileData(image),
                                               newMetadata,
                                             );
-                                          }
-                                          else {
-                                            await ref.putData(await imageFile!.readAsBytes(), newMetadata);
+                                          } else {
+                                            await ref.putData(
+                                              await imageFile.readAsBytes(),
+                                              newMetadata,
+                                            );
                                           }
 
                                           await Fluttertoast.showToast(
@@ -318,16 +318,16 @@ class _MessageBarState extends State<MessageBar> {
                                       contentType: "image/$extension",
                                     );
 
-                                    if (kIsWeb)
-                                    {
+                                    if (kIsWeb) {
                                       await ref.putData(
-                                        await controller1
-                                            .getFileData(image),
+                                        await controller1.getFileData(image),
                                         newMetadata,
                                       );
-                                    }
-                                    else {
-                                      await ref.putData(await imageFile!.readAsBytes(), newMetadata);
+                                    } else {
+                                      await ref.putData(
+                                        await imageFile.readAsBytes(),
+                                        newMetadata,
+                                      );
                                     }
 
                                     await Fluttertoast.showToast(
