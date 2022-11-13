@@ -7,10 +7,161 @@ An instant messaging application inspired from Discord and LINE written with Flu
 
 ## Packages
 
-Lists of packages used for the project.
+**Lists of packages used for the project.**
 
-### VelocityX
-VelocityX is a 100% free Flutter open-source minimalist UI Framework built with Flutter SDK to make Flutter development
+<br>
+
+### any_link_preview: ^2.0.9
+Dart package that helps with preview of any links. Fully customizable and has the ability to render from cached data. Useful for apps where we had chat feature.<br><br>
+[Link](https://pub.dev/packages/any_link_preview)
+
+<br>
+
+### camera: ^0.10.0
+A Flutter plugin for controlling the camera. Supports previewing the camera feed, capturing images and video, and streaming image buffers to Dart.
+<br><br>
+[Link](https://pub.dev/packages/camera)
+
+<br>
+
+### cloud_firestore: ^4.0.5
+A Flutter plugin to use the Cloud Firestore API.
+<br><br>
+[Link](https://pub.dev/packages/cloud_firestore)
+
+<br>
+
+### context_menus: ^1.0.2
+A package to show context menus on right-click or long-press.
+<br><br>
+[Link](https://pub.dev/packages/context_menus)
+
+<br>
+
+### cross_file_image: ^1.0.0
+ImageProvider for XFile.
+<br><br>
+[Link](https://pub.dev/packages/cross_file_image)
+
+<br>
+
+### emojis: ^0.9.9
+🔥 Emoji for Dart 🔥 Over 3300 Emojis
+This 📦 contain all 🆕 Unicode 13.1 Emojis (2️⃣0️⃣2️⃣1️⃣) 💪 supports null safety 💪
+<br><br>
+[Link](https://pub.dev/packages/emojis)
+
+<br>
+
+### firebase_auth: ^4.1.0
+A Flutter plugin to use the Firebase Authentication API.
+<br><br>
+[Link](https://pub.dev/packages/firebase_auth)
+
+<br>
+
+### firebase_core: ^2.1.1
+A Flutter plugin to use the Firebase Core API, which enables connecting to multiple Firebase apps.
+<br><br>
+[Link](https://pub.dev/packages/firebase_core)
+
+<br>
+
+### firebase_crashlytics: ^3.0.5
+A Flutter plugin to use the Firebase Crashlytics API.
+<br><br>
+[Link](https://pub.dev/packages/firebase_crashlytics)
+
+<br>
+
+### firebase_storage: ^11.0.3
+A Flutter plugin to use the Firebase Cloud Storage API.
+<br><br>
+[Link](https://pub.dev/packages/firebase_storage)
+
+<br>
+
+### flutter_dropzone: ^3.0.5
+A Flutter Web plugin to handle drag-and-drop (files) into Flutter. If you're interested in drag-and-drop inside a Flutter app, check out other packages like dnd.
+<br><br>
+[Link](https://pub.dev/packages/flutter_dropzone)
+
+<br>
+
+### flutter_parsed_text: ^2.2.1
+A Flutter plugin for controlling the camera. Supports previewing the camera feed, capturing images and video, and streaming image buffers to Dart.
+<br><br>
+[Link](https://pub.dev/packages/flutter_parsed_text)
+
+<br>
+
+### flutter_parsed_text_field: ^0.1.10
+A Flutter package to parse text and extract parts using predefined types like url, phone and email and also supports Regex.
+<br><br>
+[Link](https://pub.dev/packages/flutter_parsed_text_field)
+
+<br>
+
+### fluttertoast: ^8.1.1
+Toast Library for Flutter.
+<br><br>
+[Link](https://pub.dev/packages/fluttertoast)
+
+<br>
+
+### get: ^4.6.5
+GetX is an extra-light and powerful solution for Flutter.<br>
+It combines high-performance state management, intelligent dependency injection, and route management quickly and practically.
+<br><br>
+[Link](https://pub.dev/packages/get)
+
+<br>
+
+### google_fonts: ^3.0.1
+A Flutter package to use fonts from [fonts.google.com](fonts.google.com).<br>
+HTTP fetching at runtime, ideal for development. Can also be used in production to reduce app size. Font file caching, on device file system. Font bundling in assets. Matching font files found in assets are prioritized over HTTP fetching. Useful for offline-first apps.
+<br><br>
+[Link](https://pub.dev/packages/google_fonts)
+
+<br>
+
+### image_cropper: ^3.0.0
+A Flutter plugin for Android, iOS and Web supports cropping images. This plugin is based on three different native libraries so it comes with different UI between these platforms.
+<br><br>
+[Link](https://pub.dev/packages/image_cropper)
+
+<br>
+
+### image_picker: ^0.8.6
+A Flutter plugin for iOS and Android for picking images from the image library, and taking new pictures with the camera.
+<br><br>
+[Link](https://pub.dev/packages/image_picker)
+
+<br>
+
+### overlapping_panels: ^0.0.3
+Add Discord-like navigation to your app.
+<br><br>
+[Link](https://pub.dev/packages/overlapping_panels)
+
+<br>
+
+### shared_preferences: ^2.0.15
+Wraps platform-specific persistent storage for simple data (NSUserDefaults on iOS and macOS, SharedPreferences on Android, etc.). Data may be persisted to disk asynchronously, and there is no guarantee that writes will be persisted to disk after returning, so this plugin must not be used for storing critical data.
+<br><br>
+[Link](https://pub.dev/packages/shared_preferences)
+
+<br>
+
+### timeago_flutter: ^1.2.0
+timeago is a dart library that converts a date into a humanized text. Instead of showing a date 2020-12-12 18:30 with timeago you can display something like "now", "an hour ago", "~1y", etc
+<br><br>
+[Link](https://pub.dev/packages/timeago_flutter)
+
+<br>
+
+### velocity_x: ^3.5.1
+Flutter development
 easier and more joyful than ever.<br>
 Inspired from Tailwindcss and SwiftUI.
 <br><br>
@@ -18,53 +169,7 @@ Inspired from Tailwindcss and SwiftUI.
 
 <br>
 
-### Responsive Framework
-Responsive Framework adapts your UI to different screen sizes automatically. Create your UI once and have it display pixel perfect on mobile, tablet, and desktop!
-<br><br>
-[Link](https://pub.dev/packages/responsive_framework)
-
-<br>
-
-### GetX
-GetX is an extra-light and powerful solution for Flutter.<br>
-It combines high-performance state management, intelligent dependency injection, and route management quickly
-and practically.
-<br><br>
-[Link](https://pub.dev/packages/get)
-
-<br>
-
-### Google Fonts
-A Flutter package to use fonts from [fonts.google.com](fonts.google.com).<br>
-HTTP fetching at runtime, ideal for development. Can also be used in production to reduce app size. Font file caching, on device file system. Font bundling in assets. Matching font files found in assets are prioritized over HTTP fetching. Useful for offline-first apps.
-<br><br>
-
-[Link](https://pub.dev/packages/google_fonts)
-
-<br>
-
-### Flutter SVG
-Draw SVG (and some Android VectorDrawable (XML)) files on a Flutter Widget.
-<br><br>
-
-[Link](https://pub.dev/packages/flutter_svg)
-
-<br>
-
-### Equatable
-`Equatable` overrides `==` and `hashCode` for you so you don't have to waste your time writing lots of boilerplate code.
-<br><br>
-[Link](https://pub.dev/packages/equatable)
-
-<br>
-
-### Meta
-This package defines annotations that can be used by the tools that are shipped with the Dart SDK.<br>
-Annotations used to express developer intentions that can't otherwise be deduced by statically analyzing source code.
-<br><br>
-[Link](https://pub.dev/packages/meta)
-
-<br>
+-----
 
 ### Blackfoot Flutter Lint
 This package contains a recommended set of lints for Blackfoot's Flutter apps to encourage good coding practices.<br>
@@ -78,8 +183,6 @@ This package is built on top of Flutter `flutter.yaml` set of lints from `packag
 
 ## Download
 
-### Desktop
-
 ### Web
 
 ### Android
@@ -90,24 +193,105 @@ This package is built on top of Flutter `flutter.yaml` set of lints from `packag
 
 ```
 lib
-├── components
-└── pages
+├─┬ common
+│ └─ constants
+├─┬ domain
+│ ├── controllers
+│ ├── entities
+│ └── respositories
+└─┬ presentation
+  ├── chats
+  ├── friends
+  ├── home
+  ├── left_menu
+  ├── picture
+  ├── right_menu
+  ├── sign_in
+  ├── sign_up
+  ├── splash
+  ├── themes
+  ├── user_info
+  └─┬ widgets
+    ├── channels
+    ├── dialogs
+    ├── groups
+    ├── messages
+    └── servers
 ```
 
 <br>
 
 -----
 
-## Build
+## Build & Run
 
-Flutter Version: `3.2.2`<br>
+Flutter Version: `>= 3.2.2`<br>
 We use a main only strategy with PRs for our repository.
+
+<br>
+
+Download and install the latest available version of Flutter from: [flutter.dev](https://docs.flutter.dev/get-started/install)
 
 ### Windows
 
+##### Build (Web)
+```shell
+flutter pub get
+flutter build web
+```
+
+<br>
+
+##### Build (Android)
+```shell
+flutter pub get
+flutter build appbundle --release
+```
+
+<br>
+
 ### MacOS
 
+##### Build (Web)
+```shell
+flutter pub get
+flutter build web
+```
+<br>
+
+##### Build (Android)
+```shell
+flutter pub get
+flutter build appbundle --release
+```
+
+<br>
+
+##### Build (iOS)
+```shell
+flutter pub get
+flutter build ipa --release
+```
+*An Apple Developer Licence ($99) is required.*
+
+<br>
+
 ### Linux
+
+##### Build (Web)
+```shell
+flutter pub get
+flutter build web
+```
+
+<br>
+
+##### Build (Android)
+```shell
+flutter pub get
+flutter build appbundle --release
+```
+*Android SDK is required.*
 
 <br>
 
@@ -115,8 +299,4 @@ We use a main only strategy with PRs for our repository.
 
 ## Deploy
 
-### Desktop
-
-### Web
-
-### Mobile
+We use CodeMagic and Firebase App Distribution / Hosting to deploy our app on different platform.
