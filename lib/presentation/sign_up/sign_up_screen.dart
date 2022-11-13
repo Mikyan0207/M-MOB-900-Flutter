@@ -20,6 +20,8 @@ class SignUpScreen extends StatelessWidget {
   final TextEditingController passwordConfirmController =
       TextEditingController();
 
+  static final GlobalKey<FormState> signUpKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -34,7 +36,7 @@ class SignUpScreen extends StatelessWidget {
               width: context.screenWidth,
               height: context.screenHeight,
               child: Form(
-                key: UniqueKey(),
+                key: signUpKey,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
