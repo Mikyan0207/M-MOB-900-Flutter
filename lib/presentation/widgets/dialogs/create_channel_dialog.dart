@@ -24,7 +24,7 @@ class CreateChannelDialog extends GetView<ServerController> {
     for (int i = 0; i < controller.currentServer.value.members.length; i++) {
       if (_userController.currentUser.value.id ==
           controller.currentServer.value.members[i].id) {
-        if (controller.currentServer.value.members[i].role == "admin") {
+        if (controller.currentServer.value.members[i].role != "member") {
           return true;
         }
       }
