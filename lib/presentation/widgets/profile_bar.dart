@@ -3,7 +3,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:starlight/domain/controllers/channel_controller.dart';
+import 'package:starlight/domain/controllers/group_controller.dart';
+import 'package:starlight/domain/controllers/server_controller.dart';
 import 'package:starlight/domain/controllers/user_controller.dart';
+import 'package:starlight/domain/entities/channel_entity.dart';
+import 'package:starlight/domain/entities/group_entity.dart';
+import 'package:starlight/domain/entities/server_entity.dart';
+import 'package:starlight/domain/entities/user_entity.dart';
 import 'package:starlight/presentation/splash/splash_screen.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
 import 'package:starlight/presentation/user_info/user_info_screen.dart';
@@ -17,8 +24,7 @@ class ProfileBar extends StatelessWidget {
 
   final UserController _userController = Get.find();
 
-  Future<void> setStatus(String newStatus)
-  async {
+  Future<void> setStatus(String newStatus) async {
     await FirebaseFirestore.instance
         .collection('Users')
         .doc(_userController.currentUser.value.id)
@@ -111,6 +117,13 @@ class ProfileBar extends StatelessWidget {
                   await prefs.remove("UserId");
                   await prefs.remove("LastServerId");
                   await FirebaseAuth.instance.signOut();
+                  Get.find<UserController>().currentUser.value = UserEntity();
+                  Get.find<ServerController>().currentServer.value =
+                      ServerEntity();
+                  Get.find<ChannelController>().currentChannel.value =
+                      ChannelEntity();
+                  Get.find<GroupController>().currentGroup.value =
+                      GroupEntity();
                   await Get.to(() => const SplashScreen());
                 },
                 itemBuilder: (BuildContext context) => <PopupMenuItem<int>>[

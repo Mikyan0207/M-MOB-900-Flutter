@@ -10,14 +10,15 @@ import 'package:starlight/presentation/themes/theme_colors.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class SignUpScreen extends StatelessWidget {
-  SignUpScreen({super.key});
+  SignUpScreen({Key? key}) : super(key: key);
 
   final UserController auth = Get.find();
   final UserRepository userRepository = UserRepository();
 
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController passwordConfirmController = TextEditingController();
+  final TextEditingController passwordConfirmController =
+      TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -232,16 +233,16 @@ class SignUpScreen extends StatelessWidget {
                           } else if (passwordController.text !=
                               passwordConfirmController.text) {
                             await Fluttertoast.showToast(
-                              msg: 'Password didn\'t match with confirm password',
+                              msg:
+                                  'Password didn\'t match with confirm password',
                             );
-                          }
-                          else {
+                          } else {
                             try {
                               if (await auth.registerAsync(
                                 emailController.text,
                                 passwordController.text,
                               )) {
-                                await Get.to(() => SignInScreen);
+                                await Get.to(() => SignInScreen());
                               }
                             } on FirebaseAuthException catch (e) {
                               if (e.code == 'weak-password') {
