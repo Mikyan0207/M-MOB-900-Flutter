@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
+import 'package:starlight/domain/controllers/user_controller.dart';
 import 'package:starlight/domain/entities/friend_request_entity.dart';
 import 'package:starlight/domain/entities/user_entity.dart';
 import 'package:starlight/domain/repositories/friend_request_repository.dart';
@@ -17,17 +18,19 @@ class FriendsController extends GetxController {
 
   final FriendRequestRepository _friendRequestRepository =
       FriendRequestRepository();
-  final UserRepository _userRepository = UserRepository();
+  final UserController _userController = Get.find();
 
   Future<void> declineOrCancelFriendRequest(FriendRequestEntity fre) async {
     await _friendRequestRepository.delete(fre);
   }
 
   Future<void> acceptFriendRequest(FriendRequestEntity fre) async {
-    final UserEntity toUser = await _userRepository.get(fre.toUser.id);
-    final UserEntity fromUser = await _userRepository.get(fre.fromUser.id);
+    final UserEntity toUser =
+        await _userController.repository.get(fre.toUser.id);
+    final UserEntity fromUser =
+        await _userController.repository.get(fre.fromUser.id);
 
-    await _userRepository.updateField(
+    await _userController.repository.updateField(
       toUser,
       <String, dynamic>{
         'Friends': FieldValue.arrayUnion(<dynamic>[fromUser.id])
@@ -35,7 +38,7 @@ class FriendsController extends GetxController {
       merge: true,
     );
 
-    await _userRepository.updateField(
+    await _userController.repository.updateField(
       fromUser,
       <String, dynamic>{
         'Friends': FieldValue.arrayUnion(<dynamic>[toUser.id])
@@ -43,8 +46,8 @@ class FriendsController extends GetxController {
       merge: true,
     );
 
-    fre.accepted = true;
-    await _friendRequestRepository.update(fre);
+    await _friendRequestRepository.delete(fre);
+    await _userController.setCurrentUser('');
   }
 
   void setCurrentTab(FriendTabState state) => currentTab(state);

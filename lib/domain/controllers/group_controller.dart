@@ -12,6 +12,10 @@ class GroupController extends GetxController {
   final UserController _userController = UserController();
 
   Future<GroupEntity> create(GroupEntity ge) async {
+    ge.members.sort((UserEntity a, UserEntity b) {
+      return a.id.toLowerCase().compareTo(b.id.toLowerCase());
+    });
+
     if (await _groupRepository.exists(ge.members)) {
       final GroupEntity? existingGroup =
           _userController.currentUser.value.groups.firstWhereOrNull(
