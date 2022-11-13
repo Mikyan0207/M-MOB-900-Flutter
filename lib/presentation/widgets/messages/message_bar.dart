@@ -1,4 +1,5 @@
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dropzone/flutter_dropzone.dart';
 import 'package:flutter_parsed_text_field/flutter_parsed_text_field.dart';
@@ -83,11 +84,11 @@ class _MessageBarState extends State<MessageBar> {
                         Expanded(
                           child: Stack(
                             children: <Widget>[
-                              buildZone1(context),
-                              if (file.name.isEmptyOrNull)
-                                const Text("")
+                              if (kIsWeb) buildZone1(context) else Container(),
+                              if (kIsWeb && !file.name.isEmptyOrNull)
+                                DroppedFileWidget(key: UniqueKey(), file: file)
                               else
-                                DroppedFileWidget(key: UniqueKey(), file: file),
+                                Container(),
                               Form(
                                 key: UniqueKey(),
                                 child: ConstrainedBox(
