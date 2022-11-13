@@ -85,7 +85,7 @@ class ServerRepository {
         'Members': FieldValue.arrayUnion(<dynamic>[
           <String, dynamic>{
             'Id': user.id,
-            'Role': user.role,
+            'Role': "member",
           }
         ])
       },
