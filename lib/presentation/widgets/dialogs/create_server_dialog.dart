@@ -144,9 +144,11 @@ class _CreateServerDialogState extends State<CreateServerDialog> {
     await _userRepository.updateField(
       _userController.currentUser.value,
       <String, dynamic>{
-        'Servers': <dynamic>[
-          server.id,
-        ]
+        'Servers': FieldValue.arrayUnion(
+          <dynamic>[
+            server.id,
+          ],
+        )
       },
       merge: true,
     );
