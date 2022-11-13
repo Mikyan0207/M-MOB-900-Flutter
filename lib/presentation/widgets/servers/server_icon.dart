@@ -82,6 +82,12 @@ class _ServerIconState extends State<ServerIcon>
   }
 
   @override
+  void dispose() {
+    iconController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return MouseRegion(
       onEnter: (PointerEvent d) {

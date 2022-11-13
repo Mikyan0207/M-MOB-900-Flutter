@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:starlight/domain/controllers/friends_controller.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
-import 'package:starlight/presentation/widgets/dialogs/create_group_dialog.dart';
 import 'package:starlight/presentation/widgets/groups/group_list.dart';
 import 'package:starlight/presentation/widgets/profile_bar.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -47,26 +46,12 @@ class StarlightFriendsList extends GetView<FriendsController> {
                       padding: const EdgeInsets.all(8.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          const Text(
+                        children: const <Widget>[
+                          Text(
                             "PRIVATE MESSAGES",
                             style: TextStyle(
                               color: Vx.gray400,
                               fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          IconButton(
-                            onPressed: () async {
-                              await Get.dialog(
-                                const CreateGroupDialog(),
-                                barrierDismissible: true,
-                                barrierColor: Vx.gray800.withOpacity(0.75),
-                              );
-                            },
-                            icon: const Icon(
-                              Icons.add_rounded,
-                              size: 22,
-                              color: Vx.gray300,
                             ),
                           )
                         ],

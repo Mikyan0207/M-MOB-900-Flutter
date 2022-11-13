@@ -164,8 +164,7 @@ class UserRepository {
         await _firestore.collection(collection).add(e.toJson());
 
     e.id = document.id;
-
-    await document.set(<String, dynamic>{'Id': e.id});
+    await document.set(<String, dynamic>{'Id': e.id}, SetOptions(merge: true));
 
     return e;
   }

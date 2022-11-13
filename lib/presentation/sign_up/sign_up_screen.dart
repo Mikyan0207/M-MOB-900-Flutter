@@ -5,19 +5,20 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:starlight/domain/controllers/user_controller.dart';
 import 'package:starlight/domain/repositories/user_repository.dart';
-import 'package:starlight/presentation/home/home_screen.dart';
 import 'package:starlight/presentation/sign_in/sign_in_screen.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class SignUpScreen extends StatelessWidget {
-  SignUpScreen({super.key});
+  SignUpScreen({Key? key}) : super(key: key);
 
   final UserController auth = Get.find();
   final UserRepository userRepository = UserRepository();
 
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController passwordConfirmController =
+      TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -29,9 +30,9 @@ class SignUpScreen extends StatelessWidget {
             reverse: true,
             controller: ScrollController(),
             child: Container(
-              color: AppColors.black700,
-              width: double.infinity,
-              height: double.infinity,
+              color: AppColors.black800,
+              width: context.screenWidth,
+              height: context.screenHeight,
               child: Form(
                 key: UniqueKey(),
                 child: Column(
@@ -55,6 +56,11 @@ class SignUpScreen extends StatelessWidget {
                           color: Vx.gray300,
                         ),
                       ),
+                    ),
+                    SizedBox(
+                      width: 300,
+                      height: 300,
+                      child: Image.asset("assets/undraw_chatting.png"),
                     ),
                     SizedBox(
                       width: 400,
@@ -153,6 +159,7 @@ class SignUpScreen extends StatelessWidget {
                       child: SizedBox(
                         width: 400,
                         child: TextFormField(
+                          controller: passwordConfirmController,
                           obscureText: true,
                           style: const TextStyle(color: AppColors.white),
                           decoration: const InputDecoration(
@@ -219,21 +226,33 @@ class SignUpScreen extends StatelessWidget {
                           style: TextStyle(color: Vx.gray100, fontSize: 16),
                         ),
                         onPressed: () async {
-                          try {
-                            if (await auth.registerAsync(
-                              emailController.text,
-                              passwordController.text,
-                            )) {
-                              await Get.to(() => const Home());
+                          if (!emailController.text.isEmail) {
+                            await Fluttertoast.showToast(
+                              msg: 'Please enter a valid email',
+                            );
+                          } else if (passwordController.text !=
+                              passwordConfirmController.text) {
+                            await Fluttertoast.showToast(
+                              msg:
+                                  'Password didn\'t match with confirm password',
+                            );
+                          } else {
+                            try {
+                              if (await auth.registerAsync(
+                                emailController.text,
+                                passwordController.text,
+                              )) {
+                                await Get.to(() => SignInScreen());
+                              }
+                            } on FirebaseAuthException catch (e) {
+                              if (e.code == 'weak-password') {
+                                await Fluttertoast.showToast(
+                                  msg: 'The password provided is too weak.',
+                                );
+                              }
+                            } catch (e) {
+                              await Fluttertoast.showToast(msg: e.toString());
                             }
-                          } on FirebaseAuthException catch (e) {
-                            if (e.code == 'weak-password') {
-                              await Fluttertoast.showToast(
-                                msg: 'The password provided is too weak.',
-                              );
-                            }
-                          } catch (e) {
-                            await Fluttertoast.showToast(msg: e.toString());
                           }
                         },
                       ),

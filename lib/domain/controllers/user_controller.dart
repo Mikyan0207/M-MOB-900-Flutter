@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -95,11 +97,16 @@ class UserController extends GetxController {
         return false;
       }
 
+      final int discriminatorGenerator = Random().nextInt(9999);
       await repository.create(
         UserEntity(
           authId: userCredential.user!.uid,
           username: userCredential.user!.email!.split('@').first,
           email: userCredential.user!.email!,
+          discriminator:
+              '#${discriminatorGenerator.toString().padLeft(4, '0')}',
+          avatar:
+              "https://ddrg.farmasi.unej.ac.id/wp-content/uploads/sites/6/2017/10/unknown-person-icon-Image-from.png",
         ),
       );
 

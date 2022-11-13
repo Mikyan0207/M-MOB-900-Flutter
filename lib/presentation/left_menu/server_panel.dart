@@ -149,54 +149,6 @@ class ServerPanel extends GetView<ServerController> {
                                             ),
                                           ),
                                         ),
-                                        PopupMenuItem<int>(
-                                          value: 2,
-                                          child: SizedBox(
-                                            width: double.infinity,
-                                            child: Row(
-                                              children: const <Widget>[
-                                                Expanded(
-                                                  child: Text(
-                                                    "Server Settings",
-                                                    style: TextStyle(
-                                                      color: Vx.gray200,
-                                                    ),
-                                                  ),
-                                                ),
-                                                SizedBox(width: 50),
-                                                Icon(
-                                                  Icons.settings_rounded,
-                                                  color: Vx.gray400,
-                                                  size: 18,
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        PopupMenuItem<int>(
-                                          value: 2,
-                                          child: SizedBox(
-                                            width: double.infinity,
-                                            child: Row(
-                                              children: const <Widget>[
-                                                Expanded(
-                                                  child: Text(
-                                                    "Delete Server",
-                                                    style: TextStyle(
-                                                      color: Vx.red500,
-                                                    ),
-                                                  ),
-                                                ),
-                                                SizedBox(width: 50),
-                                                Icon(
-                                                  Icons.delete_rounded,
-                                                  color: Vx.red500,
-                                                  size: 18,
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
                                       ],
                                     ),
                                   ),

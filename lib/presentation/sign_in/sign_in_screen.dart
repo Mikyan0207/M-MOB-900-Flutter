@@ -8,14 +8,12 @@ import 'package:starlight/presentation/themes/theme_colors.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class SignInScreen extends StatelessWidget {
-  SignInScreen({super.key});
+  SignInScreen({Key? key}) : super(key: key);
 
   final UserController auth = Get.find();
 
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-
-  static final GlobalKey<FormState> _key = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -27,11 +25,11 @@ class SignInScreen extends StatelessWidget {
             reverse: true,
             controller: ScrollController(),
             child: Container(
-              decoration: const BoxDecoration(color: AppColors.black800),
+              color: AppColors.black800,
               width: context.screenWidth,
               height: context.screenHeight,
               child: Form(
-                key: _key,
+                key: UniqueKey(),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[

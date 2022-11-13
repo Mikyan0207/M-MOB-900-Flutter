@@ -40,7 +40,8 @@ class RoleList extends StatelessWidget {
           if (!snapshot.hasData) {
             return Container();
           } else {
-            if (_serverController.currentServer.value.id.isEmptyOrNull) {
+            if (_serverController.currentServer.value.id.isEmptyOrNull ||
+                snapshot.data!.docs.isEmpty) {
               return Container();
             } else {
               return _buildUsersList(
@@ -112,22 +113,18 @@ class RoleList extends StatelessWidget {
   List<dynamic> _parseUsers(
     List<QueryDocumentSnapshot<Map<String, dynamic>>> docs,
   ) {
-    return docs
-        .map(
-          (
-            QueryDocumentSnapshot<Map<String, dynamic>> e,
-          ) {
-            return e.data();
-          },
-        )
-        .where(
-          (dynamic m) =>
-              _serverController.currentServer.value.members
-                  .firstWhere((UserEntity e) => e.id == m['Id'])
-                  .role ==
-              roleToShow,
-        )
-        .toList();
+    return docs.map(
+      (
+        QueryDocumentSnapshot<Map<String, dynamic>> e,
+      ) {
+        return e.data();
+      },
+    ).where((dynamic m) {
+      return _serverController.currentServer.value.members
+              .firstWhereOrNull((UserEntity e) => e.id == m['Id'])
+              ?.role ==
+          roleToShow;
+    }).toList();
   }
 
   List<ContextMenuButtonConfig> _getContextMenu(UserEntity member) {
@@ -157,18 +154,24 @@ class RoleList extends StatelessWidget {
 
   bool _isCurrentUserInRole(String role) {
     return _serverController.currentServer.value.members
-            .firstWhere(
+            .firstWhereOrNull(
               (UserEntity u) => u.id == _userController.currentUser.value.id,
             )
-            .role ==
+            ?.role ==
         role;
   }
 
   void _setUserRole(UserEntity user, String role) async {
     try {
-      _serverController.currentServer.value.members
-          .firstWhere((UserEntity u) => u.id == user.id)
-          .role = role;
+      final UserEntity? memberInfo = _serverController
+          .currentServer.value.members
+          .firstWhereOrNull((UserEntity u) => u.id == user.id);
+
+      if (memberInfo == null) {
+        return;
+      }
+
+      memberInfo.role = role;
 
       await _serverController.serverRepository.updateField(
         _serverController.currentServer.value,

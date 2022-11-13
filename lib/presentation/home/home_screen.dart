@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:overlapping_panels/overlapping_panels.dart';
@@ -43,7 +42,6 @@ class _HomeState extends State<Home> {
         await Get.to(() => const SplashScreen());
       } else {
         await _userController.setCurrentUser(userId!);
-        //await setStatus("online");
       }
 
       final String? lastServerId = prefs.getString("LastServerId");
@@ -61,6 +59,7 @@ class _HomeState extends State<Home> {
           );
         }
         _homeController.setSelectedTab(AppTab.servers);
+        await _serverController.listenForChanges();
       } else {
         _homeController.setSelectedTab(AppTab.friends);
       }
