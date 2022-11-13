@@ -27,7 +27,7 @@ class SignInScreen extends StatelessWidget {
             reverse: true,
             controller: ScrollController(),
             child: Container(
-              decoration: const BoxDecoration(color: AppColors.black800),
+              color: AppColors.black800,
               width: context.screenWidth,
               height: context.screenHeight,
               child: Form(

@@ -29,7 +29,7 @@ class SignUpScreen extends StatelessWidget {
             reverse: true,
             controller: ScrollController(),
             child: Container(
-              color: AppColors.black700,
+              color: AppColors.black800,
               width: context.screenWidth,
               height: context.screenHeight,
               child: Form(
