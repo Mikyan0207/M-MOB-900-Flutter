@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -15,6 +16,16 @@ class ProfileBar extends StatelessWidget {
   }) : super(key: key);
 
   final UserController _userController = Get.find();
+
+  Future<void> setStatus(String newStatus)
+  async {
+    await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(_userController.currentUser.value.id)
+        .update(<String, Object?>{
+      'Status': newStatus,
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -96,6 +107,7 @@ class ProfileBar extends StatelessWidget {
                   final SharedPreferences prefs =
                       await SharedPreferences.getInstance();
 
+                  await setStatus("offline");
                   await prefs.remove("UserId");
                   await FirebaseAuth.instance.signOut();
                   await Get.to(() => const SplashScreen());
