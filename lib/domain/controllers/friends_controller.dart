@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:starlight/domain/entities/friend_request_entity.dart';
 import 'package:starlight/domain/entities/user_entity.dart';
@@ -26,11 +27,21 @@ class FriendsController extends GetxController {
     final UserEntity toUser = await _userRepository.get(fre.toUser.id);
     final UserEntity fromUser = await _userRepository.get(fre.fromUser.id);
 
-    toUser.friends.add(fromUser);
-    fromUser.friends.add(toUser);
+    await _userRepository.updateField(
+      toUser,
+      <String, dynamic>{
+        'Friends': FieldValue.arrayUnion(<dynamic>[fromUser.id])
+      },
+      merge: true,
+    );
 
-    await _userRepository.update(toUser);
-    await _userRepository.update(fromUser);
+    await _userRepository.updateField(
+      fromUser,
+      <String, dynamic>{
+        'Friends': FieldValue.arrayUnion(<dynamic>[toUser.id])
+      },
+      merge: true,
+    );
 
     fre.accepted = true;
     await _friendRequestRepository.update(fre);
