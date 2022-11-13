@@ -109,6 +109,7 @@ class ProfileBar extends StatelessWidget {
 
                   await setStatus("offline");
                   await prefs.remove("UserId");
+                  await prefs.remove("LastServerId");
                   await FirebaseAuth.instance.signOut();
                   await Get.to(() => const SplashScreen());
                 },
