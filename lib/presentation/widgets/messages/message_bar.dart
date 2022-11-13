@@ -226,20 +226,6 @@ class _MessageBarState extends State<MessageBar> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: <Widget>[
-                            IconButton(
-                              icon: const Icon(
-                                Icons.sticky_note_2,
-                                color: Vx.gray300,
-                              ),
-                              onPressed: () {},
-                            ),
-                            IconButton(
-                              icon: const Icon(
-                                Icons.emoji_emotions,
-                                color: Vx.gray300,
-                              ),
-                              onPressed: () {},
-                            ),
                             Padding(
                               padding:
                                   const EdgeInsets.symmetric(vertical: 10.0),
