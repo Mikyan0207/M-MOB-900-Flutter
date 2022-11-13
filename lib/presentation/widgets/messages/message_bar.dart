@@ -1,9 +1,12 @@
+import 'package:camera/camera.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dropzone/flutter_dropzone.dart';
 import 'package:flutter_parsed_text_field/flutter_parsed_text_field.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:starlight/domain/entities/user_entity.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
 import 'package:starlight/presentation/widgets/messages/dropped_file.dart';
@@ -41,6 +44,7 @@ class _MessageBarState extends State<MessageBar> {
   bool highlighted1 = false;
   dynamic image;
   late String url;
+  late XFile imageFile;
   DroppedFile file = const DroppedFile(url: "", name: "", mime: "", bytes: 0);
 
   @override
@@ -76,16 +80,69 @@ class _MessageBarState extends State<MessageBar> {
                             color: Vx.gray400,
                           ),
                           onPressed: () async {
-                            await controller1.pickFiles(
-                              mime: <String>['image/jpeg', 'image/png'],
-                            );
+                            if (kIsWeb)
+                            {
+                              await controller1.pickFiles(
+                                mime: <String>['image/jpeg', 'image/png'],
+                              );
+                            }
+                            else {
+                              final XFile? pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+
+                              imageFile = XFile(pickedFile!.path);
+                              final String extension = pickedFile.name
+                                  .split('.')
+                                  .last
+                                  .toString();
+
+                              final CroppedFile? croppedImage = await ImageCropper().cropImage(
+                                sourcePath: pickedFile.path,
+                                maxHeight: 2080,
+                                maxWidth: 2080,
+                                aspectRatioPresets: <CropAspectRatioPreset>[
+                                  CropAspectRatioPreset.square,
+                                  CropAspectRatioPreset.ratio3x2,
+                                  CropAspectRatioPreset.original,
+                                  CropAspectRatioPreset.ratio4x3,
+                                  CropAspectRatioPreset.ratio16x9
+                                ],
+                                uiSettings: <PlatformUiSettings>[
+                                  AndroidUiSettings(
+                                    toolbarTitle: 'Cropper',
+                                    toolbarColor: Colors.deepOrange,
+                                    toolbarWidgetColor: Colors.white,
+                                    initAspectRatio: CropAspectRatioPreset.original,
+                                    lockAspectRatio: false,
+                                  ),
+                                  IOSUiSettings(
+                                    title: 'Cropper',
+                                  ),
+                                  WebUiSettings(
+                                    context: context,
+                                  ),
+                                ],
+                              );
+
+                              if (croppedImage != null) {
+                                imageFile = XFile(croppedImage.path);
+                                final DroppedFile droppedFile = DroppedFile(
+                                  url: croppedImage.path,
+                                  name: pickedFile.name,
+                                  mime: 'image/png',
+                                  bytes: 0,
+                                );
+                                setState(() {
+                                  file = droppedFile;
+                                });
+                              }
+                            }
                           },
                         ),
                         Expanded(
                           child: Stack(
                             children: <Widget>[
-                              if (kIsWeb) buildZone1(context) else Container(),
-                              if (kIsWeb && !file.name.isEmptyOrNull)
+                              if (kIsWeb) buildDropZone(context) else Container(),
+                              if (!file.name.isEmptyOrNull)
                                 DroppedFileWidget(key: UniqueKey(), file: file)
                               else
                                 Container(),
@@ -121,11 +178,17 @@ class _MessageBarState extends State<MessageBar> {
                                             contentType: "image/$extension",
                                           );
 
-                                          await ref.putData(
-                                            await controller1
-                                                .getFileData(image),
-                                            newMetadata,
-                                          );
+                                          if (kIsWeb)
+                                          {
+                                            await ref.putData(
+                                              await controller1
+                                                  .getFileData(image),
+                                              newMetadata,
+                                            );
+                                          }
+                                          else {
+                                            await ref.putData(await imageFile!.readAsBytes(), newMetadata);
+                                          }
 
                                           await Fluttertoast.showToast(
                                             msg: "Image uploaded",
@@ -260,10 +323,17 @@ class _MessageBarState extends State<MessageBar> {
                                       contentType: "image/$extension",
                                     );
 
-                                    await ref.putData(
-                                      await controller1.getFileData(image),
-                                      newMetadata,
-                                    );
+                                    if (kIsWeb)
+                                    {
+                                      await ref.putData(
+                                        await controller1
+                                            .getFileData(image),
+                                        newMetadata,
+                                      );
+                                    }
+                                    else {
+                                      await ref.putData(await imageFile!.readAsBytes(), newMetadata);
+                                    }
 
                                     await Fluttertoast.showToast(
                                       msg: "Image uploaded",
@@ -305,7 +375,7 @@ class _MessageBarState extends State<MessageBar> {
     );
   }
 
-  Widget buildZone1(BuildContext context) => Builder(
+  Widget buildDropZone(BuildContext context) => Builder(
         builder: (BuildContext context) => ConstrainedBox(
           constraints: const BoxConstraints(
             maxHeight: 50,
