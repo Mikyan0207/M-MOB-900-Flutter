@@ -97,14 +97,13 @@ class UserController extends GetxController {
         return false;
       }
 
-      final int discriminatorGenerator = (Random().nextInt(9) * 1000) + (Random().nextInt(9) * 100) + (Random().nextInt(9999) * 10) + (Random().nextInt(9));
-
+      final int discriminatorGenerator = Random().nextInt(9999);
       await repository.create(
         UserEntity(
           authId: userCredential.user!.uid,
           username: userCredential.user!.email!.split('@').first,
           email: userCredential.user!.email!,
-          discriminator: '#${discriminatorGenerator.toString()}',
+          discriminator: '#${discriminatorGenerator.toString().padLeft(4, '0')}',
         ),
       );
 
