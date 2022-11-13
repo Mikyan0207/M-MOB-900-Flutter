@@ -5,7 +5,6 @@ import 'package:starlight/domain/controllers/channel_controller.dart';
 import 'package:starlight/domain/controllers/friends_controller.dart';
 import 'package:starlight/domain/controllers/group_controller.dart';
 import 'package:starlight/domain/controllers/home_controller.dart';
-import 'package:starlight/domain/controllers/private_message_controller.dart';
 import 'package:starlight/domain/controllers/server_controller.dart';
 import 'package:starlight/domain/controllers/user_controller.dart';
 import 'package:starlight/presentation/home/home_screen.dart';
@@ -29,7 +28,6 @@ class App extends StatelessWidget {
         Get.lazyPut(() => ChannelController()),
         Get.lazyPut(() => FriendsController()),
         Get.lazyPut(() => HomeController()),
-        Get.lazyPut(() => PrivateMessageController()),
         Get.lazyPut(() => GroupController()),
       },
       onDispose: () async {

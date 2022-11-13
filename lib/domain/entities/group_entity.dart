@@ -1,24 +1,33 @@
-import 'package:starlight/domain/entities/message_entity.dart';
 import 'package:starlight/domain/entities/user_entity.dart';
+
+class GroupQueryOptions {
+  const GroupQueryOptions({
+    this.includeMembers = false,
+  });
+
+  final bool includeMembers;
+}
 
 class GroupEntity {
   GroupEntity({
     this.id = '',
+    this.groupId = '',
     this.name = '',
     this.icon = '',
     this.members = const <UserEntity>[],
-    this.messages = const <MessageEntity>[],
   });
 
-  factory GroupEntity.fromJson(dynamic json) => GroupEntity(
+  factory GroupEntity.fromJson(
+    dynamic json, {
+    GroupQueryOptions options = const GroupQueryOptions(),
+  }) =>
+      GroupEntity(
         id: json['Id'] ?? '',
+        groupId: json['GroupId'] ?? '',
         name: json['Name'] ?? '',
-        members: json['Members'] != null
+        members: json['Members'] != null && options.includeMembers
             ? UserEntity.fromJsonList(json['Members'])
             : const <UserEntity>[],
-        messages: json['Messages'] != null
-            ? MessageEntity.fromJsonList(json['Messages'])
-            : const <MessageEntity>[],
       );
 
   static List<GroupEntity> fromJsonList(List<dynamic> jsonList) =>
@@ -27,28 +36,19 @@ class GroupEntity {
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'Id': id,
+      'GroupId': groupId,
       'Name': name,
       'Members': members
           .map(
-            (UserEntity ue) => <String, dynamic>{
-              'Id': ue.id,
-              'Username': ue.username,
-              'Discriminator': ue.discriminator,
-              'Avatar': ue.avatar,
-            },
-          )
-          .toList(),
-      'Messages': messages
-          .map(
-            (MessageEntity me) => me.toJson(),
+            (UserEntity ue) => ue.id,
           )
           .toList(),
     };
   }
 
   String id;
+  String groupId;
   String name;
   String icon;
   List<UserEntity> members;
-  List<MessageEntity> messages;
 }

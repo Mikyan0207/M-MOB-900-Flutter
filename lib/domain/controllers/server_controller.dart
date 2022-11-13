@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:starlight/domain/controllers/channel_controller.dart';
@@ -10,6 +13,8 @@ class ServerController extends GetxController {
 
   final ServerRepository serverRepository = ServerRepository();
   final ChannelController _channelController = Get.find();
+
+  StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>? listener;
 
   Future<void> deleteCurrentServer() async {
     await serverRepository.delete(currentServer.value);
@@ -39,5 +44,21 @@ class ServerController extends GetxController {
 
     currentServer(server);
     _channelController.setCurrentChannel(server.channels[0]);
+  }
+
+  Future<void> listenForChanges() async {
+    await listener?.cancel();
+
+    listener = serverRepository.firestore
+        .collection("Servers")
+        .doc(currentServer.value.id)
+        .snapshots()
+        .listen((DocumentSnapshot<Map<String, dynamic>> event) {
+      if (event.data() == null) {
+        return;
+      }
+
+      setCurrentServer(event.data()!['Id']);
+    });
   }
 }

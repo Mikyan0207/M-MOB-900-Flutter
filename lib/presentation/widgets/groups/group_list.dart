@@ -3,12 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:starlight/domain/controllers/user_controller.dart';
 import 'package:starlight/domain/entities/group_entity.dart';
+import 'package:starlight/domain/entities/user_entity.dart';
 import 'package:starlight/presentation/widgets/groups/group_card.dart';
 
 class GroupList extends StatelessWidget {
   GroupList({Key? key}) : super(key: key);
 
-  final UserController _authController = Get.find();
+  final UserController _userController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -17,12 +18,8 @@ class GroupList extends StatelessWidget {
         stream: FirebaseFirestore.instance
             .collection("Groups")
             .where(
-              "Id",
-              whereIn: _authController.currentUser.value.groups.isEmpty
-                  ? <String>['']
-                  : _authController.currentUser.value.groups
-                      .map((GroupEntity e) => e.id)
-                      .toList(),
+              "Members",
+              arrayContains: _userController.currentUser.value.id,
             )
             .snapshots(),
         builder: (
@@ -54,22 +51,45 @@ class GroupList extends StatelessWidget {
     return groups;
   }
 
-  ListView buildGroupList(List<Map<String, dynamic>> groups) {
+  Widget buildGroupList(List<Map<String, dynamic>> groups) {
+    if (groups.isEmpty) {
+      return Container();
+    }
     return ListView.builder(
       padding: const EdgeInsets.symmetric(horizontal: 6.0),
       shrinkWrap: true,
       itemCount: groups.length,
       controller: ScrollController(),
       itemBuilder: (BuildContext context, int index) {
-        final GroupEntity ge = GroupEntity.fromJson(groups[index]);
+        final GroupEntity ge = GroupEntity.fromJson(
+          groups[index],
+        );
 
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
-          child: Center(
-            child: GroupCard(
-              group: ge,
+        return FutureBuilder<List<UserEntity>>(
+          future: Future.wait(
+            (groups[index]['Members'] as List<dynamic>).map(
+              (dynamic e) => _userController.repository.get(e.toString()),
             ),
           ),
+          builder: (
+            BuildContext context,
+            AsyncSnapshot<List<UserEntity>> snapshot,
+          ) {
+            if (snapshot.data == null) {
+              return Container();
+            }
+
+            ge.members = snapshot.data!.toList();
+
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Center(
+                child: GroupCard(
+                  group: ge,
+                ),
+              ),
+            );
+          },
         );
       },
     );

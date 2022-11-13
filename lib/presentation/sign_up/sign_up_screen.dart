@@ -5,7 +5,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:starlight/domain/controllers/user_controller.dart';
 import 'package:starlight/domain/repositories/user_repository.dart';
-import 'package:starlight/presentation/home/home_screen.dart';
 import 'package:starlight/presentation/sign_in/sign_in_screen.dart';
 import 'package:starlight/presentation/themes/theme_colors.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -229,7 +228,7 @@ class SignUpScreen extends StatelessWidget {
                               emailController.text,
                               passwordController.text,
                             )) {
-                              await Get.to(() => const Home());
+                              await Get.to(() => SignInScreen());
                             }
                           } on FirebaseAuthException catch (e) {
                             if (e.code == 'weak-password') {
