@@ -110,8 +110,7 @@ class MessagesList extends StatelessWidget {
           showAuthor: false,
           showAvatar: false,
           showTime: false,
-          isMention:
-              RegExp(r"\[(@([^\]]+)):([^\]]+)\]").hasMatch(message.content),
+          isMention: isMentionForCurrentUser(message.content),
         ),
       );
     }
