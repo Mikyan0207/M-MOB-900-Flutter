@@ -74,7 +74,7 @@ class _HomeState extends State<Home> {
       case AppTab.servers:
         return Expanded(child: ServerChat());
       case AppTab.friends:
-        return Expanded(child: FriendsListManager());
+        return const Expanded(child: FriendsListManager());
       case AppTab.privateMessage:
         return Expanded(child: StarlightChat());
     }
@@ -86,19 +86,29 @@ class _HomeState extends State<Home> {
       mobile: Stack(
         children: <Widget>[
           OverlappingPanels(
+            restWidth: 20,
             left: Builder(
               builder: (BuildContext context) {
-                return Row(
-                  children: const <Widget>[
-                    SizedBox(width: 75, child: LeftMenu()),
-                    Expanded(flex: 3, child: ServerPanel()),
-                  ],
+                return Obx(
+                  () => Row(
+                    children: <Widget>[
+                      const SizedBox(width: 75, child: LeftMenu()),
+                      if (_homeController.tabSelected.value != AppTab.servers)
+                        const Expanded(child: StarlightFriendsList())
+                      else
+                        const Expanded(child: ServerPanel()),
+                    ],
+                  ),
                 );
               },
             ),
             main: Builder(
               builder: (BuildContext context) {
-                return ServerChat();
+                return Obx(
+                  () => _displayCorrespondingView(
+                    _homeController.tabSelected.value,
+                  ),
+                );
               },
             ),
             right: Builder(

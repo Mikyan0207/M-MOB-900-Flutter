@@ -76,7 +76,7 @@ class _MemberCardState extends State<MemberCard> {
                           color: Colors.transparent,
                           child: Ink.image(
                             colorFilter: ColorFilter.mode(
-                              widget.member.status == "online"
+                              widget.member.status != "offline"
                                   ? Colors.transparent
                                   : Vx.gray700.withOpacity(0.45),
                               BlendMode.darken,

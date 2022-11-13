@@ -15,13 +15,13 @@ workflows:
         PACKAGE_NAME: "io.starlight.flutteryaml" # <-- Put your package name here
         GOOGLE_PLAY_TRACK: "alpha" # <-- This must be "alpha" or above.
         CODE_COVERAGE_TARGET: 10 # <-- Expected code coverage rate
-    triggering:
-      events:
-        - push
-      branch_patterns:
-        - pattern: "main"
-          include: true
-          source: true
+#     triggering:
+#       events:
+#         - push
+#       branch_patterns:
+#         - pattern: "main"
+#           include: true
+#           source: true
     scripts:
       - name: Get Flutter packages
         script: |
