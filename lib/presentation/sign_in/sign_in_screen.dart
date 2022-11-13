@@ -13,7 +13,10 @@ class SignInScreen extends StatelessWidget {
   final UserController auth = Get.find();
 
   final TextEditingController emailController = TextEditingController();
+
   final TextEditingController passwordController = TextEditingController();
+
+  static final GlobalKey<FormState> signInKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +32,7 @@ class SignInScreen extends StatelessWidget {
               width: context.screenWidth,
               height: context.screenHeight,
               child: Form(
-                key: UniqueKey(),
+                key: signInKey,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
