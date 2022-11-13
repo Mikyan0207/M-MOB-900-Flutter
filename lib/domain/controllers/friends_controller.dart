@@ -4,7 +4,6 @@ import 'package:starlight/domain/controllers/user_controller.dart';
 import 'package:starlight/domain/entities/friend_request_entity.dart';
 import 'package:starlight/domain/entities/user_entity.dart';
 import 'package:starlight/domain/repositories/friend_request_repository.dart';
-import 'package:starlight/domain/repositories/user_repository.dart';
 
 enum FriendTabState {
   home,
