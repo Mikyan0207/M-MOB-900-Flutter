@@ -91,7 +91,7 @@ class CreateChannelDialog extends GetView<ServerController> {
                           "This functionality is only for admin",
                           style: TextStyle(
                             color: Vx.red700,
-                            fontSize: 23,
+                            fontSize: 10,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
