@@ -91,7 +91,7 @@ class _CreateServerDialogState extends State<CreateServerDialog> {
 
   ImageProvider<Object> _getImage() {
     if (imagePath.value.isEmptyOrNull) {
-      return const AssetImage("server_icon_placeholder.png");
+      return const AssetImage("assets/server_icon_placeholder.png");
     } else {
       return NetworkImage(imagePath.value);
     }
