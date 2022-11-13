@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -95,11 +97,14 @@ class UserController extends GetxController {
         return false;
       }
 
+      final int discriminatorGenerator = (Random().nextInt(9) * 1000) + (Random().nextInt(9) * 100) + (Random().nextInt(9999) * 10) + (Random().nextInt(9));
+
       await repository.create(
         UserEntity(
           authId: userCredential.user!.uid,
           username: userCredential.user!.email!.split('@').first,
           email: userCredential.user!.email!,
+          discriminator: '#${discriminatorGenerator.toString()}',
         ),
       );
 

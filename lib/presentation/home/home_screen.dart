@@ -44,7 +44,6 @@ class _HomeState extends State<Home> {
         await Get.to(() => const SplashScreen());
       } else {
         await _userController.setCurrentUser(userId!);
-        await setStatus("online");
       }
 
       final String? lastServerId = prefs.getString("LastServerId");
@@ -65,16 +64,6 @@ class _HomeState extends State<Home> {
       } else {
         _homeController.setSelectedTab(AppTab.friends);
       }
-    });
-  }
-
-  Future<void> setStatus(String newStatus)
-  async {
-    await FirebaseFirestore.instance
-        .collection('Users')
-        .doc(_userController.currentUser.value.id)
-        .update(<String, Object?>{
-      'Status': newStatus,
     });
   }
 

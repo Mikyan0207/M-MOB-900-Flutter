@@ -58,7 +58,7 @@ class SignUpScreen extends StatelessWidget {
                     ),
                     SizedBox(
                       width: 300,
-                      height: 400,
+                      height: 300,
                       child: Image.asset("assets/undraw_chatting.png"),
                     ),
                     SizedBox(
