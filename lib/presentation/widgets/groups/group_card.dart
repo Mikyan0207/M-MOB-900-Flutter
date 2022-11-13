@@ -10,7 +10,7 @@ import 'package:starlight/presentation/themes/theme_colors.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class GroupCard extends StatefulWidget {
-  GroupCard({
+  const GroupCard({
     super.key,
     required this.group,
     this.isSelected = false,
@@ -28,8 +28,6 @@ class _GroupCardState extends State<GroupCard>
   final GroupController _groupController = Get.find();
   final HomeController _homeController = Get.find();
   final UserController _authController = Get.find();
-
-  bool _isHovered = false;
 
   late final AnimationController backgroundColorController;
   late final Animation<Color?> backgroundColorAnimation;
@@ -100,29 +98,74 @@ class _GroupCardState extends State<GroupCard>
               ),
               child: Row(
                 children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(right: 12.0),
-                    child: CircleAvatar(
-                      backgroundColor: Colors.transparent,
-                      child: SizedBox(
-                        width: 60,
-                        height: 60,
-                        child: ClipOval(
-                          child: Image.network(
-                            otherUser.avatar,
+                  Stack(
+                    children: <Widget>[
+                      CircleAvatar(
+                        backgroundColor: Colors.transparent,
+                        child: SizedBox(
+                          width: 60,
+                          height: 60,
+                          child: ClipOval(
+                            child: Image.network(
+                              otherUser.avatar,
+                            ),
                           ),
                         ),
                       ),
-                    ),
+                      Positioned(
+                        bottom: -3,
+                        right: -3,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(25.0),
+                          child: SizedBox(
+                            width: 17,
+                            height: 17,
+                            child: Container(
+                              color: AppColors.black800,
+                              child: Padding(
+                                padding: const EdgeInsets.all(2.5),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(25.0),
+                                  child: Container(
+                                    color: otherUser.status == "online"
+                                        ? Vx.green600
+                                        : Vx.gray500,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                   Expanded(
-                    child: Text(
-                      otherUser.username,
-                      style: TextStyle(
-                        color: widget.isSelected ? Vx.white : Vx.gray300,
-                        fontWeight: widget.isSelected
-                            ? FontWeight.w600
-                            : FontWeight.normal,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 12.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            otherUser.username,
+                            style: TextStyle(
+                              color: Vx.white,
+                              fontSize: 16,
+                              fontWeight: widget.isSelected
+                                  ? FontWeight.w600
+                                  : FontWeight.normal,
+                            ),
+                          ),
+                          Text(
+                            otherUser.discriminator,
+                            style: TextStyle(
+                              color: Vx.gray300,
+                              fontSize: 12,
+                              fontWeight: widget.isSelected
+                                  ? FontWeight.w600
+                                  : FontWeight.normal,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
