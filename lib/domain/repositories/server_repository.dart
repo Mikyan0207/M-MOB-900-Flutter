@@ -1,9 +1,26 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:starlight/domain/entities/server_entity.dart';
 import 'package:starlight/domain/entities/user_entity.dart';
+import 'package:starlight/domain/repositories/user_repository.dart';
 
 class ServerRepository {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  Future<List<UserEntity>> _getServerUsers(List<dynamic> userIds) async {
+    final UserRepository userRepository = UserRepository();
+
+    final List<UserEntity> members = await Future.wait(
+      userIds.map((dynamic u) async {
+        final UserEntity user = await userRepository.get(u['Id']);
+
+        user.role = u['Role'].toString();
+
+        return user;
+      }).toList(),
+    );
+
+    return members;
+  }
 
   Future<List<ServerEntity>> getAll({
     ServerQueryOptions options = const ServerQueryOptions(),
@@ -24,7 +41,13 @@ class ServerRepository {
       return ServerEntity();
     }
 
-    return ServerEntity.fromJson(data, options: options);
+    final ServerEntity server = ServerEntity.fromJson(data, options: options);
+
+    if (options.includeMembers && data['Members'] != null) {
+      server.members = await _getServerUsers(data['Members']);
+    }
+
+    return server;
   }
 
   Future<ServerEntity> getServer(String serverId) async {
