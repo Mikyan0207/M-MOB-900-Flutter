@@ -126,35 +126,35 @@ HTTP fetching at runtime, ideal for development. Can also be used in production 
 <br>
 
 ### image_cropper: ^3.0.0
-A Flutter plugin for controlling the camera. Supports previewing the camera feed, capturing images and video, and streaming image buffers to Dart.
+A Flutter plugin for Android, iOS and Web supports cropping images. This plugin is based on three different native libraries so it comes with different UI between these platforms.
 <br><br>
 [Link](https://pub.dev/packages/image_cropper)
 
 <br>
 
 ### image_picker: ^0.8.6
-A Flutter plugin for controlling the camera. Supports previewing the camera feed, capturing images and video, and streaming image buffers to Dart.
+A Flutter plugin for iOS and Android for picking images from the image library, and taking new pictures with the camera.
 <br><br>
 [Link](https://pub.dev/packages/image_picker)
 
 <br>
 
 ### overlapping_panels: ^0.0.3
-A Flutter plugin for controlling the camera. Supports previewing the camera feed, capturing images and video, and streaming image buffers to Dart.
+Add Discord-like navigation to your app.
 <br><br>
 [Link](https://pub.dev/packages/overlapping_panels)
 
 <br>
 
 ### shared_preferences: ^2.0.15
-A Flutter plugin for controlling the camera. Supports previewing the camera feed, capturing images and video, and streaming image buffers to Dart.
+Wraps platform-specific persistent storage for simple data (NSUserDefaults on iOS and macOS, SharedPreferences on Android, etc.). Data may be persisted to disk asynchronously, and there is no guarantee that writes will be persisted to disk after returning, so this plugin must not be used for storing critical data.
 <br><br>
 [Link](https://pub.dev/packages/shared_preferences)
 
 <br>
 
 ### timeago_flutter: ^1.2.0
-A Flutter plugin for controlling the camera. Supports previewing the camera feed, capturing images and video, and streaming image buffers to Dart.
+timeago is a dart library that converts a date into a humanized text. Instead of showing a date 2020-12-12 18:30 with timeago you can display something like "now", "an hour ago", "~1y", etc
 <br><br>
 [Link](https://pub.dev/packages/timeago_flutter)
 
@@ -183,8 +183,6 @@ This package is built on top of Flutter `flutter.yaml` set of lints from `packag
 
 ## Download
 
-### Desktop
-
 ### Web
 
 ### Android
@@ -195,8 +193,30 @@ This package is built on top of Flutter `flutter.yaml` set of lints from `packag
 
 ```
 lib
-├── components
-└── pages
+├─┬ common
+│ └─ constants
+├─┬ domain
+│ ├── controllers
+│ ├── entities
+│ └── respositories
+└─┬ presentation
+  ├── chats
+  ├── friends
+  ├── home
+  ├── left_menu
+  ├── picture
+  ├── right_menu
+  ├── sign_in
+  ├── sign_up
+  ├── splash
+  ├── themes
+  ├── user_info
+  └─┬ widgets
+    ├── channels
+    ├── dialogs
+    ├── groups
+    ├── messages
+    └── servers
 ```
 
 <br>
@@ -205,8 +225,12 @@ lib
 
 ## Build
 
-Flutter Version: `3.2.2`<br>
+Flutter Version: `>= 3.2.2`<br>
 We use a main only strategy with PRs for our repository.
+
+<br>
+
+Download and install the latest available version of Flutter from: [flutter.dev](https://docs.flutter.dev/get-started/install)
 
 ### Windows
 
