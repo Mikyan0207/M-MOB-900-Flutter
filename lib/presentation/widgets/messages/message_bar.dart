@@ -156,11 +156,6 @@ class _MessageBarState extends State<MessageBar> {
                                     focusNode: _textFieldNode,
                                     autofocus: Vx.isWeb || Vx.isDesktop,
                                     onSubmitted: (String? value) async {
-                                      final String content =
-                                          flutterParsedTextFieldController
-                                              .stringify()
-                                              .trim();
-
                                       if (!file.name.isEmptyOrNull) {
                                         try {
                                           final String extension = file.name
@@ -202,6 +197,11 @@ class _MessageBarState extends State<MessageBar> {
                                           );
                                         }
                                       }
+
+                                      final String content =
+                                          flutterParsedTextFieldController
+                                              .stringify()
+                                              .trim();
 
                                       flutterParsedTextFieldController.clear();
                                       await widget.onSendMessage.call(content);
@@ -303,11 +303,6 @@ class _MessageBarState extends State<MessageBar> {
                                 color: Vx.indigo300,
                               ),
                               onPressed: () async {
-                                final String content =
-                                    flutterParsedTextFieldController
-                                        .stringify()
-                                        .trim();
-
                                 if (!file.name.isEmptyOrNull) {
                                   try {
                                     final String extension =
@@ -346,6 +341,11 @@ class _MessageBarState extends State<MessageBar> {
                                     );
                                   }
                                 }
+
+                                final String content =
+                                    flutterParsedTextFieldController
+                                        .stringify()
+                                        .trim();
 
                                 flutterParsedTextFieldController.clear();
                                 await widget.onSendMessage.call(content);

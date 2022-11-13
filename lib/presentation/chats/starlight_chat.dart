@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:starlight/domain/controllers/private_message_controller.dart';
+import 'package:starlight/domain/controllers/group_controller.dart';
 import 'package:starlight/domain/controllers/user_controller.dart';
 import 'package:starlight/domain/entities/message_entity.dart';
 import 'package:starlight/domain/entities/user_entity.dart';
@@ -14,10 +14,22 @@ import 'package:velocity_x/velocity_x.dart';
 class StarlightChat extends StatelessWidget {
   StarlightChat({super.key});
 
-  final PrivateMessageController _pmController = Get.find();
+  final GroupController _groupController = Get.find();
   final UserController _authController = Get.find();
 
   final MessageRepository _messageRepository = MessageRepository();
+
+  String _getGroupName() {
+    return _groupController.currentGroup.value.name.isNotEmptyAndNotNull
+        ? _groupController.currentGroup.value.name
+        : _groupController.currentGroup.value.members
+                .firstWhereOrNull(
+                  (UserEntity element) =>
+                      element.id != _authController.currentUser.value.id,
+                )
+                ?.username ??
+            'Group';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,16 +70,7 @@ class StarlightChat extends StatelessWidget {
                         ),
                         Obx(
                           () => Text(
-                            _pmController.currentGroup.value.name
-                                    .isNotEmptyAndNotNull
-                                ? _pmController.currentGroup.value.name
-                                : _pmController.currentGroup.value.members
-                                    .firstWhere(
-                                      (UserEntity element) =>
-                                          element.id !=
-                                          _authController.currentUser.value.id,
-                                    )
-                                    .username,
+                            _getGroupName(),
                             style: const TextStyle(
                               color: Vx.white,
                               fontSize: 16,
@@ -86,13 +89,8 @@ class StarlightChat extends StatelessWidget {
                       Expanded(child: PrivateMessagesList()),
                       Obx(
                         () => MessageBar(
-                          messagePlaceholder:
-                              'Message @${_pmController.currentGroup.value.name.isNotEmptyAndNotNull ? _pmController.currentGroup.value.name : _pmController.currentGroup.value.members.firstWhere(
-                                    (UserEntity element) =>
-                                        element.id !=
-                                        _authController.currentUser.value.id,
-                                  ).username}',
-                          members: _pmController.currentGroup.value.members,
+                          messagePlaceholder: 'Message @${_getGroupName()}',
+                          members: _groupController.currentGroup.value.members,
                           onSendMessage: (String value) async {
                             if (value.isEmptyOrNull) {
                               return;
@@ -102,7 +100,7 @@ class StarlightChat extends StatelessWidget {
                               MessageEntity(
                                 author: _authController.currentUser.value,
                                 content: value,
-                                group: _pmController.currentGroup.value,
+                                group: _groupController.currentGroup.value,
                                 time: Timestamp.now(),
                               ),
                             );

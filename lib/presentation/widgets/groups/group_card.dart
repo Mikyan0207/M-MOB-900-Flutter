@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:starlight/domain/controllers/group_controller.dart';
 import 'package:starlight/domain/controllers/home_controller.dart';
-import 'package:starlight/domain/controllers/private_message_controller.dart';
 import 'package:starlight/domain/controllers/user_controller.dart';
 import 'package:starlight/domain/entities/group_entity.dart';
 import 'package:starlight/domain/entities/user_entity.dart';
@@ -18,7 +18,7 @@ class GroupCard extends StatelessWidget {
   final GroupEntity group;
   final bool isSelected;
 
-  final PrivateMessageController _pmController = Get.find();
+  final GroupController _groupController = Get.find();
   final HomeController _homeController = Get.find();
   final UserController _authController = Get.find();
 
@@ -27,17 +27,17 @@ class GroupCard extends StatelessWidget {
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
-        onTap: () {
-          _pmController.setCurrentGroup(group);
+        onTap: () async {
+          await _groupController.setCurrentGroup(group.id);
           _homeController.setSelectedTab(AppTab.privateMessage);
         },
         child: Obx(
           () => Container(
             decoration: BoxDecoration(
-              color:
-                  isSelected || _pmController.currentGroup.value.id == group.id
-                      ? AppColors.black400
-                      : Colors.transparent,
+              color: isSelected ||
+                      _groupController.currentGroup.value.id == group.id
+                  ? AppColors.black400
+                  : Colors.transparent,
               borderRadius: BorderRadius.circular(7.0),
             ),
             child: Padding(

@@ -60,6 +60,7 @@ class _HomeState extends State<Home> {
           );
         }
         _homeController.setSelectedTab(AppTab.servers);
+        await _serverController.listenForChanges();
       } else {
         _homeController.setSelectedTab(AppTab.friends);
       }
