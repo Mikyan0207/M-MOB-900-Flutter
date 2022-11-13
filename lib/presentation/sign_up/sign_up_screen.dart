@@ -30,8 +30,8 @@ class SignUpScreen extends StatelessWidget {
             controller: ScrollController(),
             child: Container(
               color: AppColors.black700,
-              width: double.infinity,
-              height: double.infinity,
+              width: context.screenWidth,
+              height: context.screenHeight,
               child: Form(
                 key: UniqueKey(),
                 child: Column(
@@ -55,6 +55,11 @@ class SignUpScreen extends StatelessWidget {
                           color: Vx.gray300,
                         ),
                       ),
+                    ),
+                    SizedBox(
+                      width: 300,
+                      height: 400,
+                      child: Image.asset("assets/undraw_chatting.png"),
                     ),
                     SizedBox(
                       width: 400,

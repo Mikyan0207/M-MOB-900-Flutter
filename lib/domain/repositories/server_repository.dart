@@ -71,9 +71,11 @@ class ServerRepository {
   Future<ServerEntity> joinServer(ServerEntity server, UserEntity user) async {
     await _firestore.collection("Users").doc(user.id).set(
       <String, dynamic>{
-        'Servers': <dynamic>[
-          server.id,
-        ]
+        'Servers': FieldValue.arrayUnion(
+          <dynamic>[
+            server.id,
+          ],
+        ),
       },
       SetOptions(merge: true),
     );
